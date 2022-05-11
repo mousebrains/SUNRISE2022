@@ -1,4 +1,4 @@
-* Instructions for setting up a public-facing SSH server at Oregon State University
+# Instructions for setting up a public-facing SSH server at Oregon State University
 
 [Instructions](https://oregonstate.teamdynamix.com/TDClient/1935/Portal/KB/ArticleDet?ID=122712)
 

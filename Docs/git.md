@@ -1,4 +1,4 @@
-** Set up git and repository
+# Set up git and repository
 - Setup git defaults for dealing with submodule recurssion
   - `git config --global user.email "you@example.com"`
   - `git config --global user.name "Your Name"`

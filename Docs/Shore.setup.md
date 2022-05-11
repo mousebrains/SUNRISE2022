@@ -1,4 +1,4 @@
-* Set up for shore side system:
+# Set up for shore side system:
 
 - Install Ubuntu 22.04
 - Install fail2ban, `sudo apt install fail2ban`

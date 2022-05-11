@@ -1,4 +1,4 @@
-* Set up the shore side web server:
+# Set up the shore side web server:
 
 - `sudo apt install nginx`
 - Copy [sunrise](../SystemFiles/sunrise) to /etc/nginx/sites-available, `sudo cp sunrise /etc/nginx/sites-available`

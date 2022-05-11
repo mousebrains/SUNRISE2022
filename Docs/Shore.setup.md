@@ -2,7 +2,7 @@
 
 - Install Ubuntu 22.04
 - Install fail2ban, `sudo apt install fail2ban`
-- Configure firewall
+- Configure the [firewall](Shore.firewall.md)
 - Setup [Public-Facing SSH access](Shore.SSH.md)
 - Install the weberver:
   - `sudo apt install nginx`

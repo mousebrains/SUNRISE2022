@@ -3,6 +3,10 @@
 - Install Ubuntu 22.04
 - Install fail2ban, `sudo apt install fail2ban`
 - Configure firewall
+- Setup [Public-Facing SSH access](Shore.SSH.md)
+- Install the weberver:
+  - `sudo apt install nginx`
+
 - Setup git defaults for dealing with submodule recurssion
   - `git config --global user.email "you@example.com"`
   - `git config --global user.name "Your Name"`
@@ -23,4 +27,3 @@
     - Add a **Shore** folder Sync/Shore send only
     - Add a **Pelican** folder Sync/Pelican receive only
     - Add a **PointSur** folder Sync/PointSur receive only
- -

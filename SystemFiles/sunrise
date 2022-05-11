@@ -32,7 +32,9 @@ server { #HTTPS
 	listen 443 ssl http2 default_server;
 	listen [::]:443 ssl http2 default_server;
 
-	include snippets/ssl.conf;
+	# The SSL key and signed certificate
+	ssl_certificate     /etc/nginx/certs/sunrise.cert;
+	ssl_certificate_key /etc/nginx/certs/sunrise.key;
 
 	#
 	# Note: You should disable gzip for SSL traffic.
@@ -53,6 +55,12 @@ server { #HTTPS
 	index index.php index.html index.htm index.nginx-debian.html;
 
 	server_name _;
+
+	 location /logs {
+ 		alias /home/pat/logs;
+ 		autoindex on;
+ 		try_files $uri $uri/ =404;
+ 	}
 
 	location / {
 		# First attempt to serve request as file, then

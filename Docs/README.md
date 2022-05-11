@@ -1,2 +1,2 @@
-[Shore side setup](Shore.setup.md)
-[Ship side setup](Ship.setup.md)
+- [Shore side setup](Shore.setup.md)
+- [Ship side setup](Ship.setup.md)

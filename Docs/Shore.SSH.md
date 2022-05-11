@@ -2,9 +2,9 @@
 
 [Instructions](https://oregonstate.teamdynamix.com/TDClient/1935/Portal/KB/ArticleDet?ID=122712)
 
-- Copy [osu_security.confg](../SystemFiles/osu_security.conf) to /etc/ssh/sshd_conf.d
-- Copy [motd](../SystemFiles/motd) to /etc/motd
-- Copy [banner.txt](../SystemFiles/banner.txt) to /etc/ssh
+- Copy [osu_security.confg](../SystemFiles/osu_security.conf) to */etc/ssh/sshd_conf.d* `sudo cp osu_security.conf /etc/ssh/sshd_conf.d`
+- Copy [banner.txt](../SystemFiles/banner.txt) to */etc/ssh* `sudo cp banner.txt /etc/ssh`
+- Copy [motd](../SystemFiles/motd) to */etc/motd* `sudo cp motd /etc`
 
 **SPLUNK** instructions from Tom
 Using the Splunk Universal Forwarder is the standard method to aggregate SSH logs to the University’s central log server. Each IT support group is responsible for assisting their users with installing this forwarder and configuring it correctly. Once the forwarder is correctly configured, IS Infrastructure must allow the connection through the firewall via ticket request. This request is submitted to IS Infrastructure automatically in conjunction with the registration form mentioned above if the option “Is the Splunk Forwarder Installed” is “Yes”. Otherwise, the server owner/you must update the registration ticket once the forwarder is installed – OIS will then submit the request to IS Infrastructure on your behalf.

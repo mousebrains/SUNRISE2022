@@ -5,5 +5,5 @@
 - Configure the [firewall](Shore.firewall.md)
 - Setup [Public-Facing SSH access](Shore.SSH.md)
 - Install the [web server](Shore.webserver.md)
-- Set up [git](Shore.git.md)
+- Set up [git](git.md)
 - Set up [syncthing](syncthing.md)

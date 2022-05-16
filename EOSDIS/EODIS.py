@@ -164,6 +164,7 @@ for name in [args.raw, args.pruned]:
         os.makedirs(name, mode=0o755, exist_ok=True)
         
 with requests.session() as session:
+    session.auth = (username, codigo)
     items = cmrInfo(session, info, args.cmr)
     if not items: sys.exit(1)
     logging.info("Fetched %s CMR items", len(items))

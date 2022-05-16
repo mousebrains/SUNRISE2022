@@ -7,3 +7,5 @@
 - Install the [web server](Shore.webserver.md)
 - Set up [git](git.md)
 - Set up [syncthing](syncthing.md)
+- Install Python modules
+  - `sudo apt install python3-xarray`

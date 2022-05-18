@@ -20,7 +20,7 @@ def loadCredentials(fn:str) -> tuple[str, str]:
     dirname = os.path.dirname(fn) 
     if not os.path.isdir(dirname):
         logging.info("Creating %s", dirname)
-        os.makedirs(dirname, mode=0o755, exist_ok=True)
+        os.makedirs(dirname, mode=0o700, exist_ok=True)
     username = input("Enter username for NASA EOSDIS login: ")
     codigo = input("Enter password for NASA EOSDIS login: ")
     logging.info("Saving credentils to %s", fn)

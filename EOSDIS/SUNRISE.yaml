@@ -1,6 +1,11 @@
 # SUNRISE 2022 satellite constraints
 
 # CMR search parameters
+# 
+# CMR search base URL
+
+cmrBaseURL: https://cmr.earthdata.nasa.gov/search
+
 # These can be either scalars or lists
 collection_data_type:
   - NEAR_REAL_TIME # near real time data

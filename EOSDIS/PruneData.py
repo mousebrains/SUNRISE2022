@@ -16,6 +16,18 @@ import sys
 import logging
 
 def pruneData(info:dict, fn:str, dirname:str) -> str:
+    if not os.path.isfile(fn):
+        raise Exception(f"{fn} s does not exist")
+
+    basename = os.path.basename(fn)
+    ofn = os.path.join(dirname, basename)
+
+    if os.path.isfile(ofn) and (os.path.getmtime(fn) < os.path.getmtime(ofn)):
+        logging.info("No need to prune %s", ofn)
+        return ofn
+
+    logging.info("Pruning %s -> %s", fn, ofn)
+
     for key in ["latMin", "latMax", "lonMin", "lonMax"]:
         if key not in info:
             logging.error("%s not in info", key)
@@ -31,9 +43,6 @@ def pruneData(info:dict, fn:str, dirname:str) -> str:
     else:
         geoNames = ["sst", "sst4", "chlor_a", "chl_ocx", "nflh", "sst_triple"]
 
-    basename = os.path.basename(fn)
-    ofn = os.path.join(dirname, basename)
-    logging.info("Pruning %s -> %s", fn, ofn)
     with \
             xr.open_dataset(fn) as todo, \
             xr.open_dataset(fn, group="geophysical_data") as geo, \

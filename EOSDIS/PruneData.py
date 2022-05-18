@@ -15,14 +15,14 @@ import os
 import sys
 import logging
 
-def pruneData(info:dict, fn:str, dirname:str) -> str:
+def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
     if not os.path.isfile(fn):
         raise Exception(f"{fn} s does not exist")
 
     basename = os.path.basename(fn)
     ofn = os.path.join(dirname, basename)
 
-    if os.path.isfile(ofn) and (os.path.getmtime(fn) < os.path.getmtime(ofn)):
+    if not force and os.path.isfile(ofn) and (os.path.getmtime(fn) < os.path.getmtime(ofn)):
         logging.info("No need to prune %s", ofn)
         return ofn
 
@@ -88,6 +88,7 @@ def pruneData(info:dict, fn:str, dirname:str) -> str:
             attrs={"filename":fn},
             )
         ods = ods.assign(geoItems)
+        ods = ods.assign_attrs(todo.attrs)
         ods.to_netcdf(ofn, encoding=enc)
         return ofn
 
@@ -95,6 +96,7 @@ def pruneData(info:dict, fn:str, dirname:str) -> str:
 if __name__ == "__main__":
     from argparse import ArgumentParser
     parser = ArgumentParser()
+    parser.add_argument("--force", action="store_true", help="Force pruning")
     parser.add_argument("--yaml", type=str, default="SUNRISE.yaml", help="YAML configuration file")
     parser.add_argument("--pruned", type=str, default="data/Pruned", help="Where to store pruned data")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose messages")
@@ -112,4 +114,4 @@ if __name__ == "__main__":
         os.makedirs(args.pruned, mode=0o755, exist_ok=True)
         
     for fn in args.raw:
-        pruneData(info, fn, args.pruned)
+        pruneData(info, fn, args.pruned, args.force)

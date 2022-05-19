@@ -20,7 +20,7 @@ Type=oneshot
 User=pat
 WorkingDirectory=/home/pat/SUNRISE2022/EOSDIS
 #
-ExecStart=/home/pat/SUNRISE2022/EOSDIS/fetcher.py \
+ExecStart=/home/pat/SUNRISE2022/EOSDIS/EOSDIS.py \
 	--logfile=/home/pat/logs/EOSDIS.log \
 	--mailTo="pat@mousebrains.com" \
 	--mailSubject="EOSDIS Fetcher" \

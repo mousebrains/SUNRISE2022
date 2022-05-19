@@ -12,15 +12,23 @@ collection_data_type:
 
 provider:  # Which data providers to look for data from
   - OB_DAAC # Ocean Biology Distributed Active Archive Center
+
 processing_level_id: # Which data processing level to look for 
   - 2 # Level 2 data
     # - 3 # Level 3 data
+    
 instrument: # Which satellites to look for data from 
   - MODIS
   - VIIRS 
 
 # Regular expression on shortname, I couldn't figure out how to make ScienceKeyword filtering work
-regexp: (Ocean Color|Chlorophyll|Sea Surface Temperature|Fluorescence|Plankton)
+# regexp: (Ocean Color|Chlorophyll|Sea Surface Temperature|Fluorescence|Plankton)
+
+# There appears to be a problem getting the VIIRS ocean color URLs, but I can get
+# the VIIRS IOP files, so duplicate the IOP entries, replacing IOP with OC
+regDup: [
+  [ '(https://.*/V\d*.*_JPSS1_)IOP[.]nc', 'OC.nc' ]
+]
 
 # geophysical_data variables to save
 geoNames:
@@ -30,6 +38,7 @@ geoNames:
   - chlor_a
   - chl_ocx
   - nflh
+  - aph_443_giop # Plankton absorption
 
 # Granuale search parameters, bounding box and temporal
 

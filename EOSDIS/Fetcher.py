@@ -15,7 +15,7 @@ def fetchRaw(session:requests.Session, url:str, tModified:datetime.datetime, dir
     basename = os.path.basename(requests.utils.urlparse(url).path)
     ofn = os.path.abspath(os.path.expanduser(os.path.join(dirname, basename)))
 
-    if os.path.isfile(ofn) and (os.path.getmtime(ofn) < tModified.timestamp()):
+    if os.path.isfile(ofn) and (os.path.getmtime(ofn) < tModified):
         logging.info("No need to fetch %s", ofn)
         return ofn
 

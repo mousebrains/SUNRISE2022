@@ -17,8 +17,7 @@ from LoadYAML import loadYAML
 from Credentials import loadCredentials
 from SessionWithHeaderRedirection import Session
 import requests
-from Collections import cmrInfo,fetchPages
-from Granules import cmrGranules
+from Collections import collections,granules,duplicateURL
 from Fetcher import fetchRaw
 import json
 import logging
@@ -49,15 +48,17 @@ for name in [args.raw, args.pruned]:
 logging.info("Username %s codigo %s", username, codigo)
 
 with requests.Session() as s: # For CMR and Granules, no authorizaton needed
-    items = cmrInfo(s, info)
+    items = collections(s, info)
     if not items: 
         logger.warning("No CMR items found")
         sys.exit(1)
     logger.info("Fetched %s CMR items", len(items))
-    urls = cmrGranules(s, info, items)
+    urls = granules(s, info, items)
     if not urls: 
         logger.warning("No URLs found to fetch")
         sys.exit(1)
+    if "regDup" in info: # Duplicate some entries with substitution, VIIRS Ocean Color case
+        urls.update(duplicateURL(urls, info["regDup"]))
 
 logger.info("Found %s URLs to fetch", len(urls))
 

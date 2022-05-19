@@ -1,0 +1,29 @@
+#
+# Download NASA satellite data
+#
+# N.B. This has two components, EOSDIS.service and EOSDIS.timer
+#
+# sudo cp EOSDIS.* /etc/systemd/system/
+#
+# sudo systemctl daemon-reload
+# sudo systemctl enable EOSDIS.timer EOSDIS.service
+# sudo systemctl start EOSDIS.timer
+#
+# To view the timers:
+# 
+# sudo systemctl list-timers EOSDIS
+# 
+# May-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=Download EOSDIS data from NASA
+
+[Timer]
+# dayOfWeek Year-Month-Day Hour:Minute:Second
+# The data appears to be updated by 0700UTC
+OnCalendar=*-*-* 7:00:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+

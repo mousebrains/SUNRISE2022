@@ -1,0 +1,31 @@
+#
+# Fetch EOSDIS data from NASA
+#
+# N.B. This has two components, EOSDIS.service and EOSDIS.timer
+#
+# sudo cp EOSDIS.* /etc/systemd/system/
+#
+# sudo systemctl daemon-reload
+# sudo systemctl enable EOSDIS.timer EOSDIS.service
+# sudo systemctl start EOSDIS.timer
+#
+# Feb-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=Download EOSDIS data from NASA
+
+[Service]
+# Launced by timer
+Type=oneshot
+User=pat
+WorkingDirectory=/home/pat/SUNRISE2022/EOSDIS
+#
+ExecStart=/home/pat/SUNRISE2022/EOSDIS/fetcher.py \
+	--logfile=/home/pat/logs/EOSDIS.log \
+	--mailTo="pat@mousebrains.com" \
+	--mailSubject="EOSDIS Fetcher" \
+	--verbose
+        
+[Install]
+WantedBy=multi-user.target
+

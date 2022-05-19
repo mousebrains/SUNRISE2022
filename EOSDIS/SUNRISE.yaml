@@ -38,7 +38,8 @@ geoNames:
   - chlor_a
   - chl_ocx
   - nflh
-  - aph_443_giop # Plankton absorption
+  - aph_443_giop # MODIS Phytoplankton absorption
+  - aph_445_giop # VIIRS Phytoplankton absorption
 
 # Granuale search parameters, bounding box and temporal
 

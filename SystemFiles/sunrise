@@ -49,7 +49,7 @@ server { #HTTPS
 	# include snippets/snakeoil.conf;
 
 	# root /var/www/html;
-	root /home/pat/public_html;
+	root /home/pat/SUNRISE2022/public_html;
 
 	# Add index.php to the list if you are using PHP
 	index index.php index.html index.htm index.nginx-debian.html;

@@ -21,6 +21,7 @@ User=pat
 WorkingDirectory=/home/pat/SUNRISE2022/EOSDIS
 #
 ExecStart=/home/pat/SUNRISE2022/EOSDIS/EOSDIS.py \
+	--pruned=/home/pat/Sync/Shore/EOSDIS/Pruned \
 	--logfile=/home/pat/logs/EOSDIS.log \
 	--mailTo="pat@mousebrains.com" \
 	--mailSubject="EOSDIS Fetcher" \

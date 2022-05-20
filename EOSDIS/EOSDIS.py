@@ -45,7 +45,6 @@ for name in [args.raw, args.pruned]:
         os.makedirs(name, mode=0o755, exist_ok=True)
         
 (username, codigo) = loadCredentials(args.credentials)
-logging.info("Username %s codigo %s", username, codigo)
 
 with requests.Session() as s: # For CMR and Granules, no authorizaton needed
     items = collections(s, info)

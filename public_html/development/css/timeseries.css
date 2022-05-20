@@ -1,0 +1,103 @@
+body {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#timeseries-container {
+  height: inherit;
+  display: flex;
+  max-width: 100%;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  padding: 0;
+  margin: 0;
+}
+
+#timeseries-plot {
+  flex-grow: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 2px;
+}
+
+#sidebar-toggle-button {
+  height: 100%;
+  width: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#sidebar {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-items: flex-start;
+  overflow-y: scroll;
+}
+
+#sidebar h1 {
+  padding: 10px;
+  margin: 0;
+}
+
+#switch-axes {
+  margin: 10px 0;
+}
+
+#sidebar h2 {
+  padding: 0px 10px 10px;
+  margin: 0;
+  font-size: 1.25em;
+}
+
+.vertical-toggle-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#timeseries-set-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.label-select {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  column-gap: 10px;
+  row-gap: 2px;
+  padding: 10px;
+}
+
+.action-button {
+  padding: 10px;
+  font-weight: bold;
+}
+
+#preferences-container {
+  padding: 10px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+}
+/*
+#timeseries-retreive-data label {
+
+}
+*/
+
+#timeseries-customise {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}

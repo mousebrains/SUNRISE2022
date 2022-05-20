@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>Timeseries</title>
+  <!-- <base href="C:\Users\hildi\Documents\Stanford\Research\Sunrise\SUNRISE-realtime-plotting/"> -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/timeseries.css">
+	<script src="src/js/plotly-2.2.0.min.js"></script>
+</head>
+<body>
+  <div id="timeseries-container" class="fullscreen-container">
+    <div id="timeseries-plot" class="plotting_window"></div>
+
+    <button id="sidebar-toggle-button" onclick="toggleSidebar()">
+      &rsaquo;
+    </button>
+
+    <div id="sidebar">
+      <h1>SUNRISE Timeseries</h1>
+
+      <button id="set-data-toggle" onclick="toggleVerticalCollapsable(this,'timeseries-set-data','flex')" class="vertical-toggle-button">
+        <strong>Set Data</strong>
+        <span class="vertical-toggle-arrow">&#65087;</span>
+      </button>
+      <div id="timeseries-set-data">
+        <div id="timeseries-set-data-label-select" class="label-select">
+          <label for="independent-variable">Independent Variable:</label>
+          <select name="independent-variable" id="independent-variable-select" class="data-selector" class="common-options">
+            <option value="None">None</option>
+            <!-- Dynamically add common options with js -->
+          </select>
+          <label for="dependent-variable-1">Data 1:</label>
+          <select name="dependent-variable-1" id="dependent-variable-1-select" class="data-selector">
+            <option value="None">None</option>
+            <optgroup label="Pelican" class="Pelican-options">
+              <!-- Dynamically add Pelican options with js -->
+            </optgroup>
+            <optgroup label="Point Sur" class="PointSur-options">
+              <!-- Dynamically add Point Sur options with js -->
+            </optgroup>
+          </select>
+          <label for="dependent-variable-2">Data 2:</label>
+          <select name="dependent-variable-2" id="dependent-variable-2-select" class="data-selector">
+            <option value="None">None</option>
+            <optgroup label="Pelican" class="Pelican-options">
+              <!-- Dynamically add Pelican options with js -->
+            </optgroup>
+            <optgroup label="Point Sur" class="PointSur-options">
+              <!-- Dynamically add Point Sur options with js -->
+            </optgroup>
+          </select>
+          <label for="dependent-variable-3">Data 3:</label>
+          <select name="dependent-variable-3" id="dependent-variable-3-select" class="data-selector">
+            <option value="None">None</option>
+            <optgroup label="Pelican" class="Pelican-options">
+              <!-- Dynamically add Pelican options with js -->
+            </optgroup>
+            <optgroup label="Point Sur" class="PointSur-options">
+              <!-- Dynamically add Point Sur options with js -->
+            </optgroup>
+          </select>
+          <label for="dependent-variable-4">Data 4:</label>
+          <select name="dependent-variable-4" id="dependent-variable-4-select" class="data-selector">
+            <option value="None">None</option>
+            <optgroup label="Pelican" class="Pelican-options">
+              <!-- Dynamically add Pelican options with js -->
+            </optgroup>
+            <optgroup label="Point Sur" class="PointSur-options">
+              <!-- Dynamically add Point Sur options with js -->
+            </optgroup>
+          </select>
+          <label for="start-time">Start time (UTC):</label>
+          <input type="datetime-local" id="start-time" name="start-time">
+          <label for="end-time">End time (UTC):</label>
+          <input type="datetime-local" id="end-time" name="end-time">
+        </div>
+
+        <button id="load-data-button" onclick="loadData()" class="action-button">
+          Load Data
+        </button>
+      </div>
+
+      <button id="switch-axes" onclick="switchAxes()" class="action-button">
+        <strong>Switch Axes</strong>
+      </button>
+
+      <h2>Modify Plot</h2>
+
+      <div id="timeseries-customise" class="customise">
+
+        <button id="figure-toggle" onclick="toggleVerticalCollapsable(this,'figure-settings','grid')" class="vertical-toggle-button">
+          <strong>Figure</strong>
+          <span class="vertical-toggle-arrow">&#65088;</span>
+        </button>
+        <div id="figure-settings" class="label-select" style="display: none">
+          <label for="figure-background-colour">Background Colour:</label>
+          <input type="color" id="figure-background-colour" name=figure-background-colour value="#dfdfdf">
+          <label for="figure-independent-axis-grid">Indep. Grid Lines:</label>
+          <input type="checkbox" id="figure-independent-axis-grid" name="figure-independent-axis-grid" checked>
+          <label for="figure-independent-axis-reversed">Reverse Indep. Axis:</label>
+          <input type="checkbox" id="figure-independent-axis-reversed" name="figure-independent-axis-reversed">
+        </div>
+
+        <button id="data-1-toggle" onclick="toggleVerticalCollapsable(this,'data-1-settings','grid')" class="vertical-toggle-button">
+          <strong>Data 1</strong>
+          <span class="vertical-toggle-arrow">&#65088;</span>
+        </button>
+        <div id="data-1-settings" class="label-select" style="display: none">
+          <label for="data-1-colour">Colour:</label>
+          <input type="color" id="data-1-colour" name="data-1-colour" value="#0000ff">
+          <label for="data-1-grid">Grid Lines:</label>
+          <input type="checkbox" id="data-1-grid" name="data-1-grid" checked>
+          <label for="data-1-reversed">Reverse Axis:</label>
+          <input type="checkbox" id="data-1-reversed" name="data-1-reversed">
+        </div>
+        <button id="data-2-toggle" onclick="toggleVerticalCollapsable(this,'data-2-settings','grid')" class="vertical-toggle-button">
+          <strong>Data 2</strong>
+          <span class="vertical-toggle-arrow">&#65088;</span>
+        </button>
+        <div id="data-2-settings" class="label-select" style="display: none">
+          <label for="data-2-colour">Colour:</label>
+          <input type="color" id="data-2-colour" name="data-2-colour" value="#ff0000">
+          <label for="data-2-grid">Grid Lines:</label>
+          <input type="checkbox" id="data-2-grid" name="data-2-grid">
+          <label for="data-2-reversed">Reverse Axis:</label>
+          <input type="checkbox" id="data-2-reversed" name="data-2-reversed">
+        </div>
+        <button id="data-3-toggle" onclick="toggleVerticalCollapsable(this,'data-3-settings','grid')" class="vertical-toggle-button">
+          <strong>Data 3</strong>
+          <span class="vertical-toggle-arrow">&#65088;</span>
+        </button>
+        <div id="data-3-settings" class="label-select" style="display: none">
+          <label for="data-3-colour">Colour:</label>
+          <input type="color" id="data-3-colour" name="data-3-colour" value="#007f00">
+          <label for="data-3-grid">Grid Lines:</label>
+          <input type="checkbox" id="data-3-grid" name="data-3-grid">
+          <label for="data-3-reversed">Reverse Axis:</label>
+          <input type="checkbox" id="data-3-reversed" name="data-3-reversed">
+        </div>
+        <button id="data-4-toggle" onclick="toggleVerticalCollapsable(this,'data-4-settings','grid')" class="vertical-toggle-button">
+          <strong>Data 4</strong>
+          <span class="vertical-toggle-arrow">&#65088;</span>
+        </button>
+        <div id="data-4-settings" class="label-select" style="display: none">
+          <label for="data-4-colour">Colour:</label>
+          <input type="color" id="data-4-colour" name="data-4-colour" value="#ff3fcf">
+          <label for="data-4-grid">Grid Lines:</label>
+          <input type="checkbox" id="data-4-grid" name="data-4-grid">
+          <label for="data-4-reversed">Reverse Axis:</label>
+          <input type="checkbox" id="data-4-reversed" name="data-4-reversed">
+        </div>
+      </div>
+
+      <button id="apply-changes-button" onclick="applyChanges()" class="action-button">
+        Apply Changes
+      </button>
+
+      <div id="preferences-container">
+        <button id="save-preferences-button" onclick="savePreferences()" class="action-button" class="half-width">
+          Save Preferences
+        </button>
+        <button id="clear-preferences-button" onclick="clearPreferences()" class="action-button" class="half-width">
+          Clear Preferences
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/toggle_collapsables.js"></script>
+  <script src="js/timeseries.js"></script>
+  <script src="js/timeseries_load_data.js"></script>
+</body>

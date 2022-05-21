@@ -2,7 +2,7 @@
 
 - Install syncthing using [instructions](https://www.linuxfordevices.com/tutorials/ubuntu/syncthing-install-and-setup)
   - `echo "deb https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list`
-  - `curl -s https://syncthing.net/release-key.txt | sudo apt-key add -`
+  - `curl -s https://syncthing.net/release-key.txt | sudo tee /etc/apt/trusted.gpg.d/syncthing.asc`
   - `sudo apt update`
   - `sudo apt install syncthing`
   - `sudo systemctl enable syncthing@pat.service`

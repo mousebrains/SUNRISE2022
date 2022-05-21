@@ -14,7 +14,8 @@ function loadData () {
     setLabels(independent_axis_x,
               independent_label,
               datasets.map(ds => ds.name))
-  });
+  })
+  .catch(error => console.log(error))
 };
 
 //  .catch(error => window.alert("Loading Data Failed"));
@@ -45,6 +46,7 @@ function updateDatasets(passData,data) {
 async function requestData (passData) {
   const response = await fetch('./php/load_timeseries_data.php', {
     method: 'POST',
+    mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -52,7 +54,7 @@ async function requestData (passData) {
     body: JSON.stringify(passData)
   });
   // return response.json();
-  console.log(response.json())
+  console.log(response)
   return generateData(passData)
 }
 

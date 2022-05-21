@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 $input = file_get_contents('php://input');
 
 // decode the passed data
-$passData = json_decode($input);
+$passData = json_decode($input,true);
 
 // define an output
 $output = array(

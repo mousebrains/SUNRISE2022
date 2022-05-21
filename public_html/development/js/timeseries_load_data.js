@@ -54,7 +54,8 @@ async function requestData (passData) {
     body: JSON.stringify(passData)
   });
   // return response.json();
-  console.log(response)
+  let data = await response.json();
+  console.log(data);
   return generateData(passData)
 }
 

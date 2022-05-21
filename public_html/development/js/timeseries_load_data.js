@@ -6,7 +6,7 @@ function loadData () {
   // copy values of set_data_values and set_time_values into a single object
   // this also guards against changes in their value - I think
   const passData = Object.assign({},set_data_values,set_time_values);
-  dummyData(passData)
+  requestData(passData)
   .then(data => updateDatasets(passData,data))
   .then(() => replotData())
   .then(() => {
@@ -42,21 +42,27 @@ function updateDatasets(passData,data) {
 };
 
 
-// async function requestData (passData) {
-//   const response = await fetch('./php/load_timeseries_data.php', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'Accept': 'application/json',
-//     },
-//     body: JSON.stringify(passData)
-//   });
-//   return response.json();
-// }
+async function requestData (passData) {
+  const response = await fetch('./php/load_timeseries_data.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify(passData)
+  });
+  // return response.json();
+  console.log(response.json())
+  return generateData(passData)
+}
 
 async function dummyData (passData) {
-  await new Promise(r => setTimeout(r, 2000));
-  data = {"Pelican_independent_values":["2020-06-25 17:00","2020-06-25 17:01","2020-06-25 17:02","2020-06-25 17:03","2020-06-25 17:04","2020-06-25 17:05","2020-06-25 17:06","2020-06-25 17:07","2020-06-25 17:08"],
+  await new Promise(r => setTimeout(r, 1000));
+  return generateData(passData)
+}
+
+function generateData(passData) {
+  var data = {"Pelican_independent_values":["2020-06-25 17:00","2020-06-25 17:01","2020-06-25 17:02","2020-06-25 17:03","2020-06-25 17:04","2020-06-25 17:05","2020-06-25 17:06","2020-06-25 17:07","2020-06-25 17:08"],
           "PointSur_independent_values":["2020-06-25 17:06","2020-06-25 17:07","2020-06-25 17:08","2020-06-25 17:09","2020-06-25 17:10","2020-06-25 17:11"]}
   switch (passData.data_1.substring(0,2)) {
     case 'PE':

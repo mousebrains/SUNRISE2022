@@ -6,4 +6,4 @@
   - `git config --global diff.submodule log`
   - `git config --global status.submodulesummary 1`
   - `git config --global push.recurseSubmodules on-demand`
-- Clone this repository, `git --recurse-submodules clone git@github.com:mousebrains/SUNRISE2022.git`
+- Clone this repository, `git clone --recurse-submodules git@github.com:mousebrains/SUNRISE2022.git`

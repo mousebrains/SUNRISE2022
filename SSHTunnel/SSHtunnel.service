@@ -1,0 +1,31 @@
+#
+# SSHtunnel service file
+# Set up a service which maintains a SSH tunnel to a host
+# that can be backtracked
+#
+# Feb-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=SSHtunnel
+
+[Service]
+# type=simple
+User=pat
+Group=pat
+
+WorkingDirectory=/home/pat/SUNRISE2022/SSHTunnel
+
+ExecStart= \
+	./tunnel \
+	--verbose \
+	--logfile=/home/pat/logs/SSHTunnel.log \
+	--host=sunrise.ceoas.oregonstate.edu \
+
+Restart=on-succes
+RestartSec=120
+
+# Harden
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

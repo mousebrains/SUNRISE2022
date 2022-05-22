@@ -29,7 +29,13 @@ parser.add_argument("--systemctl", type=str, default="/usr/bin/systemctl",
 parser.add_argument("--cp", type=str, default="/usr/bin/cp", help="cp executable")
 parser.add_argument("--chmod", type=str, default="/usr/bin/chmod", help="chmod executable")
 parser.add_argument("--sudo", type=str, default="/usr/bin/sudo", help="sudo executable")
+parser.add_argument("--logdir", type=str, default="~/logs", help="Where logfiles are stored")
 args = parser.parse_args()
+
+args.logdir = os.path.abspath(os.path.expanduser(args.logdir))
+if not os.path.isdir(args.logdir):
+    print("Creating", args.logdir)
+    os.makedirs(args.logdir, mode=0o755, exist_ok=True)
 
 ifn = os.path.abspath(os.path.expanduser(args.service + ".service"))
 if not os.path.isfile(ifn):

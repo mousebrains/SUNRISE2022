@@ -8,7 +8,6 @@ from argparse import ArgumentParser
 import subprocess
 from tempfile import NamedTemporaryFile
 import os
-import sys
 
 parser = ArgumentParser()
 parser.add_argument("--service", type=str, default="EOSDIS.service", help="Service file")
@@ -21,7 +20,13 @@ parser.add_argument("--cp", type=str, default="/usr/bin/cp",
         help="cp executable")
 parser.add_argument("--sudo", type=str, default="/usr/bin/sudo",
         help="sudo executable")
+parser.add_argument("--logdir", type=str, default="~/logs", help="Where logfiles are stored")
 args = parser.parse_args()
+
+args.logdir = os.path.abspath(os.path.expanduser(args.logdir))
+if not os.path.isdir(args.logdir):
+    print("Creating", args.logdir)
+    os.makedirs(args.logdir, mode=0o755, exist_ok=True)
 
 root = os.path.abspath(os.path.expanduser(args.serviceDirectory))
 

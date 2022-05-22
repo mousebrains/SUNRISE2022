@@ -85,7 +85,7 @@ print(f"Starting {args.timer}")
 subprocess.run((args.systemctl, "--user", "start", args.timer),
         shell=False, check=True)
 
-printf("Enable lingering")
+print("Enable lingering")
 subprocess.run((args.loginctl, "enable-linger"), shell=False, check=True)
 
 print(f"Status {args.service} and {args.timer}")

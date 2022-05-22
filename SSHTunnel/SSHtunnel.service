@@ -10,15 +10,15 @@ Description=SSHtunnel
 
 [Service]
 # type=simple
-User=pat
-Group=pat
+# 
+# This is run via the --user command, so it will run as User/Group
 
-WorkingDirectory=/home/pat/SUNRISE2022/SSHTunnel
+WorkingDirectory=%h/SUNRISE2022/SSHTunnel
 
 ExecStart= \
-	/home/pat/SUNRISE2022/SSHTunnel/tunnel.py \
+	%h/SUNRISE2022/SSHTunnel/tunnel.py \
 	--verbose \
-	--logfile=/home/pat/logs/SSHTunnel.log \
+	--logfile=%h/logs/SSHTunnel.log \
 	--host=sunrise.ceoas.oregonstate.edu
 
 Restart=on-succes

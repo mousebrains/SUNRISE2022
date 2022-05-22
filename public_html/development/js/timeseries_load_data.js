@@ -1,11 +1,22 @@
+// define some constants
+const MAX_NUMBER_DATAPOINTS = 10000; // maximum number of datapoints that can be loaded
+const CRUISE_START_TIME = new Date("2020-06-25 17:00"); // cannot load data from before the start of the cruise
 
 // function called when "Load Data Clicked"
 function loadData () {
+  // get values from the UI
   updateSetData()
   updateSetTime()
   // copy values of set_data_values and set_time_values into a single object
-  // this also guards against changes in their value - I think
+  // this also guards against changes in their value
   const passData = Object.assign({},set_data_values,set_time_values);
+  // check the independent variable is set
+  if (passData.independent_variable == 'None') {window.alert("Independent variable required"); return};
+  // check the number of datapoints requested is valid
+  let Ndatapoints = computeNumberDatapoints(passData);
+  if (!validateNumberDatapoints(Ndatapoints)) {return};
+
+  // request the data and modify plot
   requestData(passData)
   .then(data => updateDatasets(passData,data))
   .then(() => replotData())
@@ -62,6 +73,57 @@ async function requestData (passData) {
 async function dummyData (passData) {
   await new Promise(r => setTimeout(r, 1000));
   return generateData(passData)
+}
+
+function computeNumberDatapoints(passData) {
+  // compute how many datapoints have been requested
+  // this will return a negative number if start_time is after end_time
+  // first determine how many variables we are loading
+  var include_Pelican_independent = false;
+  var include_PointSur_independent = false;
+  var number_of_variables = 0;
+  let data_variables = [passData.data_1,passData.data_2,passData.data_3,passData.data_4];
+  data_variables.forEach((variable) => {
+    switch (variable.substring(0,2)) {
+      case 'PE':
+        number_of_variables++;
+        include_Pelican_independent = true;
+        break;
+      case 'PS':
+        number_of_variables++;
+        include_PointSur_independent = true;
+        break;
+    }
+  });
+  number_of_variables += include_Pelican_independent + include_PointSur_independent;
+  console.log("number_of_variables = " + number_of_variables)
+
+  //now determine the time span
+  var start_time = parseDateString(passData.start_time);
+  start_time = start_time > CRUISE_START_TIME ? start_time : CRUISE_START_TIME;
+  var end_time = parseDateString(passData.end_time);
+  let now = new Date();
+  end_time = end_time < now ? end_time : now;
+  let timespan = end_time - start_time; // in milliseconds
+
+  // get number of datapoints at 1 per minute
+  let number_of_datapoints = number_of_variables*parseInt(timespan/60000)
+
+  return number_of_datapoints
+}
+
+function validateNumberDatapoints(Ndatapoints) {
+  if (Ndatapoints < 0) {window.alert("Start time before end time"); return false};
+  if (Ndatapoints == 0) {
+    window.alert("No data requested");
+    return false
+  }
+  if (Ndatapoints > MAX_NUMBER_DATAPOINTS) {
+    window.alert(Ndatapoints + " datapoints requested\n" +
+                "Maximum is " + MAX_NUMBER_DATAPOINTS);
+    return false
+  }
+  return true
 }
 
 function generateData(passData) {

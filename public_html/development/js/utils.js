@@ -3,6 +3,11 @@ function datetime2str(dt) {
 	return (parts[0]+':'+parts[1])
 };
 
+function parseDateString(ds) {
+	// all datestrings are UTC with form YYYY-MM-DDTHH:mm
+	return new Date(ds+':00+00:00')
+};
+
 function hex2plotlyRGB(hex) {
 	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	var r = parseInt(result[1], 16);

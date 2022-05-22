@@ -16,10 +16,10 @@ Group=pat
 WorkingDirectory=/home/pat/SUNRISE2022/SSHTunnel
 
 ExecStart= \
-	./tunnel \
+	/home/pat/SUNRISE2022/SSHTunnel/tunnel.py \
 	--verbose \
 	--logfile=/home/pat/logs/SSHTunnel.log \
-	--host=sunrise.ceoas.oregonstate.edu \
+	--host=sunrise.ceoas.oregonstate.edu
 
 Restart=on-succes
 RestartSec=120

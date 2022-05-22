@@ -49,6 +49,9 @@ parser.add_argument("--serviceDirectory", type=str, default="~/.config/systemd/u
         help="Where to copy service and timer files to")
 parser.add_argument("--systemctl", type=str, default="/usr/bin/systemctl",
         help="systemctl executable")
+parser.add_argument("--loginctl", type=str, default="/usr/bin/loginctl",
+        help="loginctl executable")
+
 parser.add_argument("--logdir", type=str, default="~/logs", help="Where logfiles are stored")
 args = parser.parse_args()
 
@@ -77,6 +80,13 @@ subprocess.run((args.systemctl, "--user", "enable", args.timer),
 print(f"Starting {args.timer}")
 subprocess.run((args.systemctl, "--user", "start", args.timer),
         shell=False, check=True)
+
+print(f"Starting {args.timer}")
+subprocess.run((args.systemctl, "--user", "start", args.timer),
+        shell=False, check=True)
+
+printf("Enable lingering")
+subprocess.run((args.loginctl, "enable-linger"), shell=False, check=True)
 
 print(f"Status {args.service} and {args.timer}")
 s = subprocess.run((args.systemctl, "--user", "--no-pager", "status", 

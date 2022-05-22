@@ -21,11 +21,11 @@ ExecStart= \
 	--logfile=%h/logs/SSHTunnel.log \
 	--host=sunrise.ceoas.oregonstate.edu
 
-Restart=on-succes
+Restart=on-success
 RestartSec=120
 
 # Harden
 NoNewPrivileges=true
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target

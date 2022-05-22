@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 #
-# Install the SSHTunnel service
+# Install the SSHtunnel service
 #
 # Feb-2022, Pat Welch, pat@mousebrains.com
 
@@ -43,11 +43,13 @@ def maybeCopy(src:str, tgt:str) -> bool:
 
 parser = ArgumentParser()
 parser.add_argument("--force", action="store_true", help="Force reloading ...")
-parser.add_argument("--service", type=str, default="EOSDIS.service", help="Service file")
+parser.add_argument("--service", type=str, default="SSHtunnel.service", help="Service file")
 parser.add_argument("--serviceDirectory", type=str, default="~/.config/systemd/user",
         help="Where to copy service file to")
 parser.add_argument("--systemctl", type=str, default="/usr/bin/systemctl",
         help="systemctl executable")
+parser.add_argument("--loginctl", type=str, default="/usr/bin/loginctl",
+        help="loginctl executable")
 parser.add_argument("--logdir", type=str, default="~/logs", help="Where logfiles are stored")
 args = parser.parse_args()
 
@@ -71,6 +73,9 @@ subprocess.run((args.systemctl, "--user", "enable", args.service),
 print(f"Starting {args.service}")
 subprocess.run((args.systemctl, "--user", "start", args.service),
         shell=False, check=True)
+
+print("Enable lingering")
+subprocess.run((args.loginctl, "enable-linger"), shell=False, check=True)
 
 print(f"Status {args.service}")
 s = subprocess.run((args.systemctl, "--user", "--no-pager", "status", args.service),

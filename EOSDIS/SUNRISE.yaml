@@ -33,8 +33,12 @@ regDup: [
 # geophysical_data variables to save
 geoNames:
   - sst
+  - qual_sst
   - sst4
+  - qual_sst4
   - sst_triple
+  - qual_sst_triple
+  - l2_flags
   - chlor_a
   - chl_ocx
   - nflh

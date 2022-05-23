@@ -1,0 +1,26 @@
+#
+# Faux MET data generation
+#
+# May-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=Faux Point Sur
+
+[Service]
+# type=simple
+# 
+# This is run via the --user command, so it will run as User/Group
+
+WorkingDirectory=%h/SUNRISE2022/Faux
+
+ExecStart= \
+	%h/SUNRISE2022/Faux/met.py \
+	--verbose \
+	--logfile=%h/logs/met.ps.log \
+	--output=%s/sync/%H/met.ps.csv \
+	--yaml=%h/SUNRISE2022/Faux/ps.yaml
+
+RestartSec=30
+
+[Install]
+WantedBy=default.target

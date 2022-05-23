@@ -26,7 +26,6 @@ def loadYAML(fn:str) -> list:
     if hostname not in info:
         logger.error("Hostname, %s, not in information from %s", hostname, fn)
         sys.exit(1)
-    logger.info("Hostname %s", hostname)
     items = []
     for i in range(len(info[hostname])):
         item = info[hostname][i]
@@ -76,8 +75,8 @@ cmd.extend(info)
 
 cmd.append(args.host)
 
-logger.info("Command: %s", " ".join(cmd))
 try:
+    logger.info("Command: %s", " ".join(cmd))
     s = subprocess.run(cmd, capture_output=True, shell=False)
     logger.warning("\n%s", s)
 except:

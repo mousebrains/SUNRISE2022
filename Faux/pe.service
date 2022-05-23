@@ -17,7 +17,7 @@ ExecStart= \
 	%h/SUNRISE2022/Faux/met.py \
 	--verbose \
 	--logfile=%h/logs/met.pe.log \
-	--output=%h/Sync/Shore/met.pe.csv \
+	--output=%h/Sync/Probar/met.pe.csv \
 	--yaml=%h/SUNRISE2022/Faux/pe.yaml
 
 RestartSec=30

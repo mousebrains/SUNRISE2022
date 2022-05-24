@@ -4,3 +4,4 @@
 - Set up [git](git.md)
 - Install the [web server](Ship.webserver.md)
 - Set up [syncthing](syncthing.md)
+- Install Python [packages](python.packages.md)

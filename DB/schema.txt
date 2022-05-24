@@ -1,0 +1,27 @@
+/* Schema for SUNRISE 2022's PostgreSQL database tables */
+
+-- MET data from all the vessels
+DROP TABLE IF EXISTS MET;
+
+CREATE TABLE IF NOT EXISTS MET ( -- MET data
+  ship CHARACTER(2), -- Name of ship the data is from
+  t TIMESTAMP WITH TIME ZONE NOT NULL, -- Time stamp of the observation in UTC
+  latitude REAL NOT NULL, -- Latitude of the observation
+  longitude REAL NOT NULL, -- Longitude of the observation
+  salinity REAL NULL, --  salinity in PSU of the observation
+  temperature REAL NULL, --  temperationr in degrees C of the observation
+  PRIMARY KEY(ship, t),
+  CHECK (latitude  BETWEEN  -90 AND  90), 
+  CHECK (longitude BETWEEN -180 AND 180), 
+  CHECK (salinity  BETWEEN 20 AND 40),
+  CHECK (temperature BETWEEN 0 AND 40)
+);
+
+CREATE INDEX IF NOT EXISTS met_t ON MET ( -- time sortable for MET table
+  t
+);
+
+CREATE INDEX IF NOT EXISTS met_latLon ON MET ( -- time sortable for MET table
+  latitude,
+  longitude
+);

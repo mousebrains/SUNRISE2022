@@ -26,8 +26,6 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
         logging.info("No need to prune %s", ofn)
         return ofn
 
-    logging.info("Pruning %s -> %s", fn, ofn)
-
     for key in ["latMin", "latMax", "lonMin", "lonMax"]:
         if key not in info:
             logging.error("%s not in info", key)
@@ -90,6 +88,14 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
         ods = ods.assign(geoItems)
         ods = ods.assign_attrs(todo.attrs)
         ods.to_netcdf(ofn, encoding=enc)
+        szSrc = os.path.getsize(fn)  / 1024 / 1024
+        szTgt = os.path.getsize(ofn) / 1024 / 1024
+        logging.info("Pruned %s %s -> %s MB, %s%%",
+                os.path.basename(fn),
+                round(szSrc, 2),
+                round(szTgt, 2),
+                round(szTgt / szSrc * 100, 1),
+                )
         return ofn
 
 

@@ -121,16 +121,19 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
             return None
 
         # Convert to unix seconds
-        t = (t - np.datetime64("1970-01-01T00:00:00Z")) / np.timedelta64(1,"s")
+        t = t.astype(float) / 1e9 # ns to s UTC
+        attributes = {
+            "units": "seconds since 1970-01-01 00:00:00",
+            "calendar": "proleptic_gregorian",
+            }
+
         df = df.assign({
-            "tMin": ([], t.min(), {"units": "seconds since 1970-01-01 00:00:00"}),
-            "tMax": ([], t.max(), {"units": "seconds since 1970-01-01 00:00:00"}),
-            "tMean": ([], t.mean(), {"units": "seconds since 1970-01-01 00:00:00"}),
-            "tMedian": ([], np.median(t), {"units": "seconds since 1970-01-01 00:00:00"}),
+            "tMin":   ([], t.min(),      attributes),
+            "tMax":   ([], t.max(),      attributes),
+            "tMean":  ([], t.mean(),     attributes),
+            "tMedian":([], np.median(t), attributes),
             })
         df = df.drop(("t", "qFinite"))
-
-        print(df)
 
         logging.info("Pruned %s %s%%",
                 os.path.basename(fn),

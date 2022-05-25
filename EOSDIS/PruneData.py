@@ -115,6 +115,11 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
 
         # Find times of "good" observations
         t = df.t.data.flatten()[df.qFinite.data.flatten() != 0]
+
+        if t.size == 0: # Nothing finite left
+            logging.debug("No data in finite box in %s", fn)
+            return None
+
         t0 = t.min()
         df = df.assign({
             "tMin": t0,

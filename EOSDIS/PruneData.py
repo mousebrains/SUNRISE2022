@@ -120,14 +120,17 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
             logging.debug("No data in finite box in %s", fn)
             return None
 
-        t0 = t.min()
+        # Convert to unix seconds
+        t = (t - np.datetime64("1970-01-01T00:00:00Z")) / np.timedelta64(1,"s")
         df = df.assign({
-            "tMin": t0,
-            "tMax": t.max(),
-            "tMean": t0 + (t - t0).mean(),
-            "tMedian": t0 + np.median(t-t0),
+            "tMin": ([], t.min(), {"units": "seconds since 1970-01-01 00:00:00"}),
+            "tMax": ([], t.max(), {"units": "seconds since 1970-01-01 00:00:00"}),
+            "tMean": ([], t.mean(), {"units": "seconds since 1970-01-01 00:00:00"}),
+            "tMedian": ([], np.median(t), {"units": "seconds since 1970-01-01 00:00:00"}),
             })
         df = df.drop(("t", "qFinite"))
+
+        print(df)
 
         logging.info("Pruned %s %s%%",
                 os.path.basename(fn),

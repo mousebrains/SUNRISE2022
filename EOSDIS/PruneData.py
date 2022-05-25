@@ -80,11 +80,14 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
         # Now flatten and further filter on lat/lon and finite
 
         df = xr.Dataset({
-                    "lon": ("i", nav.longitude.data.flatten()),
-                    "lat": ("i", nav.latitude.data.flatten()),
-                    "t": ("i", t.flatten()),
+                    "lon": (("i","j"), nav.longitude.data),
+                    "lat": (("i","j"), nav.latitude.data),
+                    "t": (("i","j"), t),
                     },
-                    coords = {"i": np.arange(nav.longitude.size)},
+                    coords = {
+                        "i": np.arange(nav.longitude.shape[0]),
+                        "j": np.arange(nav.longitude.shape[1]),
+                        },
                 )
         
         nLatLon = df.lon.size # Number after lat/lon box
@@ -92,45 +95,38 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
         encBase = {"zlib": True, "complevel": 9}
         enc = {"lon": encBase, "lat": encBase}
 
-        q = np.zeros(df.t.size, dtype=bool)
+        df = df.assign({"qFinite": (("i","j"), np.zeros(df.lon.shape))})
         for key in sorted(names):
-            df = df.assign({key: ("i", geo[key].data.flatten())})
+            df = df.assign({key: (("i","j"), geo[key].data)})
             enc[key] = encBase
             for item in names[key]:
                 if item in geo.variables:
-                    qual = geo[item].data.flatten()
+                    qual = geo[item].data
                     (llim, ulim) = names[key][item]
-                    qKeep = np.logical_and(qual >= llim, qual <= ulim)
-                    df[key][np.logical_not(qKeep)] = None
-            qKey = np.isfinite(df[key].data)
-            q = np.logical_or(q, qKey)
+                    qBad = np.logical_or(qual < llim, qual > ulim)
+                    val = df[key].data
+                    val[qBad] = None
+                    df[key].data = val
+            df.qFinite.data += np.isfinite(df[key].data)
 
-        df = df.sel(i=df.i[q])
+        # filter columns and rows which have no finite values
+        df = df.sel(j=df.j[df.qFinite.sum(dim="i") != 0])
+        df = df.sel(i=df.i[df.qFinite.sum(dim="j") != 0])
 
-        nFinite = df.lon.size # Number ofter quality check
-
-        if not nFinite: return None # Nothing left
-
+        # Find times of "good" observations
+        t = df.t.data.flatten()[df.qFinite.data.flatten() != 0]
+        t0 = t.min()
         df = df.assign({
-            "tMin": df.t.min(),
-            "tMax": df.t.max(),
-            "tMean": df.t.mean(),
+            "tMin": t0,
+            "tMax": t.max(),
+            "tMean": t0 + (t - t0).mean(),
+            "tMedian": t0 + np.median(t-t0),
             })
-        df = df.drop("t")
+        df = df.drop(("t", "qFinite"))
 
-        qLatLon = np.logical_and(
-                np.logical_and(df.lon >= lonMin, df.lon <= lonMax),
-                np.logical_and(df.lat >= latMin, df.lat <= latMax),
-                )
-        df.sel(i=df.i[qLatLon])
-
-        nLatLon2 = df.lon.size
-
-        logging.info("Pruned %s %s%% lat/lon %s%% finite %s%%",
+        logging.info("Pruned %s %s%%",
                 os.path.basename(fn),
-                round(nLatLon2 / nOrig * 100, 1),
-                round(nLatLon / nOrig * 100, 1),
-                round(nFinite / nOrig * 100, 1),
+                round(df.lon.size / nOrig * 100, 1),
                 )
         df.to_netcdf(ofn, encoding=enc)
         return ofn

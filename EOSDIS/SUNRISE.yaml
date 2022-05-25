@@ -32,18 +32,17 @@ regDup: [
 
 # geophysical_data variables to save
 geoNames:
-  - sst
-  - qual_sst
-  - sst4
-  - qual_sst4
-  - sst_triple
-  - qual_sst_triple
-  - l2_flags
-  - chlor_a
-  - chl_ocx
-  - nflh
-  - aph_443_giop # MODIS Phytoplankton absorption
-  - aph_445_giop # VIIRS Phytoplankton absorption
+  sst: 
+    qual_sst: [-1, 2.5]
+  sst4: 
+    qual_sst4: [-1, 2.5]
+  sst_triple: 
+    qual_sst_triple: [-1, 2.5]
+  chlor_a: []
+  chl_ocx: []
+  nflh: []
+  aph_443_giop: [] # MODIS phytoplankton absorption
+  aph_445_giop: [] # VIIRS phytoplankton absorption
 
 # Granuale search parameters, bounding box and temporal
 

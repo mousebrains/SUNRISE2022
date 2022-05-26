@@ -47,7 +47,7 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
             xr.open_dataset(fn) as todo, \
             xr.open_dataset(fn, group="geophysical_data") as geo, \
             xr.open_dataset(fn, group="navigation_data") as nav, \
-            xr.open_dataset(fn, group="scan_line_attributes") as scan:
+            xr.open_dataset(fn, group="scan_line_attributes", decode_times=False) as scan:
 
         names = {}
         for key in geoNames:
@@ -74,7 +74,11 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
         geo = geo.sel(number_of_lines=qLine, pixels_per_line=qPixel)
         nav = nav.sel(number_of_lines=qLine, pixel_control_points=qPixel)
         scan = scan.sel(number_of_lines=qLine)
-        t = ((scan.year - 1970).astype("datetime64[Y]") + scan.day + scan.msec).data
+
+        t = (scan.year - 1970).astype("datetime64[Y]")
+        t+= (scan.day - 1).astype("timedelta64[D]") # 1-Jan is day 1, so offset by 1
+        t+= scan.msec.astype("timedelta64[ms]")
+        t = t.astype(float) / 1e9 # Convert to unix time
         t = np.tile(t, (nav.longitude.shape[1], 1)).T
 
         df = xr.Dataset({
@@ -127,7 +131,6 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
             return None
 
         # Convert to unix seconds
-        t = t.astype(float) / 1e9 # ns to s UTC
         attributes = {
             "units": "seconds since 1970-01-01 00:00:00",
             "calendar": "proleptic_gregorian",

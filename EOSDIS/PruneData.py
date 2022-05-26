@@ -94,7 +94,7 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
         qLatLon =  np.logical_not(np.logical_and(
                 np.logical_and(df.lon >= lonMin, df.lon <= lonMax),
                 np.logical_and(df.lat >= latMin, df.lat <= latMax),
-                ))
+                )).data
 
 
         encBase = {"zlib": True, "complevel": 9}

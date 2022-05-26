@@ -77,8 +77,6 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
         t = ((scan.year - 1970).astype("datetime64[Y]") + scan.day + scan.msec).data
         t = np.tile(t, (nav.longitude.shape[1], 1)).T
 
-        # Now flatten and further filter on lat/lon and finite
-
         df = xr.Dataset({
                     "lon": (("i","j"), nav.longitude.data),
                     "lat": (("i","j"), nav.latitude.data),
@@ -92,12 +90,20 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
         
         nLatLon = df.lon.size # Number after lat/lon box
 
+        # for points outside lat/lon box, due to swath angle, set them to NaN
+        qLatLon =  np.logical_not(np.logical_and(
+                np.logical_and(df.lon >= lonMin, df.lon <= lonMax),
+                np.logical_and(df.lat >= latMin, df.lat <= latMax),
+                ))
+
+
         encBase = {"zlib": True, "complevel": 9}
         enc = {"lon": encBase, "lat": encBase}
 
         df = df.assign({"qFinite": (("i","j"), np.zeros(df.lon.shape))})
         for key in sorted(names):
             df = df.assign({key: (("i","j"), geo[key].data)})
+            df[key].data[qLatLon] = None
             enc[key] = encBase
             for item in names[key]:
                 if item in geo.variables:

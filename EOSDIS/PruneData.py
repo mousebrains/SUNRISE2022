@@ -24,7 +24,7 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
     ofn = os.path.join(dirname, basename)
 
     if not force and os.path.isfile(ofn) and (os.path.getmtime(fn) < os.path.getmtime(ofn)):
-        logging.info("No need to prune %s", ofn)
+        logging.debug("No need to prune %s", ofn)
         return ofn
 
     for key in ["latMin", "latMax", "lonMin", "lonMax"]:

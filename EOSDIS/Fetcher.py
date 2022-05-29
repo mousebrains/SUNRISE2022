@@ -11,12 +11,13 @@ import datetime
 import logging
 import sys
 
-def fetchRaw(session:requests.Session, url:str, tModified:datetime.datetime, dirname:str) -> str:
+def fetchRaw(session:requests.Session, url:str, tModified:datetime.datetime, dirname:str,
+        qForce:bool=False) -> str:
     basename = os.path.basename(requests.utils.urlparse(url).path)
     ofn = os.path.abspath(os.path.expanduser(os.path.join(dirname, basename)))
 
-    if os.path.isfile(ofn) and (os.path.getmtime(ofn) < tModified):
-        logging.info("No need to fetch %s", ofn)
+    if not qForce and os.path.isfile(ofn) and (os.path.getmtime(ofn) > tModified):
+        logging.debug("No need to fetch %s", ofn)
         return ofn
 
     with session.get(url) as r:

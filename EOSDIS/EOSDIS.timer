@@ -20,8 +20,8 @@ Description=Download EOSDIS data from NASA
 
 [Timer]
 # dayOfWeek Year-Month-Day Hour:Minute:Second
-# The data appears to be updated by 0700UTC
-OnCalendar=*-*-* 07/12:00:00 UTC
+# Pull fresh data every 2 hours
+OnCalendar=*-*-* 01/2:00:00 UTC
 Persistent=true
 
 [Install]

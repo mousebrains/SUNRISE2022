@@ -26,6 +26,7 @@ import sys
 
 parser = ArgumentParser()
 Logger.addArgs(parser)
+parser.add_argument("--force", action="store_true", help="Force downloading")
 parser.add_argument("--yaml", type=str, default="SUNRISE.yaml", help="YAML configuration file")
 parser.add_argument("--credentials", type=str, default="~/.config/NASA/.credentials",
         help="Credentials for accessing NASA's EOSDIS information")
@@ -38,7 +39,7 @@ logger = Logger.mkLogger(args, fmt="%(asctime)s %(levelname)s: %(message)s", log
 
 try:
     info = loadYAML(args.yaml)
-    logger.info("%s ->\n%s", args.yaml, json.dumps(info, indent=True, sort_keys=True))
+    logger.debug("%s ->\n%s", args.yaml, json.dumps(info, indent=True, sort_keys=True))
 
     for name in [args.raw, args.pruned]:
         if not os.path.isdir(name):
@@ -64,7 +65,7 @@ try:
 
     with Session(username, codigo) as s: # For data fetching
         for url in urls:
-            ofn = fetchRaw(s, url, urls[url], args.raw)
+            ofn = fetchRaw(s, url, urls[url], args.raw, args.force)
             if ofn: pruneData(info, ofn, args.pruned)
 except:
     logger.exception("Unexpected exception")

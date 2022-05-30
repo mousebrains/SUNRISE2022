@@ -1,0 +1,29 @@
+#
+# Download NASA satellite data
+#
+# N.B. This has two components, SSS.service and SSS.timer
+#
+# sudo cp SSS.* /etc/systemd/system/
+#
+# sudo systemctl daemon-reload
+# sudo systemctl enable SSS.timer SSS.service
+# sudo systemctl start SSS.timer
+#
+# To view the timers:
+# 
+# sudo systemctl list-timers SSS
+# 
+# May-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=Download Sea Surface Salinity data from NASA
+
+[Timer]
+# dayOfWeek Year-Month-Day Hour:Minute:Second
+# Pull fresh data every 2 hours
+OnCalendar=*-*-* 01/2:05:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+

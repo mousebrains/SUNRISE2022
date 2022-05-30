@@ -1,0 +1,37 @@
+#
+# Fetch SSS data from NASA
+#
+# N.B. This has two components, SSS.service and SSS.timer
+#
+# cp SSS.* ~/.config/systemd/user
+#
+# systemctl --user daemon-reload
+# systemctl --user enable SSS.timer SSS.service
+# systemctl --user start SSS.timer
+#
+# Feb-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=Download Sea Surface Salinity data from NASA
+
+[Service]
+# Launced by timer
+Type=oneshot
+# Since this is installed in user space, it will run as the proper user/group
+# User=pat
+# Group=pat
+# 
+# %h is becomes the user's home directory, $HOME
+WorkingDirectory=%h/SUNRISE2022/EOSDIS
+#
+ExecStart=%h/SUNRISE2022/EOSDIS/EOSDIS.py \
+	--yaml=SSS.yaml \
+	--pruned=%h/Sync/Shore/EOSDIS/Pruned \
+	--logfile=%h/logs/SSS.log \
+	--mailTo="pat@mousebrains.com" \
+	--mailSubject="SSS Fetcher" \
+	--verbose
+        
+[Install]
+WantedBy=default.target
+

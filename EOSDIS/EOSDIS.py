@@ -13,6 +13,7 @@
 from TPWUtils import Logger
 from argparse import ArgumentParser
 from PruneData import pruneData
+from PruneSSS import pruneSSS
 from LoadYAML import loadYAML
 from Credentials import loadCredentials
 from SessionWithHeaderRedirection import Session
@@ -66,6 +67,11 @@ try:
     with Session(username, codigo) as s: # For data fetching
         for url in urls:
             ofn = fetchRaw(s, url, urls[url], args.raw, args.force)
-            if ofn: pruneData(info, ofn, args.pruned)
+            if ofn: 
+                if "pruner" in info: # Pruner specified
+                    if info["pruner"] == "SSS": # Sea Surface Salinity pruner
+                        pruneSSS(info, ofn, args.pruned)
+                        continue
+                pruneData(info, ofn, args.pruned) # Fell through to default for MODIS/VIIRS
 except:
     logger.exception("Unexpected exception")

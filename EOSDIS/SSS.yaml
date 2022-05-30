@@ -1,0 +1,42 @@
+# SUNRISE 2022 satellite constraints
+
+# CMR search parameters
+# 
+# CMR search base URL
+
+cmrBaseURL: https://cmr.earthdata.nasa.gov/search
+
+# These can be either scalars or lists
+# collection_data_type: # Doesn't work for SMAP
+# - NEAR_REAL_TIME # near real time data
+
+provider:  # Which data providers to look for data from
+  - PODAAC # Physical Oceanography Distributed Active Archive Center
+  - POCLOUD # Physical Oceanography Cloud data
+
+processing_level_id: # Which data processing level to look for 
+  - 2 # Level 2 data
+    # - 3 # Level 3 data
+    
+instrument: # Which satellites to look for data from 
+  - "SMAP L-BAND RADIOMETER"
+
+keyword: sss JPLSMAPSSSV50
+
+pruner: SSS # Which data pruner to use
+
+varNames: # Global section variable names
+  smap_spd: []
+  smap_sss: []
+  smap_sss_uncertainty: []
+
+# Granuale search parameters, bounding box and temporal
+
+# Gulf of Mexico bounding box
+latMin:  25. # Near the basin boundary
+latMax:  32  # Just into Lousiana
+lonMin: -97. # Galveston
+lonMax: -88. # Delta
+
+# Temporal granual search parameter
+daysBack:    7 # Days into the past to start looking for data from

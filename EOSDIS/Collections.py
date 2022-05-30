@@ -44,7 +44,11 @@ def collections(session:requests.Session, info:dict) -> list:
             "has_granules": "true",
             "downloadable": "true",
             }
-    for key in ["collection_data_type", "provider", "processing_level_id", "instrument"]:
+
+    params.update(mkBoundingBox(info)) # Add geographic bounding box constraint
+
+    for key in ["collection_data_type", "provider", "processing_level_id", "instrument", 
+            "keyword", "platform", "version"]:
         if key in info and info[key]:
             params[key] = info[key]
 
@@ -84,12 +88,12 @@ def mkBoundingBox(info:dict) -> dict:
                 max(info["latMin"], info["latMax"]),
                 )}
 
-def mkTemporal(info:dict) -> dict:
+def mkTemporal(info:dict, parameterName:str="temporal[]") -> dict:
     if "daysBack" not in info or info["daysBack"] <= 0: return {}
     now = datetime.datetime.utcnow() # Current UTC time
     tStart = now - datetime.timedelta(days=info["daysBack"])
     tStr = tStart.strftime("%Y-%m-%dT%H:%M:%SZ")
-    return {"temporal[]": f"{tStr},"}
+    return {parameterName: f"{tStr},"}
 
 def mkRevisionDate(grain:dict) -> float:
     if "meta" not in grain or "revision-date" not in grain["meta"]: return time.time()
@@ -105,7 +109,7 @@ def mkRevisionDate(grain:dict) -> float:
 
 def granules(session:requests.Session, info:dict, items:list) -> dict:
     params = mkBoundingBox(info)
-    params.update(mkTemporal(info))
+    params.update(mkTemporal(info, "temporal[]"))
 
     url = cmrBaseURL(info) + "/granules.umm_json_v1_4"
 
@@ -124,7 +128,9 @@ def granules(session:requests.Session, info:dict, items:list) -> dict:
             revDate = mkRevisionDate(grain)
             for rurl in umm["RelatedUrls"]:
                 if "URL" in rurl and "Type" in rurl and rurl["Type"] == "GET DATA":
-                    urls[rurl["URL"]] = revDate
+                    candidate = rurl["URL"]
+                    if candidate.find("http") == 0: # Skip s3: URLs
+                        urls[rurl["URL"]] = revDate
     return urls
 
 def duplicateURL(urls:dict, regDup:list) -> dict:

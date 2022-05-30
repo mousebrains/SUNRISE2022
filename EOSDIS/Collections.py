@@ -165,6 +165,6 @@ if __name__ == "__main__":
         if items and args.granules:
             urls = granules(s, info, items)
             logging.info("Fetched %s Granules", len(urls))
-        if urls and "regDup" in info:
-            urls.update(duplicateURL(urls, info["regDup"]))
-        logging.info("Granules\n%s", json.dumps(urls, indent=4, sort_keys=True))
+            if urls and "regDup" in info:
+                urls.update(duplicateURL(urls, info["regDup"]))
+            logging.info("Granules\n%s", json.dumps(urls, indent=4, sort_keys=True))

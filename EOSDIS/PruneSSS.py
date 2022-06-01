@@ -65,9 +65,14 @@ def pruneSSS(info:dict, fn:str, dirname:str, force:bool=False) -> str:
 
         ds = ds.sel(phony_dim_0=qLine, phony_dim_1=qPixel)
 
-        t = np.datetime64(int(ds.attrs["REV_START_YEAR"]) - 1970, "Y")
-        t+= np.timedelta64(int(ds.attrs["REV_START_DAY_OF_YEAR"]) - 1, "D")
-        t = t + ds.row_time.data.astype("timedelta64[s]")
+        rt = ds.row_time.data
+        if isinstance(rt[0], np.float32):
+            t = np.datetime64(int(ds.attrs["REV_START_YEAR"]) - 1970, "Y")
+            t+= np.timedelta64(int(ds.attrs["REV_START_DAY_OF_YEAR"]) - 1, "D")
+            t = t + rt.astype("timedelta64[s]") # Not in place due to size change
+        else: # Datetime64
+            t = rt
+
         t = np.tile(t, [ds.lon.shape[0], 1])
 
         df = xr.Dataset({

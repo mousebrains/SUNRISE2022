@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>Hovmoller</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+  <link rel="icon" sizes="any" href="favicon.ico">
+  <link rel="manifest" href="favicons/site.webmanifest">
+  <!-- <base href="C:\Users\hildi\Documents\Stanford\Research\Sunrise\SUNRISE-realtime-plotting/"> -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/hovmoller.css">
+	<script src="src/js/plotly-2.2.0.min.js"></script>
+</head>
+<body>
+  <div id="hovmoller-container" class="fullscreen-container">
+    <div id="hovmoller-plot" class="plotting_window"></div>
+
+    <button id="sidebar-toggle-button" onclick="toggleSidebar()">
+      &rsaquo;
+    </button>
+
+    <div id="sidebar">
+      <h1>SUNRISE Hovmoller</h1>
+
+      <button id="set-data-toggle" onclick="toggleVerticalCollapsable(this,'hovmoller-set-data','flex')" class="vertical-toggle-button">
+        <strong>Set Data</strong>
+        <span class="vertical-toggle-arrow">&#65087;</span>
+      </button>
+      <div id="hovmoller-set-data">
+        <div id="hovmoller-set-data-label-select" class="label-select">
+          <label for="x-axis-variable">X Variable:</label>
+          <select name="x-axis-variable" id="x-axis-variable-select" class="data-selector" class="common-options">
+            <option value="Time">Time</option>
+            <!-- Dynamically add common options with js -->
+          </select>
+          <label for="y-axis-variable">Y Variable:</label>
+          <select name="y-axis-variable" id="y-axis-variable-select" class="data-selector" class="common-options">
+            <option value="Time">Time</option>
+            <!-- Dynamically add common options with js -->
+          </select>
+          <label for="data-variable-PE">Pelican Data:</label>
+          <select name="data-variable-PE" id="data-variable-PE-select" class="data-selector">
+            <option value="None">None</option>
+              <!-- Dynamically add Pelican options with js -->
+          </select>
+          <label for="data-variable-PS">Point Sur Data:</label>
+          <select name="data-variable-PS" id="data-variable-PS-select" class="data-selector">
+            <option value="None">None</option>
+              <!-- Dynamically add Point Sur options with js -->
+          </select>
+
+          <label for="start-time">Start time (UTC):</label>
+          <input type="datetime-local" id="start-time" name="start-time">
+          <label for="end-time">End time (UTC):</label>
+          <input type="datetime-local" id="end-time" name="end-time">
+        </div>
+
+        <button id="load-data-button" onclick="loadData()" class="action-button">
+          Load Data
+        </button>
+      </div>
+
+      <h2>Modify Plot</h2>
+
+      <div id="hovmoller-customise" class="customise">
+
+        <button id="figure-toggle" onclick="toggleVerticalCollapsable(this,'figure-settings','grid')" class="vertical-toggle-button">
+          <strong>Figure</strong>
+          <span class="vertical-toggle-arrow">&#65088;</span>
+        </button>
+        <div id="figure-settings" class="label-select" style="display: none">
+          <label for="figure-background-colour">Background Colour:</label>
+          <input type="color" id="figure-background-colour" name=figure-background-colour value="#dfdfdf">
+          <label for="figure-x-axis-grid">X Grid Lines:</label>
+          <input type="checkbox" id="figure-x-axis-grid" name="figure-x-axis-grid" checked>
+          <label for="figure-y-axis-grid">Y Grid Lines:</label>
+          <input type="checkbox" id="figure-y-axis-grid" name="figure-y-axis-grid" checked>
+          <label for="figure-x-axis-reversed">Reverse X Axis:</label>
+          <input type="checkbox" id="figure-x-axis-reversed" name="figure-x-axis-reversed">
+          <label for="figure-y-axis-reversed">Reverse Y Axis:</label>
+          <input type="checkbox" id="figure-y-axis-reversed" name="figure-y-axis-reversed">
+        </div>
+
+        <button id="data-PE-toggle" onclick="toggleVerticalCollapsable(this,'data-PE-settings','grid')" class="vertical-toggle-button">
+          <strong>Pelican Data</strong>
+          <span class="vertical-toggle-arrow">&#65088;</span>
+        </button>
+        <div id="data-PE-settings" class="label-select" style="display: none">
+          <label for="data-PE-colour-map">Colour Map:</label>
+          <select id="data-PE-colour-map" name="data-PE-colour-map">
+            <option value="Blackbody">Blackbody</option>
+            <option value="Bluered">Blue-Red</option>
+            <option value="Blues">Blues</option>
+            <option value="Earth">Earth</option>
+            <option value="Electric">Electric</option>
+            <option value="Greens">Greens</option>
+            <option value="Greys">Greys</option>
+            <option value="Hot">Hot</option>
+            <option value="Jet">Jet</option>
+            <option value="Picnic">Picnic</option>
+            <option value="Portland">Portland</option>
+            <option value="Rainbow">Rainbow</option>
+            <option value="RdBu">Red-Blue</option>
+            <option value="Reds">Reds</option>
+            <option value="Viridis">Viridis</option>
+            <option value="YlGnBu" selected>Yellow-Green-Blue</option>
+            <option value="YlOrRd">Yellow-Orange-Red</option>
+          </select>
+          <label for "data-PE-reverse-colour-map">Reverse Colour Map:</label>
+          <input type="checkbox" id="data-PE-reverse-colour-map" name="data-PE-reverse-colour-map">
+          <label for="data-PE-min">Min limit:</label>
+          <input type="number" id="data-PE-min" name="data-PE-min" step="0.1" required>
+          <label for="data-PE-max">Max limit:</label>
+          <input type="number" id="data-PE-max" name="data-PE-max" step="0.1" required>
+        </div>
+        <button id="data-PS-toggle" onclick="toggleVerticalCollapsable(this,'data-PS-settings','grid')" class="vertical-toggle-button">
+          <strong>Point Sur Data</strong>
+          <span class="vertical-toggle-arrow">&#65088;</span>
+        </button>
+        <div id="data-PS-settings" class="label-select" style="display: none">
+          <label for="data-PS-colour-map">Colour Map:</label>
+          <select id="data-PS-colour-map" name="data-PS-colour-map">
+            <option value="Blackbody">Blackbody</option>
+            <option value="Bluered">Blue-Red</option>
+            <option value="Blues">Blues</option>
+            <option value="Earth">Earth</option>
+            <option value="Electric">Electric</option>
+            <option value="Greens">Greens</option>
+            <option value="Greys">Greys</option>
+            <option value="Hot">Hot</option>
+            <option value="Jet">Jet</option>
+            <option value="Picnic">Picnic</option>
+            <option value="Portland">Portland</option>
+            <option value="Rainbow">Rainbow</option>
+            <option value="RdBu">Red-Blue</option>
+            <option value="Reds">Reds</option>
+            <option value="Viridis">Viridis</option>
+            <option value="YlGnBu" selected>Yellow-Green-Blue</option>
+            <option value="YlOrRd">Yellow-Orange-Red</option>
+          </select>
+          <label for "data-PS-reverse-colour-map">Reverse Colour Map:</label>
+          <input type="checkbox" id="data-PS-reverse-colour-map" name="data-PS-reverse-colour-map">
+          <label for="data-PS-min">Min limit:</label>
+          <input type="number" id="data-PS-min" name="data-PS-min" step="0.1" required>
+          <label for="data-PS-max">Max limit:</label>
+          <input type="number" id="data-PS-max" name="data-PS-max" step="0.1" required>
+        </div>
+      </div>
+
+      <button id="apply-changes-button" onclick="applyChanges()" class="action-button">
+        Apply Changes
+      </button>
+
+      <div id="preferences-container">
+        <button id="save-preferences-button" onclick="savePreferences()" class="action-button" class="half-width">
+          Save Preferences
+        </button>
+        <button id="clear-preferences-button" onclick="clearPreferences()" class="action-button" class="half-width">
+          Clear Preferences
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/toggle_collapsables.js"></script>
+  <script src="js/hovmoller.js"></script>
+  <script src="js/hovmoller_load_data.js"></script>
+</body>

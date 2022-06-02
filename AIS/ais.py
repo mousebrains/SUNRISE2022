@@ -8,9 +8,9 @@
 from argparse import ArgumentParser
 from TPWUtils import Logger
 from TPWUtils import Thread
-import pyais
+import ais
 import sqlite3
-import psycopg
+import psycopg2
 import time
 import socket
 import pty
@@ -170,6 +170,7 @@ class RawWriter(Thread.Thread):
         Thread.Thread.__init__(self, name, args)
         self.queue = queue.Queue()
         rdr.addQueue(self.queue)
+        self.insert = None
 
     @staticmethod
     def addArgs(parser:ArgumentParser) -> None:
@@ -189,10 +190,13 @@ class RawWriter(Thread.Thread):
         cursor.execute(sql)
 
     def dbWrite(self, cursor, payload:tuple) -> None:
-        tbl = self.args.rawTable
-        sql = f"INSERT OR IGNORE INTO {tbl} VALUES(?,?,?,?);"
-        logging.info("%s", payload)
-        cursor.execute(sql, payload)
+        if not self.insert: return
+        try:
+            payload = (payload[0], payload[1], payload[2], str(payload[3], "UTF-8"))
+            logging.info("%s", payload)
+            cursor.execute(self.insert, payload)
+        except:
+            logger.exception("Error handling %s", payload)
 
 class Raw2SQLite(RawWriter):
     def __init__(self, args:ArgumentParser, rdr) -> None:
@@ -204,6 +208,9 @@ class Raw2SQLite(RawWriter):
         grp.add_argument("--rawSQLite3", type=str, help="SQLite3 database filename")
 
     def runIt(self) -> None: # Called on thread start
+        args = self.args
+        tbl = self.args.rawTable
+        self.insert = f"INSERT OR IGNORE INTO {tbl} VALUES(?,?,?,?);"
         q = self.queue
         logging.info("Starting")
         qCreateTable = True
@@ -229,21 +236,23 @@ class Raw2PostgreSQL(RawWriter):
         grp.add_argument("--rawPostgreSQL", type=str, help="PostgreSQL database")
 
     def runIt(self) -> None: # Called on thread start
+        args = self.args
+        tbl = self.args.rawTable
+        self.insert = f"INSERT INTO {tbl} VALUES(%s,%s,%s,%s) ON CONFLICT DO NOTHING;"
         q = self.queue
         logging.info("Starting")
         qCreateTable = True
-        with psycopg.connect("dbname=" + args.rawPostgreSQL) as db:
+        with psycopg2.connect("dbname=" + args.rawPostgreSQL) as db:
             while True:
                 payload = q.get()
                 q.task_done()
-                with sqlite3.connect(args.rawPostgreSQL) as db:
-                    cursor = db.cursor()
-                    cursor.execute("BEGIN;")
-                    if qCreateTable: 
-                        self.createTable(cursor)
-                        qCreateTable = False
-                    self.dbWrite(cursor, payload)
-                    cursor.execute("COMMIT;")
+                cursor = db.cursor()
+                cursor.execute("BEGIN;")
+                if qCreateTable:
+                    self.createTable(cursor)
+                    qCreateTable = False
+                self.dbWrite(cursor, payload)
+                cursor.execute("COMMIT;")
 
 parser = ArgumentParser()
 Logger.addArgs(parser)
@@ -251,6 +260,7 @@ Faux.addArgs(parser)
 ReadSerial.addArgs(parser)
 RawWriter.addArgs(parser)
 Raw2SQLite.addArgs(parser)
+Raw2PostgreSQL.addArgs(parser)
 grp = parser.add_mutually_exclusive_group(required=True)
 grp.add_argument("--udp", type=int, help="UDP port to listen to for datagrams")
 grp.add_argument("--serial", type=str, help="Serial port to listen to")
@@ -275,8 +285,8 @@ elif args.serial:
     rdr = ReadSerial(args)
     thrds.append(rdr)
 
-if args.rawSQLite3:
-    thrds.append(Raw2SQLite(args, rdr))
+if args.rawSQLite3: thrds.append(Raw2SQLite(args, rdr))
+if args.rawPostgreSQL: thrds.append(Raw2PostgreSQL(args, rdr))
 
 for thrd in thrds: thrd.start() # Start all the threads
 

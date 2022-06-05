@@ -10,8 +10,10 @@ Description=Monitor my status
 # Type=simple # Default
 WorkingDirectory=%h/logs
 #
-ExecStart=%h/SUNRISE2022/monitor/monitor/monter.py \
+ExecStart=%h/SUNRISE2022/MonitorTemperature/monitor.py \
 	--logfile=monitorPi.log \
+	--verbose \
+	--hostsYAML=%h/SUNRISE2022/MonitorTemperature/hosts.yaml \
 	--host=128.193.72.57
 	
 RestartSec=60

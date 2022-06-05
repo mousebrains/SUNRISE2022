@@ -4,4 +4,5 @@ pe2: {"number": 2, "spaceNorm": 100, "tempNorm": 0.1}
 ps0: {"number": 3, "spaceNorm": 100, "tempNorm": 0.1}
 ps1: {"number": 4, "spaceNorm": 100, "tempNorm": 0.1}
 ps2: {"number": 5, "spaceNorm": 100, "tempNorm": 0.1}
+shore0: {"number": 6, "spaceNorm": 100, "tempNorm": 0.1}
 Patricio-M1.local: {"number": 255, "spaceNorm": 0.1, "tempNorm": 0.1}

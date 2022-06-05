@@ -10,13 +10,15 @@ Description=Monitor ship to shore datagrams
 # Type=simple # Default
 WorkingDirectory=%h/logs
 #
-ExecStart=%h/SUNRISE2022/monitor/receiver.py \
+ExecStart=%h/SUNRISE2022/MonitorTemperature/receiver.py \
+	--verbose \
 	--mailFrom=pat.welch@oregonstate.edu \
 	--mailTo=pat@mousebrains.com \
 	--mailSubject=shipMonitor \
 	--smtpHost=mail.ceoas.oregonstate.edu \
 	--logfile=shipMonitor.log \
-	--csv=%h/Sync/Shore/monitor/shipMonitor.csv
+	--hostsYAML=%h/SUNRISE2022/MonitorTemperature/hosts.yaml \
+	--db=sunrise
 	
 RestartSec=60
 Restart=always

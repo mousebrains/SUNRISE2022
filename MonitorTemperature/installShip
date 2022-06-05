@@ -4,4 +4,4 @@
 #
 # Feb-2022, Pat Welch, pat@mousebrains.com
 
-./install --service=monitorShip.service
+./install.py --service=monitorShip.service $*

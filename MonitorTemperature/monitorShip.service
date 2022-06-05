@@ -1,0 +1,21 @@
+#
+# send datagrams with ship computer status information
+#
+# May-2021, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=Monitor my status
+
+[Service]
+# Type=simple # Default
+WorkingDirectory=%h/logs
+#
+ExecStart=%h/SUNRISE2022/monitor/monitor/monter.py \
+	--logfile=monitorPi.log \
+	--host=128.193.72.57
+	
+RestartSec=60
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

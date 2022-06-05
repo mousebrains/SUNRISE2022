@@ -1,0 +1,25 @@
+#
+# Listen for datagrams with ship computer status information
+#
+# June-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=Monitor ship to shore datagrams
+
+[Service]
+# Type=simple # Default
+WorkingDirectory=%h/logs
+#
+ExecStart=%h/SUNRISE2022/monitor/receiver.py \
+	--mailFrom=pat.welch@oregonstate.edu \
+	--mailTo=pat@mousebrains.com \
+	--mailSubject=shipMonitor \
+	--smtpHost=mail.ceoas.oregonstate.edu \
+	--logfile=shipMonitor.log \
+	--csv=%h/Sync/Shore/monitor/shipMonitor.csv
+	
+RestartSec=60
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

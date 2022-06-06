@@ -11,6 +11,7 @@ Description=Monitor ship to shore datagrams
 WorkingDirectory=%h/logs
 #
 ExecStart=%h/SUNRISE2022/MonitorTemperature/receiver.py \
+	--tcp \
 	--verbose \
 	--mailFrom=pat.welch@oregonstate.edu \
 	--mailTo=pat@mousebrains.com \

@@ -30,7 +30,10 @@ class Reader(Thread.Thread):
         grp = parser.add_argument_group(description="UDP Listener options")
         grp.add_argument('--port', type=int, default=11113, metavar='port',
                 help='Port to listen on')
-        grp.add_argument("--size", type=int, default=65536, help="Datagram size")
+        grp.add_argument("--size", type=int, default=16, help="Datagram size, power of 2 near 9")
+        grp = grp.add_mutually_exclusive_group()
+        grp.add_argument("--tcp", action="store_true", help="Connect using TCP")
+        grp.add_argument("--udp", action="store_true", help="Connect using UDP datagrams")
 
     def addQueue(self, q:queue.Queue) -> None:
         self.__queues.append(q)
@@ -38,15 +41,25 @@ class Reader(Thread.Thread):
     def runIt(self) -> None:
         '''Called on thread start '''
         args = self.args
+        qTCP = args.tcp
+        packetSize = args.size
         hosts = self.__hosts
         queues = self.__queues
-        logging.info("Starting")
-        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-            logging.debug("Opened UDP socket")
+        logging.info("Starting TCP %s port %s size %s", qTCP, args.port, packetSize)
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM if qTCP else socket.SOCK_DGRAM) as s:
             s.bind(('', args.port))
-            logging.info('Bound to port %s', args.port)
-            while True: # Read datagrams
-                (data, senderAddr) = s.recvfrom(args.size)
+
+            if qTCP:
+                s.listen() # Listen for incoming TCP connections
+                logging.debug("TCP listening to port %s", args.port)
+
+            while True: # Read TCP packets or UDP datagrams
+                if qTCP: # Listen for a connection via TCP
+                    (conn, senderAddr) = s.accept() # Got a connection request
+                    with conn: # Close the connection cleanly when we leave with block
+                        data = conn.recv(packetSize)
+                else: # UDP get a datagram
+                    (data, senderAddr) = s.recvfrom(packetSize)
                 t = time.time()
                 if not hosts.checkSignature(data[:2]):
                     logging.warning("Bad datagram received, %s, from %s", data, senderAddr)

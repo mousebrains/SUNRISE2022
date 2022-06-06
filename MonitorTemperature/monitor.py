@@ -14,6 +14,24 @@ import time
 import os
 import sys
 
+def udpSend(host:str, port:int, data:bytes) -> int:
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        n = s.sendto(data, (host, port))
+        logging.info("UDP %s:%s sent %s bytes of %s", host, port, n, data)
+        return n
+
+def tcpSend(host:str, port:int, data:bytes) -> int:
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((host, port))
+            n = s.send(data)
+            logging.info("TCP %s:%s sent %s bytes of %s", host, port, n, data)
+            return n
+    except:
+        logging.exception("Error sending %s to %s:%s", data, host, port)
+        return None
+
+
 def postData(args:ArgumentParser, host:Host) -> None:
     temp = None
     total = None
@@ -46,9 +64,10 @@ def postData(args:ArgumentParser, host:Host) -> None:
     data+= host.encodeFraction(avail)
     data+= host.hostNumber()
 
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-        n = s.sendto(data, (args.host, args.port))
-        logging.info("host %s port %s sent %s bytes of %s", args.host, args.port, n, data)
+    if args.tcp:
+        tcpSend(args.host, args.port, data)
+    else:
+        udpSend(args.host, args.port, data)
         
 parser = ArgumentParser()
 Logger.addArgs(parser)
@@ -61,6 +80,9 @@ parser.add_argument("--fs", type=str, default="/", help="Filesystem to send info
 parser.add_argument("--dt", type=float, default=600, help="Time between samples in seconds")
 parser.add_argument("--host", type=str, required=True, help="Hostname to send datagrams to")
 parser.add_argument("--port", type=int, default=11113, help="port to send datagrams to")
+grp = parser.add_mutually_exclusive_group()
+grp.add_argument("--tcp", action="store_true", help="Connect using TCP")
+grp.add_argument("--udp", action="store_true", help="Connect using UDP datagrams")
 args = parser.parse_args()
 
 Logger.mkLogger(args, fmt="%(asctime)s %(levelname)s: %(message)s")

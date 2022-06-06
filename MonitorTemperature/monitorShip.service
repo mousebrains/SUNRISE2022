@@ -12,6 +12,7 @@ WorkingDirectory=%h/logs
 #
 ExecStart=%h/SUNRISE2022/MonitorTemperature/monitor.py \
 	--logfile=monitorPi.log \
+	--tcp \
 	--verbose \
 	--hostsYAML=%h/SUNRISE2022/MonitorTemperature/hosts.yaml \
 	--host=128.193.72.57

@@ -11,13 +11,14 @@ Description=Monitor my status
 WorkingDirectory=%h/logs
 #
 ExecStart=%h/SUNRISE2022/MonitorTemperature/monitor.py \
-	--logfile=monitorPi.log \
+	--logfile=monitor.pi.log \
+	--dt=600 \
 	--tcp \
 	--verbose \
 	--hostsYAML=%h/SUNRISE2022/MonitorTemperature/hosts.yaml \
 	--host=128.193.72.57
 	
-RestartSec=60
+RestartSec=600
 Restart=always
 
 [Install]

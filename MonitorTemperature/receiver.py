@@ -8,29 +8,31 @@
 from argparse import ArgumentParser
 import queue
 import psycopg2 # Postgresql interface
-import sqlite3
 import socket
 from TPWUtils import Thread
+import threading
 from TPWUtils import Logger
+from DataPacket import Packet
 from Hosts import Hosts
 import time
 import logging
 import os.path
 
 class Reader(Thread.Thread):
-    ''' Wait for a datagram, then decode and forward to consumers '''
-    def __init__(self, args:ArgumentParser) -> None:
-        Thread.Thread.__init__(self, "Reader", args)
-        self.__hosts = Hosts(args)
-        self.__queues = []
+    ''' Common components for reading data packets '''
+    def __init__(self, name:str, args:ArgumentParser) -> None:
+        Thread.Thread.__init__(self, name, args)
+        self.hosts = Hosts(args)
+        self.packet = Packet(args)
+        self.queues = []
 
     @staticmethod
     def addArgs(parser:ArgumentParser) -> None:
         Hosts.addArgs(parser)
-        grp = parser.add_argument_group(description="UDP Listener options")
+        grp = parser.add_argument_group(description="TCP/UDP listener options")
         grp.add_argument('--port', type=int, default=11113, metavar='port',
                 help='Port to listen on')
-        grp.add_argument("--size", type=int, default=16, help="Datagram size, power of 2 near 9")
+        grp.add_argument("--size", type=int, default=8, help="Datagram size, power of 2 >= 8")
         grp = grp.add_mutually_exclusive_group()
         grp.add_argument("--tcp", action="store_true", help="Connect using TCP")
         grp.add_argument("--udp", action="store_true", help="Connect using UDP datagrams")
@@ -38,44 +40,87 @@ class Reader(Thread.Thread):
     def addQueue(self, q:queue.Queue) -> None:
         self.__queues.append(q)
 
-    def runIt(self) -> None:
-        '''Called on thread start '''
+    def received(self, data:bytes, addr:tuple) -> None:
+        now = time.time()
+        (host, temp, free, frac) = self.packet.explode(data, self.hosts)
+        if host is not None:
+            payload = (now, addr[0], addr[1], host, temp, free, frac)
+            logging.debug("Payload %s", payload)
+            for q in self.queues: q.put(payload)
+        else:
+            logging.debug("data %s", data)
+
+class ConsumeTCP(Thread.Thread):
+    ''' Consume a TCP connection '''
+    def __init__(self, args:ArgumentParser, connection, addr:tuple, rdr:Reader) -> None:
+        Thread.Thread.__init__(self, f"TCP:{addr[0]}:{addr[1]}", args)
+        self.__connection = connection
+        self.__addr = addr
+        self.__reader = rdr
+
+    def runIt(self) -> None: # Called on thread start
+        sz = self.args.size
+        rdr = self.__reader
+        addr = self.__addr
+        try:
+            with self.__connection as conn:
+                while True:
+                    data = conn.recv(sz)
+                    if not data: break
+                    rdr.received(data, addr)
+        except:
+            logging.exception("Connection problem")
+
+class ReaderTCP(Reader):
+    ''' Wait on a connection request, then spawn off a TCP consumer '''
+    def __init__(self, args:ArgumentParser) -> None:
+        Reader.__init__(self, "RdrTCP", args)
+
+    @staticmethod
+    def addArgs(parser:ArgumentParser) -> None:
+        grp = parser.add_argument_group(description="TCP listener options")
+        grp.add_argument("--nThreads", type=int, default=30,
+                help="Maximum number of simultaneous connections")
+
+    def runIt(self) -> None: # Called on thread start
         args = self.args
-        qTCP = args.tcp
-        packetSize = args.size
-        hosts = self.__hosts
-        queues = self.__queues
-        logging.info("Starting TCP %s port %s size %s", qTCP, args.port, packetSize)
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM if qTCP else socket.SOCK_DGRAM) as s:
-            s.bind(('', args.port))
+        port = args.port
+        sz = args.size
+        maxThreads = args.nThreads
+        logging.info("Starting port %s size %s", port, sz)
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(('', port))
+            s.listen() # Listen for incoming TCP connections
+            logging.debug("Listening to port %s", port)
+            while True:
+                (conn, addr) = s.accept() # Got a connection request, so spin it off
+                if threading.active_count() > maxThreads:
+                    logging.info("Rejecting connections %s due to maximum number of threads, %s<%s",
+                            addr, maxThreads, threading.active_count())
+                    conn = None # Close the connection, eventually
+                else:
+                    thrd = ConsumeTCP(args, conn, addr, self)
+                    thrd.start()
+  
+class ReaderUDP(Reader):
+    ''' Wait for UDP datagrams '''
+    def __init__(self, args:ArgumentParser) -> None:
+        Reader.__init__(self, "RdrUDP", args)
 
-            if qTCP:
-                s.listen() # Listen for incoming TCP connections
-                logging.debug("TCP listening to port %s", args.port)
+    @staticmethod
+    def addArgs(parser:ArgumentParser) -> None:
+        pass
 
-            while True: # Read TCP packets or UDP datagrams
-                if qTCP: # Listen for a connection via TCP
-                    (conn, senderAddr) = s.accept() # Got a connection request
-                    with conn: # Close the connection cleanly when we leave with block
-                        data = conn.recv(packetSize)
-                else: # UDP get a datagram
-                    (data, senderAddr) = s.recvfrom(packetSize)
-                t = time.time()
-                if not hosts.checkSignature(data[:2]):
-                    logging.warning("Bad datagram received, %s, from %s", data, senderAddr)
-                    continue
-                logging.info("Received from %s n %s", senderAddr, data)
-                host = hosts.hostFromNumber(data[-1:])
-                if host is None:
-                    logging.warning("Unrecognized host in, %s, from %s", data, senderAddr)
-                    continue
-                temp = host.decodeTemperature(data[2:4])
-                free = host.decodeSpace(data[4:6])
-                avail = host.decodeFraction(data[6:8])
-                host = host.host()
-                (ipAddr, port) = senderAddr
-                body = (t, ipAddr, port, host, temp, free, avail)
-                for q in queues: q.put(body)
+    def runIt(self) -> None: # Called on thread start
+        args = self.args
+        port = args.port
+        sz = args.size
+        logging.info("Starting port %s size %s", port, sz)
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+            s.bind(("", port))
+            while True:
+                (data, addr) = s.recvfrom(sz)
+                self.received(data, addr)
 
 class Writer(Thread.Thread):
     ''' Wait on a queue, and write the item to a database '''
@@ -165,6 +210,8 @@ class CSV(Thread.Thread):
 parser = ArgumentParser(description="Listen for a LiveGPS message")
 Logger.addArgs(parser)
 Reader.addArgs(parser)
+ReaderTCP.addArgs(parser)
+ReaderUDP.addArgs(parser)
 Writer.addArgs(parser)
 CSV.addArgs(parser)
 args = parser.parse_args()
@@ -173,7 +220,7 @@ Logger.mkLogger(args)
 logging.info("args=%s", args)
 
 try:
-    reader = Reader(args) # Create the UDP datagram reader thread
+    reader = ReaderTCP(args) if args.tcp else ReaderUDP(args)
     if args.db: 
         writer = Writer(args, reader) # Create the db writer thread
         writer.start()

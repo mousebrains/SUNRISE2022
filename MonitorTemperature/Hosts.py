@@ -4,35 +4,22 @@
 #
 # June-2022, Pat Welch, pat@mousebrains.com
 
+from argparse import ArgumentParser
 import yaml
 import json
 import logging
 import socket
 import os
-from argparse import ArgumentParser
 
 class Host:
-    __signature = b"\xd2\x93" # 2 byte message prefix
-
     def __init__(self, name:str, info:dict) -> None:
-        self.__name = name
-        self.__hostNumber = info["number"].to_bytes(1, byteorder="big", signed=False)
+        self.name = name
+        self.hostNumber = info["number"].to_bytes(1, byteorder="big", signed=False)
         self.__spaceNorm  = info["spaceNorm"]
         self.__tempNorm   = info["tempNorm"]
 
-    def host(self) -> str:
-        return self.__name
-
-    def hostNumber(self) -> bytes:
-        return self.__hostNumber
-
-    @classmethod
-    def signature(cls) -> bytes:
-        return cls.__signature
-
-    @classmethod
-    def checkSignature(cls, val:bytes) -> bool:
-        return val == cls.__signature
+    def __repr__(self) -> str:
+        return f"{self.name} {self.hostNumber} {self.__spaceNorm} {self.__tempNorm}"
 
     @staticmethod
     def encode(val:float, norm:float, tit:str) -> bytes:
@@ -52,8 +39,10 @@ class Host:
     def encodeTemperature(self, temperature:float) -> bytes:
         return self.encode(temperature, self.__tempNorm, "temperature")
 
-    def encodeFraction(self, frac:float) -> bytes:
-        return self.encode(frac, 0xffff, "Fraction")
+    def encodeFraction(self, numerator:float, denominator:float) -> bytes:
+        if numerator is None or denominator is None or denominator == 0:
+            return self.encode(None, 0xffff, "Fraction")
+        return self.encode(numerator / denominator, 0xffff, "Fraction")
 
     @staticmethod
     def decode(val:bytes, norm:float=None) -> float:
@@ -89,8 +78,12 @@ class Hosts:
 
         for key in info:
             host = Host(key, info[key])
+            n = int.from_bytes(host.hostNumber, byteorder="big", signed=False)
             self.__info[key] = host
-            self.__number2host[host.hostNumber()] = host
+            if n in self.__number2host:
+                logging.error("Host number conflict\n%s\n%s",
+                        host, self.__number2host[host.hostNumber])
+            self.__number2host[n] = host
 
 
     @staticmethod
@@ -98,9 +91,10 @@ class Hosts:
         parser.add_argument("--hostsYAML", type=str, default="hosts.yaml",
                 help="Hostname configuration file")
 
-    @staticmethod
-    def checkSignature(val:bytes) -> bool:
-        return Host.checkSignature(val)
+    def __repr__(self) -> str:
+        msg = []
+        for key in sorted(self.__info): msg.append(str(self.__info[key]))
+        return "\n".join(msg)
 
     def getHost(self, hostname:str=socket.gethostname()) -> Host:
         if hostname in self.__info:
@@ -111,3 +105,11 @@ class Hosts:
 
     def hostFromNumber(self, hostNumber:bytes) -> Host:
         return self.__number2host[hostNumber] if hostNumber in self.__number2host else None
+
+if __name__ == "__main__":
+    parser = ArgumentParser()
+    Hosts.addArgs(parser)
+    args = parser.parse_args()
+
+    h = Hosts(args)
+    print(h)

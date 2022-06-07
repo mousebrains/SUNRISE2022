@@ -17,7 +17,7 @@ ExecStart=%h/SUNRISE2022/MonitorTemperature/receiver.py \
 	--mailTo=pat@mousebrains.com \
 	--mailSubject=shipMonitor \
 	--smtpHost=mail.ceoas.oregonstate.edu \
-	--logfile=shipMonitor.log \
+	--logfile=monitor.shore.log \
 	--hostsYAML=%h/SUNRISE2022/MonitorTemperature/hosts.yaml \
 	--db=sunrise
 	

@@ -38,7 +38,7 @@ class Reader(Thread.Thread):
         grp.add_argument("--udp", action="store_true", help="Connect using UDP datagrams")
 
     def addQueue(self, q:queue.Queue) -> None:
-        self.__queues.append(q)
+        self.queues.append(q)
 
     def received(self, data:bytes, addr:tuple) -> None:
         now = time.time()

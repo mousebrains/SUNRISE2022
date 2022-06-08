@@ -57,6 +57,9 @@ print(pt0)
 offset = Point(0, 0) # UTM offset
 
 if not os.path.isfile(args.output):
+    dirname = os.path.dirname(args.output)
+    if not os.path.isdir(dirname):
+        os.makedirs(dirname, 0o766, exist_ok=True)
     with open(args.output, "w") as fp: fp.write("time,longitude,latitude,salinity,temperature\n")
 
 while True:

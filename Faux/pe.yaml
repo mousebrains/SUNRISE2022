@@ -1,6 +1,6 @@
 # Faux MET data for the R/V Pelican
 
-dt: 60 # Seconds between prints
+dt: 1 # Seconds between prints
 
 # Lat/Lon center of line
 latCentroid: 29

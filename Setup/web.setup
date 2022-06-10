@@ -1,0 +1,17 @@
+#! /bin/sh -x
+
+sudo apt install -y nginx php-fpm
+
+sed -e s/www-data/pat/ </etc/nginx/nginx.conf >/tmp/nginx.conf.$$
+sudo cp /tmp/nginx.conf.$$ /etc/nginx/nginx.conf
+rm /tmp/nginx.conf.$$
+
+sed -e s/www-data/pat/ </etc/php/8.1/fpm/pool.d/www.conf >/tmp/www.conf.$$
+sudo cp /tmp/www.conf.$$ /etc/php/8.1/fpm/pool.d/www.conf
+rm /tmp/www.conf.$$
+
+sudo cp ~/SUNRISE2022/SystemFiles/sunrise.ship /etc/nginx/sites-available/sunrise
+sudo ln -sf /etc/nginx/sites-available/sunrise /etc/nginx/sites-enabled
+sudo rm /etc/nginx/sites-enabled/default
+sudo nginx -t # Check the configuration
+sudo systemctl restart nginx php8.1-fpm.service # Restart the webserver and php-fpm

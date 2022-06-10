@@ -1,5 +1,6 @@
 # Set up the shore side web server:
 
+- The following instructions are in [../Setup/install.webserver](../Setup/install.webserver)
 - `sudo apt install nginx php-fpm`
 - Change the user NGINX is running as, change all instances of *www-data* to pat in /etc/nginx/nginx.conf
 - Change the user/group fpm-php is running as, change all instances of *www-data* to pat in /etc/php/8.1/fpm/pool.d/www.conf

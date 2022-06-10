@@ -1,0 +1,7 @@
+git config --global user.email "pat@mousebrains.com"
+git config --global user.name "Pat"
+git config --global submodule.recurse true
+git config --global diff.submodule log
+git config --global status.submodulesummary 1
+git config --global push.recurseSubmodules on-demand
+git clone --recurse-submodules git@github.com:mousebrains/SUNRISE2022.git

@@ -1,4 +1,7 @@
 # Set up git and repository
+
+There is a script with the following in [../Setup/git.setup](../Setup/git.setup) Bit it is a bit of a catch 22
+
 - Setup git defaults for dealing with submodule recurssion
   - `git config --global user.email "you@example.com"`
   - `git config --global user.name "Your Name"`

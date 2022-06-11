@@ -8,4 +8,5 @@
 - Set up [git](git.md)
 - Install the [web server](Shore.webserver.md)
 - Set up [syncthing](syncthing.md)
+- Install [PostgreSQL](../DB/README.md)
 - Install Python [packages](python.packages.md)

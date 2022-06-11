@@ -1,0 +1,7 @@
+# bi-directional shared folder
+[Share]
+  comment = SUNRISE bid-directional shared folder
+  path = /home/pat/Sync/Share
+  browseable = yes
+  readonly = no
+  guest ok = yes

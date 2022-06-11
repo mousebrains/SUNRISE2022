@@ -1,0 +1,7 @@
+# Autonomous Surface Vehicle, RHIBs
+[ASV]
+  comment = SUNRISE ASV folders
+  path = /home/pat/Sync/Processed/ASV
+  browseable = yes
+  readonly = no
+  guest ok = no

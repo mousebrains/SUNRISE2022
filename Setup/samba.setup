@@ -1,0 +1,111 @@
+#! /usr/bin/env python3
+#
+# Install Ship board samba server for smb: access
+#
+# There will be both a guest read-only account,
+# an ASV read-write account,
+# and a read-write intership account 
+#
+# June-2022, Pat Welch
+
+from argparse import ArgumentParser
+from tempfile import NamedTemporaryFile
+import subprocess
+import logging
+import os.path
+import re
+import sys
+
+def execute(args:list[str], input:str=None) -> bool:
+    s = subprocess.run(args, 
+            capture_output=True, shell=False, 
+            input=None if input is None else bytes(input, "UTF-8"),
+            )
+    if s.returncode != 0:
+        logging.error("executing %s", args)
+        logging.info("%s", s)
+    if s.stdout:
+        logging.info("%s\n%s", " ".join(args), str(s.stdout, "UTF-8"))
+    return s.returncode == 0
+
+def maybeUpdate(args:ArgumentParser, filenames:list[str]) -> bool:
+    fn = args.smbconf
+    if not os.path.isfile(fn):
+        logging.error("%s does not exist", fn)
+        return False
+
+    with open(fn, "r") as fp: orig = fp.read()
+    proposed = str(orig)
+
+    if args.guestaccount:
+        if "guest account" in proposed:
+            proposed = re.sub(r"guest account\s*=.*\n",
+                    r"guest account = " + args.guestaccount + "\n",
+                    proposed)
+        else:
+            proposed = re.sub(r"\[global\][ \t]*\n", 
+                    r"[global]\n  guest account = " + args.guestaccount + "\n",
+                    proposed)
+
+    for blkfn in filenames:
+        if not os.path.isfile(blkfn):
+            logging.error("%s does not exist", blkfn)
+            continue
+
+        with open(blkfn, "r") as fp: blk = fp.read()
+
+        if blk not in proposed:
+            proposed += "\n" + blk
+
+    if proposed == orig:
+        logging.info("No need to update %s", args.smbconf)
+        return False
+
+    with NamedTemporaryFile() as fp:
+        fp.write(bytes(proposed, "utf-8"))
+        fp.flush()
+        execute([args.sudo, args.cp, fp.name, args.smbconf])
+
+    return execute([args.testparm, "-s", args.smbconf])
+
+parser = ArgumentParser()
+grp = parser.add_argument_group(description="Samba related options")
+grp.add_argument("block", type=str, nargs="*", help="Blocks to insert into samba")
+grp.add_argument("--username", type=str, action="append", help="Samba username to create")
+grp.add_argument("--password", type=str, action="append", help="Samba user's password")
+grp.add_argument("--smbconf", type=str, default="/etc/samba/smb.conf", help="Samba's config file")
+grp.add_argument("--guestaccount", type=str, default="pat", help="Samba's guest user account")
+
+grp = parser.add_argument_group(description="Commands related options")
+grp.add_argument("--sudo", type=str, default="/usr/bin/sudo", help="sudo command")
+grp.add_argument("--apt", type=str, default="/usr/bin/apt", help="apt command")
+grp.add_argument("--cp", type=str, default="/usr/bin/cp", help="cp command")
+grp.add_argument("--systemctl", type=str, default="/usr/bin/systemctl", help="systemctl command")
+grp.add_argument("--smbpasswd", type=str, default="/usr/bin/smbpasswd", help="smbpasswd command")
+grp.add_argument("--testparm", type=str, default="/usr/bin/testparm", help="testparm command")
+args = parser.parse_args()
+
+logging.basicConfig(level=logging.DEBUG, format="%(levelname)s: %(message)s")
+
+if not args.username: args.username = ["pat"]
+if not args.password: args.password = ["sunrise"]
+
+if len(args.username) != len(args.password):
+    parser.error("You must specify the same number of usernames and passwords")
+
+if not args.block:
+    args.block = [
+            "../SystemFiles/SAMBA.sync",
+            "../SystemFiles/SAMBA.share",
+            "../SystemFiles/SAMBA.asv",
+            ]
+
+execute([args.sudo, args.apt, "install", "-y", "samba"]) # Install the SAMBA related packages
+
+maybeUpdate(args, args.block)
+
+for i in range(len(args.username)):
+    execute([args.sudo, args.smbpasswd, "-a", args.username[i]], 
+            input=args.password[i] + "\n" + args.password[i] + "\n")
+
+execute([args.sudo, args.systemctl, "restart", "smbd"]) # Restart SAMBA with updated configuration

@@ -7,3 +7,4 @@
 - Set up [syncthing](syncthing.md)
 - Install [PostgreSQL](../DB/README.md)
 - Install Python [packages](python.packages.md)
+- Install samba [../Setup/samba.setup](../Setup/samba.setup) You'll also need to create ~/Sync/Processed/ASV

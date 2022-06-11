@@ -13,9 +13,9 @@
 #
 pe0: {"number": 0, "spaceNorm": 511, "tempNorm": 0.65}
 pe1: {"number": 1, "spaceNorm": 511, "tempNorm": 0.65}
-pe2: {"number": 2, "spaceNorm": 511, "tempNorm": 0.65}
+pe2: {"number": 2, "spaceNorm": 256, "tempNorm": 0.65}
 ps0: {"number": 3, "spaceNorm": 511, "tempNorm": 0.65}
 ps1: {"number": 4, "spaceNorm": 511, "tempNorm": 0.65}
-ps2: {"number": 5, "spaceNorm": 511, "tempNorm": 0.65}
+ps2: {"number": 5, "spaceNorm": 256, "tempNorm": 0.65}
 shore0: {"number": 6, "spaceNorm": 255, "tempNorm": 0.65}
 Patricio-M1.local: {"number": 255, "spaceNorm": 16, "tempNorm": 0.65}

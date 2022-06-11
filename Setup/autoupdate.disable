@@ -1,0 +1,12 @@
+#! /usr/bin/sh -x
+#
+# Disable automatic updates
+#
+# June-2022, Pat Welch, pat@mousebrains.com
+
+fn=/etc/apt/apt.conf.d/20auto-upgrades
+tmp=/tmp/tpw.$$
+
+sed -e 's/"1";/"0";/' <$fn >$tmp
+sudo cp $tmp $fn
+rm -f $tmp

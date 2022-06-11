@@ -1,0 +1,7 @@
+#! /usr/bin/sh
+
+# Generate a key pair
+ssh-keygen -b 4096
+ssh-copy-id -i ~/.ssh/id_rsa.pub sunrise.ceoas.oregonstate.edu
+
+../SSHTunnel/install.py --force

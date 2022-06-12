@@ -23,6 +23,7 @@ foreach($files as $item) {
 }
 ?>
 <li><a href=logViewer.php>log files</a></li>
+<li><a href=monitor.php>System monitor</a></li>
 </ul>
 </body>
 </html>

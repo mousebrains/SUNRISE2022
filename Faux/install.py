@@ -43,7 +43,6 @@ def maybeCopy(src:str, tgt:str) -> bool:
 
 parser = ArgumentParser()
 parser.add_argument("--force", action="store_true", help="Force reloading ...")
-parser.add_argument("--services", type=str, action="append", help="Service files")
 parser.add_argument("--serviceDirectory", type=str, default="~/.config/systemd/user",
         help="Where to copy service file to")
 parser.add_argument("--systemctl", type=str, default="/usr/bin/systemctl",
@@ -51,6 +50,7 @@ parser.add_argument("--systemctl", type=str, default="/usr/bin/systemctl",
 parser.add_argument("--loginctl", type=str, default="/usr/bin/loginctl",
         help="loginctl executable")
 parser.add_argument("--logdir", type=str, default="~/logs", help="Where logfiles are stored")
+parser.add_argument("services", type=str, nargs="+", help="Service file(s)")
 args = parser.parse_args()
 
 if args.services is None: args.services = ["pe.service", "ps.service"]
@@ -66,6 +66,11 @@ for service in args.services:
 if not q and not args.force:
     print("Nothing to be done")
     sys.exit(0)
+
+print(f"Stopping {args.services}")
+cmd = [args.systemctl, "--user", "stop"]
+cmd.extend(args.services)
+subprocess.run(cmd, shell=False, check=False)
 
 print("Forcing reload of daemon")
 subprocess.run((args.systemctl, "--user", "daemon-reload"),

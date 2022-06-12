@@ -14,11 +14,10 @@ Description=Faux Point Sur
 WorkingDirectory=%h/SUNRISE2022/Faux
 
 ExecStart= \
-	%h/SUNRISE2022/Faux/met.py \
+	%h/SUNRISE2022/Faux/spit.py \
 	--verbose \
 	--logfile=%h/logs/met.ps.log \
-	--output=%h/SUNRISE2022/Faux/data/PS/met.csv \
-	--yaml=%h/SUNRISE2022/Faux/ps.yaml
+	--output=%h/SUNRISE2022/Faux/data/PS/met.csv
 
 RestartSec=30
 

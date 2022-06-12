@@ -22,12 +22,12 @@ root = os.path.abspath(os.path.expanduser(args.serviceDirectory))
 print(f"Stopping {args.services}")
 cmd = [args.systemctl, "--user", "stop"]
 cmd.extend(args.services)
-subprocess.run(cmd, shell=False, check=True)
+subprocess.run(cmd, shell=False, check=False)
 
 print(f"Disabling {args.services}")
 cmd = [args.systemctl, "--user", "disable"]
 cmd.extend(args.services)
-subprocess.run(cmd, shell=False, check=True)
+subprocess.run(cmd, shell=False, check=False)
 
 subprocess.run((args.systemctl, "--user", "daemon-reload"),
         shell=False, check=True)

@@ -16,8 +16,8 @@ WorkingDirectory=%h/SUNRISE2022/Faux
 ExecStart= \
 	%h/SUNRISE2022/Faux/spit.py \
 	--verbose \
-	--logfile=%h/logs/met.pe.log \
-	--output=%h/SUNRISE2022/Faux/data/PE/met.csv
+	--logfile=%h/logs/faux.pe.log \
+	--output=%h/SUNRISE2022/Faux/data/met.pe.csv
 
 RestartSec=30
 

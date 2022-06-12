@@ -9,7 +9,7 @@ from argparse import ArgumentParser
 from TPWUtils import Logger
 import logging
 import bz2
-import os.path
+import os
 import time
 import sys
 
@@ -25,6 +25,15 @@ parser.add_argument("--time", type=str, default="Time", help="Time column name")
 args = parser.parse_args()
 
 Logger.mkLogger(args, fmt="%(asctime)s %(levelname)s: %(message)s")
+
+if not os.path.isfile(args.sample):
+    logging.error("%s does not exist", args.sample)
+    sys.exit(1)
+
+if not os.path.isdir(os.path.dirname(args.output)):
+    dirname = os.path.dirname(args.output)
+    logging.info("Creating %s", dirname)
+    os.makedirs(dirname, mode=0o755, exist_ok=True)
 
 dateCol = None
 timeCol = None

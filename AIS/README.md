@@ -1,5 +1,7 @@
 # Code to suck in AIS payloads embeded in NEMA sentences from either UDP datagrams or a serial feed.
 
+# To install use [ais.setup](ais.setup)
+
 `receiver.py` is the main program which does the following:
 - Store the datagrams into a database
 - Decode NEMA sentences and build AIS payloads

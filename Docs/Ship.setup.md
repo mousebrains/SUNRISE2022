@@ -6,5 +6,5 @@
 - Install the [web server](Ship.webserver.md)
 - Set up [syncthing](syncthing.md)
 - Install [PostgreSQL](../DB/README.md)
-- Install Python [packages](python.packages.md)
+- Install Packages [../Setup/packages.setup](../Setup/packages.setup)
 - Install samba [../Setup/samba.setup](../Setup/samba.setup) You'll also need to create ~/Sync/Processed/ASV

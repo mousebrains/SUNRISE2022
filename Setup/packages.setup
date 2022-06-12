@@ -1,0 +1,11 @@
+#! /usr/bin/sh -x
+#
+# Install various packages
+#
+# June-2022, Pat Welch
+
+sudo apt install -y \
+	sqlite3 \
+	python3-xarray \
+	python3-ais \
+	python3-psycopg2 \

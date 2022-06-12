@@ -10,11 +10,11 @@ import os
 import sys
 
 parser = ArgumentParser()
-parser.add_argument("--services", type=str, required=True, action="append", help="Service files")
 parser.add_argument("--serviceDirectory", type=str, default="~/.config/systemd/user",
         help="Where to copy service file to")
 parser.add_argument("--systemctl", type=str, default="/usr/bin/systemctl",
         help="systemctl executable")
+parser.add_argument("services", type=str, nargs="+", help="Service files")
 args = parser.parse_args()
 
 root = os.path.abspath(os.path.expanduser(args.serviceDirectory))
@@ -32,8 +32,8 @@ subprocess.run(cmd, shell=False, check=True)
 subprocess.run((args.systemctl, "--user", "daemon-reload"),
         shell=False, check=True)
 
-for service in args.service:
-    fn = os.path.join(fn, service)
+for service in args.services:
+    fn = os.path.join(root, service)
     if os.path.isfile(fn):
         print(f"Removing {fn}")
         os.unlink(fn)

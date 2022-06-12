@@ -19,13 +19,15 @@ function loadData () {
   let Ndatapoints = computeNumberDatapoints(passData);
   if (!validateNumberDatapoints(Ndatapoints)) {return};
 
+  //console.log(passData);
+
   // request the data and modify plot
   requestData(passData)
   .then(data => updateDatasets(passData,data))
   .then(() => replotData())
   .then(() => {
-    let x_label = (passData.x_variable != 'None' ? passData.x_variable : '');
-    let y_label = (passData.y_variable != 'None' ? passData.y_variable : '');
+    let x_label = LABELS[passData.x_variable] || '';
+    let y_label = LABELS[passData.y_variable] || '';
     setLabels(x_label,y_label)
   })
   .then(() => updateColourProperties())
@@ -86,7 +88,7 @@ function computeNumberDatapoints(passData) {
   let timespan = end_time - start_time; // in milliseconds
 
   // get number of datapoints at 1 per minute
-  let number_of_datapoints = number_of_variables*parseInt(timespan/60000)
+  let number_of_datapoints = number_of_variables*parseInt(timespan/60000/passData.time_resolution)
 
   return number_of_datapoints
 }

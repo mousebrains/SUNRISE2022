@@ -31,12 +31,12 @@
         <div id="hovmoller-set-data-label-select" class="label-select">
           <label for="x-axis-variable">X Variable:</label>
           <select name="x-axis-variable" id="x-axis-variable-select" class="data-selector" class="common-options">
-            <option value="Time">Time</option>
+            <!-- <option value="Time">Time</option> -->
             <!-- Dynamically add common options with js -->
           </select>
           <label for="y-axis-variable">Y Variable:</label>
           <select name="y-axis-variable" id="y-axis-variable-select" class="data-selector" class="common-options">
-            <option value="Time">Time</option>
+            <!-- <option value="Time">Time</option> -->
             <!-- Dynamically add common options with js -->
           </select>
           <label for="data-variable-PE">Pelican Data:</label>
@@ -54,6 +54,15 @@
           <input type="datetime-local" id="start-time" name="start-time">
           <label for="end-time">End time (UTC):</label>
           <input type="datetime-local" id="end-time" name="end-time">
+          <label for="time-resolution">Resolution:</label>
+          <div>
+            <input type="radio" id="1min-resolution" name="time-resolution" value=1 checked>
+            <label for "1min-resolution">1 min</label>
+            <input type="radio" id="5min-resolution" name="time-resolution" value=5>
+            <label for "5min-resolution">5 min</label>
+            <input type="radio" id="15min-resolution" name="time-resolution" value=15>
+            <label for "15min-resolution">15 min</label>
+          </div>
         </div>
 
         <button id="load-data-button" onclick="loadData()" class="action-button">
@@ -165,6 +174,7 @@
 
   <script src="js/utils.js"></script>
   <script src="js/toggle_collapsables.js"></script>
+  <script src="js/constants.js"></script>
   <script src="js/hovmoller.js"></script>
   <script src="js/hovmoller_load_data.js"></script>
 </body>

@@ -1,26 +1,10 @@
 // main script for the timeseries plots
 
+//first run utils.js, toggle_collpasable.js, and constants.js
+
 // *********************************************** //
 // ************** INITIALISE THE UI*************** //
 // *********************************************** //
-
-// available data fields
-const PELICAN_DATA_VARIABLES = [
-	"Time",
-	"Latitude",
-	"Longitude",
-	"Salinity",
-	"Temperature",
-	"Fluorescence"
-];
-
-const POINTSUR_DATA_VARIABLES = [
-	"Time",
-	"Latitude",
-	"Longitude",
-	"Salinity",
-	"Temperature"
-];
 
 const COMMON_VARIABLES = PELICAN_DATA_VARIABLES.filter(x => POINTSUR_DATA_VARIABLES.includes(x));
 
@@ -79,8 +63,12 @@ const PREFERENCES_CHECKBOXES = [
 	"data-3-grid",
 	"data-3-reversed",
 	"data-4-grid",
-	"data-4-reversed"
+	"data-4-reversed",
+	"1min-resolution",
+	"5min-resolution",
+	"15min-resolution"
 ];
+
 
 setPreferences()
 
@@ -107,7 +95,8 @@ earlier.setHours(now.getHours()-2);
 // also set the edfault range to now - 2 hours to now, datetime2str defined in js/utils.js
 const set_time_values = {
 	start_time: datetime2str(earlier),
-	end_time: datetime2str(now)
+	end_time: datetime2str(now),
+	time_resolution: 1
 };
 
 // set default values in the time selectors
@@ -115,6 +104,8 @@ let start_time = document.getElementById("start-time");
 start_time.value = set_time_values.start_time;
 let end_time = document.getElementById("end-time");
 end_time.value = set_time_values.end_time;
+
+updateSetTime();
 
 // create a variable to determine whether the x axis is the independent axis or not
 // switching the independent axis requires modifying both the layout and data
@@ -236,8 +227,10 @@ function updateSetData() {
 function updateSetTime() {
 	var new_start_time = document.getElementById("start-time").value;
 	var new_end_time = document.getElementById("end-time").value;
+	var new_time_resolution = document.querySelector('input[name="time-resolution"]:checked').value;
 	set_time_values.start_time = new_start_time;
 	set_time_values.end_time = new_end_time;
+	set_time_values.time_resolution = new_time_resolution;
 };
 
 // ******************************************************** //

@@ -21,10 +21,10 @@ function loadData () {
   .then(data => updateDatasets(passData,data))
   .then(() => replotData())
   .then(() => {
-    let independent_label = (passData.independent_variable != 'None' ? passData.independent_variable : '');
+    let independent_label = LABELS[passData.independent_variable] || '';
     setLabels(independent_axis_x,
               independent_label,
-              datasets.map(ds => ds.name))
+              datasets.map(ds => LABELS[ds.name.substring(3)]))
   })
   .catch(error => console.log(error))
 };
@@ -107,7 +107,7 @@ function computeNumberDatapoints(passData) {
   let timespan = end_time - start_time; // in milliseconds
 
   // get number of datapoints at 1 per minute
-  let number_of_datapoints = number_of_variables*parseInt(timespan/60000)
+  let number_of_datapoints = number_of_variables*parseInt(timespan/60000/passData.time_resolution)
 
   return number_of_datapoints
 }

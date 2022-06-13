@@ -22,8 +22,9 @@ class Monitor(Thread):
     def __init__(self, name:str, args:ArgumentParser, config:Config):
         Thread.__init__(self, name, args)
         self.__queues = [] # Where to send filenames to
-        self.pattern = config.regexp # compiled pattern
-        self.dt = config.timeToWait # Seconds after an update before starting any actions
+        self.pattern = None if config is None else config.regexp # compiled pattern
+        # Seconds after an update before starting any actions
+        self.dt = 10 if config is None else config.timeToWait
 
     def __repr__(self) -> str:
         return f"dt={self.dt} pattern={self.pattern}"
@@ -115,7 +116,6 @@ class MonitorPolling(Monitor):
 if __name__ == "__main__":
     parser = ArgumentParser()
     Logger.addArgs(parser)
-    Config.addArgs(parser)
     parser.add_argument("--directory", type=str, required=True, help="Name of directory to monitor")
     grp = parser.add_mutually_exclusive_group(required=True)
     grp.add_argument("--inotify", action="store_true",
@@ -128,14 +128,13 @@ if __name__ == "__main__":
     logging.info("Args %s", args)
 
     try:
-        config = Config(args)
         if args.inotify: # Use inotify
             i = INotify(args, flags=pyinotify.IN_CLOSE_WRITE | pyinotify.IN_MOVED_TO)
-            monitor = MonitorINotify(args, i.queue, config)
+            monitor = MonitorINotify(args, i.queue, None)
             i.start()
             i.addTree(args.directory)
         else: # Use polling
-            monitor = MonitorPolling(args, args.directory, config)
+            monitor = MonitorPolling(args, args.directory, None)
 
         monitor.start()
         Thread.waitForException()

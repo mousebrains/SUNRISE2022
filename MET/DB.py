@@ -73,7 +73,6 @@ class DB(Thread):
                     logging.info("Bad line, %s", line)
                     continue
                 self.__config.insertRow(cur, fields)
-            break
         epos =  fp.tell() - len(buffer)
         if spos == epos: # Nothing happened
             cur.execute("ROLLBACK;")

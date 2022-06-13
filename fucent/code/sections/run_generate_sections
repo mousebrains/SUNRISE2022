@@ -1,9 +1,0 @@
-#!/bin/bash 
-
-ml load matlab
-
-# add matlab packages to path
-# export MATLABPATH=../utils/yaml
-
-matlab < generate_sections.m
-

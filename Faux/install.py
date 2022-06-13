@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 #
-# Install the SSHtunnel service
+# Install the Faux service
 #
 # Feb-2022, Pat Welch, pat@mousebrains.com
 

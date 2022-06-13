@@ -1,0 +1,130 @@
+#
+# information for how to process file classes
+#
+# June-2022, Pat Welch, pat@mousebrains.com
+
+met.pe:
+  ship: pe
+  regexp: "met[.]pe[.]csv"
+  timeToWait: 60 # Seconds after an update prior to taking any action
+  delimiter: ','
+    # headerSkipBefore: 0 # Lines to skip before header
+    # headerSkipAfter: 0 # Lines to skip after header before data
+  headers: # These are the column names in the file to DB field name
+    Date: {name: t, type: date, format: "%m/%d/%Y"}
+    Time: {name: t, type: time, format: "%H:%M:%S"}
+    ADU800-GGA-Lon: {name: longitude, type: latLonDegMin}
+    ADU800-GGA-Lat: {name: latitude, type: latLonDegMin}
+    Sperry-MK1-Gyro-Hdg-deg: {name: headingGyro}
+    Furuno-SC50-GPS-Hdg-Hdg: {name: headingGPS}
+    Knudsen-True-Depth-DRV-VALUE: {name: waterTemperature}
+    Thermosalinograph-Data-Temp: {name: waterTemperature}
+    Thermosalinograph-Data-Salinity: {name: salinity}
+    Thermosalinograph-Data-Conductivity: {name: conductivity}
+    Thermosalinograph-Data-Sound-Velocity: {name: speedOfSound}
+    Wetstar-Flourometer-microgperL-DRV-VALUE: {name: flourometer}
+    Air-Temp-2: {name: airTemp2}
+    Rel-Humidity-2: {name: relHumidity2}
+    BaromPress-2: {name: airPressure2}
+    Rel-WindDir-2: {name: windDirRel2}
+    Rel-WindSpd-2: {name: windSpdRel2}
+    True-Wind-2-DRV-DIRECTION: {name: windDirTrue2}
+    True-Wind-2-DRV-SPEED: {name: windSpdTrue2}
+    Air-Temp-1: {name: airTemp1}
+    Rel-Humidity-1: {name: relHumidity1}
+    BaromPress-1: {name: airPressure1}
+    Rel-WindDir-1: {name: windDirRel1}
+    Rel-WindSpd-1: {name: windSpdRel1}
+    True-Wind-1-DRV-DIRECTION: {name: windDirTrue1}
+    True-Wind-1-DRV-SPEED: {name: windSpdTrue1}
+    Radiometer-Feed--Long Wave Radiation Watts Per Square Meter: {name: longWave}
+    "Radiometer-Feed--Short Wave Radiation from PSP in Watts Per M^2": {name: shortWave}
+  db.parameters: db.met # Which database parameters to use
+  csv.parameters: csv.met # Which CSV output parameters to use
+  netCDF.parameters: netCDF.met # Which NetCDF output parameters to use
+
+met.ps:
+  ship: ps
+  regexp: "met[.]ps[.]csv"
+  timeToWait: 60 # Seconds after an update prior to taking any action
+  delimiter: ','
+    # headerSkipBefore: 0 # Lines to skip before header
+    # headerSkipAfter: 0 # Lines to skip after header before data
+  headers: # These are the column names in the file to DB field name
+    Date: {name: t, type: date, format: "%m/%d/%Y"}
+    Time: {name: t, type: time, format: "%H:%M:%S"}
+    ADU800-GGA-Lon: {name: longitude, type: latLonDegMin}
+    ADU800-GGA-Lat: {name: latitude, type: latLonDegMin}
+    Sperry-MK1-Gyro-Hdg-deg: {name: headingGyro}
+    Furuno-SC50-GPS-Hdg-Hdg: {name: headingGPS}
+    Knudsen-True-Depth-DRV-VALUE: {name: waterTemperature}
+    Thermosalinograph-Data-Temp: {name: waterTemperature}
+    Thermosalinograph-Data-Salinity: {name: salinity}
+    Thermosalinograph-Data-Conductivity: {name: conductivity}
+    Thermosalinograph-Data-Sound-Velocity: {name: speedOfSound}
+    Wetstar-Flourometer-microgperL-DRV-VALUE: {name: flourometer}
+    Air-Temp-2: {name: airTemp2}
+    Rel-Humidity-2: {name: relHumidity2}
+    BaromPress-2: {name: airPressure2}
+    Rel-WindDir-2: {name: windDirRel2}
+    Rel-WindSpd-2: {name: windSpdRel2}
+    True-Wind-2-DRV-DIRECTION: {name: windDirTrue2}
+    True-Wind-2-DRV-SPEED: {name: windSpdTrue2}
+    Air-Temp-1: {name: airTemp1}
+    Rel-Humidity-1: {name: relHumidity1}
+    BaromPress-1: {name: airPressure1}
+    Rel-WindDir-1: {name: windDirRel1}
+    Rel-WindSpd-1: {name: windSpdRel1}
+    True-Wind-1-DRV-DIRECTION: {name: windDirTrue1}
+    True-Wind-1-DRV-SPEED: {name: windSpdTrue1}
+    Radiometer-Feed--Long Wave Radiation Watts Per Square Meter: {name: longWave}
+    "Radiometer-Feed--Short Wave Radiation from PSP in Watts Per M^2": {name: shortWave}
+  db.parameters: db.met # Which database parameters to use
+  csv.parameters: csv.met # Which CSV output parameters to use
+  netCDF.parameters: netCDF.met # Which NetCDF output parameters to use
+
+db.met:
+  table: met
+  schema:
+    ship: TEXT NOT NULL
+    t: TIMESTAMPTZ NOT NULL
+    longitude: REAL CHECK(longitude BETWEEN -180 AND 180)
+    latitude:  REAL CHECK(latitude BETWEEN -90 AND 90)
+    headingGyro: REAL CHECK(headingGyro BETWEEN -180 AND 360)
+    headingGPS: REAL CHECK(headingGPS BETWEEN -180 AND 360)
+    waterDepth: REAL CHECK(waterDepth BETWEEN 0 AND 1000)
+    waterTemperature: REAL CHECK(waterTemperature BETWEEN 1 AND 40)
+    chlorophyll: REAL CHECK(chlorophyll >= 0)
+    salinity: REAL CHECK(salinity BETWEEN 1 AND 40)
+    conductivity: REAL CHECK(conductivity BETWEEN 1 AND 40)
+    speedOfSound: REAL CHECK(speedOfSound BETWEEN 1000 AND 2000)
+    flourometer: REAL CHECK(flourometer BETWEEN 0 AND 1000)
+    airTemp1: REAL CHECK(airTemp1 BETWEEN 1 AND 60)
+    airTemp2: REAL CHECK(airTemp2 BETWEEN 1 AND 60)
+    airPressure1: REAL CHECK(airPressure1 BETWEEN 1000 AND 2000)
+    airPressure2: REAL CHECK(airPressure2 BETWEEN 1000 AND 2000)
+    relHumidity1: REAL CHECK(relHumidity1 BETWEEN 0 AND 110)
+    relHumidity2: REAL CHECK(relHumidity2 BETWEEN 0 AND 110)
+    windSpdRel1: REAL CHECK(windDirRel1 BETWEEN 1 AND 100)
+    windSpdRel2: REAL CHECK(windDirRel2 BETWEEN 1 AND 100)
+    windDirRel1: REAL CHECK(windDirRel1 BETWEEN -180 AND 360)
+    windDirRel2: REAL CHECK(windDirRel2 BETWEEN -180 AND 360)
+    shortWave: REAL CHECK(shortWave BETWEEN -2000 AND 2000)
+    longWave: REAL CHECK(longWave BETWEEN -1000 AND 2000)
+
+  supplemental:
+    - PRIMARY KEY(ship,t)
+
+  insert:
+    extra:
+      - ship
+    onConflict: DO NOTHING
+
+netCDF.met:
+  output: True
+  decimate: None
+
+csv.met:
+  output: True
+  decimate: 60
+

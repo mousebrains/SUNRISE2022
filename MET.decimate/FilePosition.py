@@ -3,6 +3,7 @@
 # PostgreSQL table of file positions
 #
 import logging
+import os.path
 
 class FilePosition:
     def __init__(self, table:str="filePosition") -> None:
@@ -23,6 +24,7 @@ class FilePosition:
         cur.execute(self.__create)
 
     def get(self, fn:str, cur) -> int:
+        fn = os.path.abspath(os.path.expanduser(fn))
         cur.execute(self.__get, (fn,))
         for row in cur:
             return row[0]
@@ -30,6 +32,7 @@ class FilePosition:
 
     def set(self, fn:str, pos:int, cur) -> bool:
         try:
+            fn = os.path.abspath(os.path.expanduser(fn))
             cur.execute(self.__set, (fn, pos))
             return True
         except:

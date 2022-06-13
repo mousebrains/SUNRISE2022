@@ -1,4 +1,6 @@
-# SUNRISE2022
+# SUNRISE2022 Research Cruise
+
+# For data processing see [SUNRISE2022_code](https://github.com/mousebrains/SUNRISE2022_code)
 
 Source code for SUNRISE 2022 cruise
 

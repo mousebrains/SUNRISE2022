@@ -113,6 +113,8 @@ db.met:
     longWave: REAL CHECK(longWave BETWEEN -1000 AND 2000)
 
   supplemental:
+    - qCSV BOOL DEFAULT false
+    - qNetCDF BOOL DEFAULT false
     - PRIMARY KEY(ship,t)
 
   insert:

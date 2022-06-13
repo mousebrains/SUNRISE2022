@@ -169,8 +169,11 @@ class Writer(Thread.Thread):
                 if qMakeTable:
                     self.mkTable(cur)
                     qMakeTable = False
-                cur.execute(sql, row)
-                cur.execute("COMMIT;")
+                try:
+                    cur.execute(sql, row)
+                    cur.execute("COMMIT;")
+                except:
+                    cur.execute("ROLLBACK;")
 
 class CSV(Thread.Thread):
     ''' Wait on a queue to look at a database and update a CSV file '''

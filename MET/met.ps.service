@@ -26,7 +26,3 @@ RestartSec=30
 
 [Install]
 WantedBy=default.target
-
-# TPW
-# TKW
-# TPW 2

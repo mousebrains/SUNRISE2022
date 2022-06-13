@@ -53,8 +53,6 @@ parser.add_argument("--logdir", type=str, default="~/logs", help="Where logfiles
 parser.add_argument("services", type=str, nargs="+", help="Service file(s)")
 args = parser.parse_args()
 
-if args.services is None: args.services = ["faux.pe.service", "faux.ps.service"]
-
 makeDirectory(args.logdir)
 
 root = args.serviceDirectory

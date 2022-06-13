@@ -18,7 +18,6 @@ import queue
 
 parser = ArgumentParser()
 Logger.addArgs(parser)
-Monitor.Monitor.addArgs(parser)
 Config.addArgs(parser)
 DB.addArgs(parser)
 parser.add_argument("--directory", type=str, required=True, help="Name of directory to monitor")

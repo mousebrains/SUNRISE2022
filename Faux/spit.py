@@ -73,17 +73,16 @@ while True:
         if not os.path.isfile(args.output):
             with open(args.output, "wb") as ofp: ofp.write(hdr)
 
-        with open(args.output, "ab") as ofp: # Now loop over lines
-            for line in fp.readlines():
-                fields = line.split(delim)
-                if len(fields) < minCol:
-                    logging.warning("Skipping %s", line)
-                    continue
-                tm = time.gmtime(now)
-                fields[dateCol] = bytes(time.strftime("%m/%d/%Y", tm), "utf-8")
-                fields[timeCol] = bytes(time.strftime("%H:%M:%S", tm), "utf-8")
+        for line in fp.readlines():
+            fields = line.split(delim)
+            if len(fields) < minCol:
+                logging.warning("Skipping %s", line)
+                continue
+            tm = time.gmtime(now)
+            fields[dateCol] = bytes(time.strftime("%m/%d/%Y", tm), "utf-8")
+            fields[timeCol] = bytes(time.strftime("%H:%M:%S", tm), "utf-8")
+            with open(args.output, "ab") as ofp: # output the line, this way so inotify will work
                 ofp.write(delim.join(fields))
-                ofp.flush()
-                now += dt
-                dtWait = max(0.01, now - time.time())
-                time.sleep(dtWait)
+            now += dt
+            dtWait = max(0.01, now - time.time())
+            time.sleep(dtWait)

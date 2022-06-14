@@ -29,11 +29,12 @@ cmd = [args.systemctl, "--user", "disable"]
 cmd.extend(args.services)
 subprocess.run(cmd, shell=False, check=False)
 
-subprocess.run((args.systemctl, "--user", "daemon-reload"),
-        shell=False, check=True)
-
 for service in args.services:
     fn = os.path.join(root, service)
     if os.path.isfile(fn):
         print(f"Removing {fn}")
         os.unlink(fn)
+
+print("Reloading of daemon")
+subprocess.run((args.systemctl, "--user", "daemon-reload"),
+        shell=False, check=True)

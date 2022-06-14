@@ -43,7 +43,10 @@ class Config:
         self.dbInfo = self.dbParams(fn, key, info, "db.parameters")
         self.csv = self.decimateParameters(fn, key, info, "csv.parameters")
         self.netcdf = self.decimateParameters(fn, key, info, "netCDF.parameters")
-        self.headers = item["headers"]
+        hdrKey = item["headers"]
+        if hdrKey not in info:
+            raise KeyError(f"{hdrKey} not in {fn} referenced from {key}")
+        self.headers = info[hdrKey]
 
     def __repr__(self) -> str:
         info = {
@@ -110,7 +113,7 @@ class Config:
     def decimateParameters(self, fn:str,  key:str, info:str, paramName:str) -> dict:
         item = info[key]
         if paramName not in item: return None
-        a = item[paramName]
+        a = item[paramName] # CSV definition
         if a not in info:
             raise KeyError(f"{a} not in {fn} referenced from {key}")
         return info[a]
@@ -164,6 +167,8 @@ class Config:
                 else:
                     val = datetime.datetime.combine(t, time, tzinfo=datetime.timezone.utc)
                     t = None
+            elif item[2] == "epoch":
+                val = datetime.datetime.fromtimestamp(val, tz=datetime.timezone.utc)
             elif item[2] == "latLonDegMin":
                 val = self.latLon(val)
             if val is None: continue # Date/Time

@@ -108,7 +108,8 @@ class Config:
                 "insertPre": insertPre,
                 "insertMid": insertMid,
                 "insertPost": insertPost,
-                "extra": exValues}
+                "extra": exValues,
+                "table": tbl}
 
     def decimateParameters(self, fn:str,  key:str, info:str, paramName:str) -> dict:
         item = info[key]

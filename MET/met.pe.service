@@ -15,7 +15,7 @@ WorkingDirectory=%h/SUNRISE2022/MET
 
 ExecStart= \
 	%h/SUNRISE2022/MET/met2db.py \
-	--directory=../Faux/data
+	--directory=../Faux/data \
 	--key=met.ps \
 	--inotify \
 	--yaml=decimate.yaml \

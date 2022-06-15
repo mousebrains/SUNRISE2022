@@ -17,7 +17,7 @@ met.pe:
 
 met.ps:
   ship: ps
-  regexp: "met[.]ps[.]csv"
+  regexp: "PS22_23[.].*[.]csv"
   timeToWait: 60 # Seconds after an update prior to taking any action
   delimiter: ','
     # headerSkipBefore: 0 # Lines to skip before header
@@ -82,8 +82,8 @@ Pelican.headers: # These are the column names in the file to DB field name
   "Radiometer-Feed--Short Wave Radiation from PSP in Watts Per M^2": {name: shortWave}
 
 PointSur.headers: # These are the column names in the file to DB field name
-  Date: {name: t, type: date, format: "%m/%d/%Y"}
-  Time: {name: t, type: time, format: "%H:%M:%S"}
+  DATE: {name: t, type: date, format: "%m/%d/%Y"}
+  TIME: {name: t, type: time, format: "%H:%M:%S"}
   ABX_LAT: {name: latitude, type: latLonDegMin}
   ABX_LON: {name: longitude, type: latLonDegMin}
   GYRO_HEADING: {name: headingGyro}
@@ -92,13 +92,13 @@ PointSur.headers: # These are the column names in the file to DB field name
   TSG_CONDUCTICITY: {name: conductivity}
   TSG_TEMP: {name: waterTemperature}
   TSG_SALINITY: {name: salinity}
-  BEAM_TRANSMISSION: {name:beamTransmission}
+  BEAM_TRANSMISSION: {name: beamTransmission}
   FLUOROMETER: {name: flourometer}
-  WS_TEMP: {airTemp1}
-  WS_RH: {relHumidity1}
-  WS_BARO: {airPressure1}
-  REL_WIND_DIR: {windDirRel1}
-  REL_WIND_SPEED: {windSpdRel1}
+  WS_TEMP: {name: airTemp1}
+  WS_RH: {name: relHumidity1}
+  WS_BARO: {name: airPressure1}
+  REL_WIND_DIR: {name: windDirRel1}
+  REL_WIND_SPEED: {name: windSpdRel1}
   TRUE_WIND_DIR: {name: windDirTrue1}
   TRUE_WIND_SPEED: {name: windSpdTrue1}
   RADIOMETER_LONGWAVE: {name: longWave}
@@ -132,8 +132,8 @@ db.met:
     waterDepth: REAL CHECK(waterDepth BETWEEN 0 AND 1000)
     waterTemperature: REAL CHECK(waterTemperature BETWEEN 1 AND 40)
     chlorophyll: REAL CHECK(chlorophyll >= 0)
-    salinity: REAL CHECK(salinity BETWEEN 1 AND 40)
-    conductivity: REAL CHECK(conductivity BETWEEN 1 AND 40)
+    salinity: REAL CHECK(salinity BETWEEN 0 AND 40)
+    conductivity: REAL CHECK(conductivity BETWEEN 0 AND 40)
     speedOfSound: REAL CHECK(speedOfSound BETWEEN 1000 AND 2000)
     flourometer: REAL CHECK(flourometer BETWEEN 0 AND 1000)
     beamTransmission: REAL CHECK(beamTransmission >= 0)
@@ -145,8 +145,12 @@ db.met:
     relHumidity2: REAL CHECK(relHumidity2 BETWEEN 0 AND 110)
     windSpdRel1: REAL CHECK(windDirRel1 BETWEEN 1 AND 100)
     windSpdRel2: REAL CHECK(windDirRel2 BETWEEN 1 AND 100)
-    windDirRel1: REAL CHECK(windDirRel1 BETWEEN -180 AND 360)
-    windDirRel2: REAL CHECK(windDirRel2 BETWEEN -180 AND 360)
+    windDirRel1: REAL CHECK(windDirRel1 BETWEEN -180 AND 720)
+    windDirRel2: REAL CHECK(windDirRel2 BETWEEN -180 AND 720)
+    windSpdTrue1: REAL CHECK(windDirTrue1 BETWEEN 1 AND 100)
+    windSpdTrue2: REAL CHECK(windDirTrue2 BETWEEN 1 AND 100)
+    windDirTrue1: REAL CHECK(windDirTrue1 BETWEEN -180 AND 720)
+    windDirTrue2: REAL CHECK(windDirTrue2 BETWEEN -180 AND 720)
     shortWave: REAL CHECK(shortWave BETWEEN -2000 AND 2000)
     longWave: REAL CHECK(longWave BETWEEN -1000 AND 2000)
 

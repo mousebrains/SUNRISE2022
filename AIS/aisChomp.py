@@ -156,12 +156,23 @@ class ReadSerial(Reader):
                 stopbits=self.__Stopbits[args.serialStopbits],
                 ) as s:
             logging.info("s %s", s)
+            buffer = bytearray()
             while s.is_open:
                 (rlist, wlist, xlist) = select.select([s], [], [])
                 t = time.time()
                 try:
-                    data = s.read(65536) # Read a sentence
-                    self.put(time.time(), None, None, data)
+                    buffer += s.read(65536) # Read a data
+                    t = time.time()
+                    lines = buffer.split(b"\n")
+                    for line in lines:
+                        if line == b"": continue
+                        if (len(line) > 1) and line[-1:] == b"\r":
+                            self.put(t, None, None, line)
+                    if len(lines):
+                        if lines[-1] == b"" or lines[-1][-1] == "\r":
+                            buffer = bytearray()
+                        else:
+                            buffer = buffer[-len(lines[-1]):]
                 except Exception as e:
                     logging.exception("While reading serial device")
         raise Exception(f"EOF while reading from {device}")

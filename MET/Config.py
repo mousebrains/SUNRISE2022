@@ -128,6 +128,7 @@ class Config:
         headers = self.headers
         for index in range(len(columns)):
             name = columns[index]
+            logging.info("name %s in headers %s", name, name in headers)
             if name not in headers: continue
             item = headers[name]
             colmap.append((
@@ -152,7 +153,9 @@ class Config:
         for item in self.__colmap:
             val = row[item[0]].strip()
             if len(val) == 0: continue
-            if item[2] == "date":
+            if item[2] is None:
+                pass
+            elif item[2] == "date":
                 date = datetime.datetime.strptime(val, item[3]).date()
                 if t is None:
                     t = date
@@ -168,10 +171,12 @@ class Config:
                 else:
                     val = datetime.datetime.combine(t, time, tzinfo=datetime.timezone.utc)
                     t = None
-            elif item[2] == "epoch":
-                val = datetime.datetime.fromtimestamp(val, tz=datetime.timezone.utc)
+            # elif item[2] == "epoch":
+                # val = datetime.datetime.fromtimestamp(val, tz=datetime.timezone.utc)
             elif item[2] == "latLonDegMin":
                 val = self.latLon(val)
+            else:
+                logging.error("Unrecognized type %s", item)
             if val is None: continue # Date/Time
             names.append(item[1])
             values.append(val)
@@ -183,7 +188,7 @@ class Config:
         except:
             logging.error("sql %s", sql)
             logging.error("Values %s\n%s", len(values), values)
-            logging.exception("Error inserting row, %s, with\n%s", row, self)
+            logging.exception("Error inserting row, %s", row)
             return False
 
 if __name__ == "__main__":

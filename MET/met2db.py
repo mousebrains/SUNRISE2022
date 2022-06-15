@@ -40,7 +40,7 @@ try:
         i.start()
         i.addTree(args.directory)
     else: # Use polling
-        monitor = Monitor.MonitorPolling(args, config)
+        monitor = Monitor.MonitorPolling(args, args.directory, config)
 
     db = DB(args, monitor, config)
 

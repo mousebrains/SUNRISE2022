@@ -15,12 +15,12 @@ WorkingDirectory=%h/SUNRISE2022/MET
 
 ExecStart= \
 	%h/SUNRISE2022/MET/met2db.py \
-	--directory=../Faux/data \
-	--key=met.pe \
 	--inotify \
+	--directory="/mnt/sci/2022 Data/PS22_23_MacKinnon/DAILY_LOG" \
+	--key=met.ps \
 	--yaml=decimate.yaml \
 	--verbose \
-	--logfile=%h/logs/met.pe.log
+	--logfile=%h/logs/met.ps.log
 
 RestartSec=30
 

@@ -52,13 +52,13 @@ try:
     with requests.Session() as s: # For CMR and Granules, no authorizaton needed
         items = collections(s, info)
         if not items: 
-            logger.warning("No CMR items found")
-            sys.exit(1)
+            logger.info("No CMR items found")
+            sys.exit(0)
         logger.info("Fetched %s CMR items", len(items))
         urls = granules(s, info, items)
         if not urls: 
-            logger.warning("No URLs found to fetch")
-            sys.exit(1)
+            logger.info("No URLs found to fetch")
+            sys.exit(0)
         if "regDup" in info: # Duplicate some entries with substitution, VIIRS Ocean Color case
             urls.update(duplicateURL(urls, info["regDup"]))
 
@@ -73,5 +73,7 @@ try:
                         pruneSSS(info, ofn, args.pruned)
                         continue
                 pruneData(info, ofn, args.pruned) # Fell through to default for MODIS/VIIRS
+except SystemExit:
+    pass # Ignore sys.exit calls
 except:
     logger.exception("Unexpected exception")

@@ -13,6 +13,7 @@ parser = ArgumentParser()
 Logger.addArgs(parser)
 grp = parser.add_argument_group(description="Command options")
 grp.add_argument("--rsync", type=str, default="/usr/bin/rsync")
+grp.add_argument("--shell", action="store_true", help="Use a shell")
 grp.add_argument("--opt", type=str, action="append", help="rsync options")
 parser.add_argument("--tgt", type=str, required=True, help="Target of rsync command")
 parser.add_argument("src", type=str, nargs="+", help="Source directories")
@@ -32,7 +33,7 @@ logging.info("%s", " ".join(cmd))
 
 try:
     a = subprocess.run(cmd,
-            shell=False,
+            shell=args.shell,
             capture_output=True,
             )
     if a.returncode:

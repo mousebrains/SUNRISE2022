@@ -16,7 +16,7 @@ WorkingDirectory=%h/logs
 ExecStart=%h/SUNRISE2022/MET/db2csv.py \
 	--logfile=%h/logs/db2csv.log \
 	--verbose \
-	--yaml=decimate.yaml \
+	--yaml=%h/SUNRISE2022/MET/decimate.yaml \
 	--key=met.ps \
 	--csv=%h/Sync/PointSur/met.ps.csv
         

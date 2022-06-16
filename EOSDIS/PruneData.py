@@ -63,7 +63,7 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
                 np.logical_and(nav.latitude >= latMin, nav.latitude <= latMax)).data
 
         if not qLatLon.any():
-            logging.debug("No data in lat/lon box in %s", fn)
+            logging.info("No data in lat/lon box in %s", fn)
             return None # Nothing to prune
 
         qLine = qLatLon.any(axis=1) # There is a point in this line we are interested in
@@ -127,7 +127,7 @@ def pruneData(info:dict, fn:str, dirname:str, force:bool=False) -> str:
         t = df.t.data.flatten()[df.qFinite.data.flatten() != 0]
 
         if t.size == 0: # Nothing finite left
-            logging.debug("No data in finite box in %s", fn)
+            logging.info("No data in finite box in %s", fn)
             return None
 
         # Convert to unix seconds

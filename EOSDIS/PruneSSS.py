@@ -55,7 +55,7 @@ def pruneSSS(info:dict, fn:str, dirname:str, force:bool=False) -> str:
                 np.logical_and(ds.lat >= latMin, ds.lat <= latMax)).data
 
         if not qLatLon.any():
-            logging.debug("No data in lat/lon box in %s", fn)
+            logging.info("No data in lat/lon box in %s", fn)
             return None # Nothing to prune
 
         qLine = qLatLon.any(axis=1) # There is a point in this line we are interested in
@@ -121,7 +121,7 @@ def pruneSSS(info:dict, fn:str, dirname:str, force:bool=False) -> str:
         t = df.t.data.flatten()[df.qFinite.data.flatten() != 0]
 
         if t.size == 0: # Nothing finite left
-            logging.debug("No data in finite box in %s", fn)
+            logging.info("No data in finite box in %s", fn)
             return None
 
         t = t.astype(float) / 1e9 # UTC seconds

@@ -18,7 +18,6 @@ Description=Collect AIS datagrams
 WorkingDirectory=%h/logs
 #
 ExecStart=%h/SUNRISE2022/AIS/aisChomp.py \
-    --verbose \
     --logfile=AIS.log \
     --serial=/dev/ttyUSB0 \
     --serialBaud=38400 \

@@ -18,7 +18,6 @@ Description=Collect AIS datagrams
 WorkingDirectory=%h/logs
 #
 ExecStart=%h/SUNRISE2022/AIS/aisChomp.py \
-    --verbose \
     --logfile=AIS.log \
     --udp=44444 \
     --rawSQLite3=ais.pe.raw.db \

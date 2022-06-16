@@ -9,6 +9,7 @@ from TPWUtils.Thread import Thread
 from Monitor import Monitor
 from Config import Config
 from FilePosition import FilePosition
+import os.path
 import logging
 import psycopg2
 import queue
@@ -98,10 +99,13 @@ class DB(Thread):
             q.task_done()
             with psycopg2.connect(dbname) as db:
                 cur = db.cursor()
+                posDB = self.__filepos.get(fn, cur)
+                if posDB and (posDB == os.path.getsize(fn)): 
+                    logging.info("Already fully processed %s", fn)
+                    continue # Nothing new get get
                 if fn not in header:
                     (header[fn], posHeader[fn]) = self.__populateHeaders(fn)
                     logging.info("fn %s header %s", fn, header[fn])
-                    posDB = self.__filepos.get(fn, cur)
                     position[fn] = posHeader[fn] if posDB is None else posDB
                 self.__config.mapColumns(header[fn])
                 with open(fn, "r") as fp:

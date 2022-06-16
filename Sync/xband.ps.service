@@ -17,7 +17,7 @@ ExecStart=%h/SUNRISE2022/Sync/syncit.py \
 	--logfile=%h/logs/xband.log \
 	--verbose \
 	--tgt=%h/Sync/PointSur/xband \
-	/mnt/xband/Recorder/VIDEO
+	/mnt/xband/VIDEO
         
 [Install]
 WantedBy=default.target

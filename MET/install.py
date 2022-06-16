@@ -60,7 +60,7 @@ timerServices = set()
 for item in args.services:
     if item[-8:] == ".service":
         services.add(item)
-    elif item[:-6] == ".timer":
+    elif item[-6:] == ".timer":
         timers.add(item)
     else:
         print("Unsupported file suffix in", item)
@@ -69,11 +69,10 @@ if not timers and not services:
     print("No services specified")
 
 for item in timers: # Now split out services with timers
-    a = str.replace(".timer", ".service")
+    a = item.replace(".timer", ".service")
     if a in services:
         timerServices.add(a)
-        del services[a]
-
+        services.remove(a)
 
 toStart = services.union(timers) # Services and timers that need started
 onlyServices = services.union(timerServices)

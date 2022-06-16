@@ -15,8 +15,8 @@ WorkingDirectory=%h/SUNRISE2022/MET
 
 ExecStart= \
 	%h/SUNRISE2022/MET/met2db.py \
-	--inotify \
-	--directory="/mnt/sci/2022 Data/PS22_23_MacKinnon/DAILY_LOG" \
+	--polling \
+	--directory=/mnt/data \
 	--key=met.ps \
 	--yaml=decimate.yaml \
 	--verbose \

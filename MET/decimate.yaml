@@ -63,7 +63,7 @@ Pelican.headers: # These are the column names in the file to DB field name
   Thermosalinograph-Data-Salinity: {name: salinity}
   Thermosalinograph-Data-Conductivity: {name: conductivity}
   Thermosalinograph-Data-Sound-Velocity: {name: speedOfSound}
-  Wetstar-Flourometer-ug-per-L-chl-A-DRV-VALUE: {name: flourometer}
+  Wetstar-Flourometer-ug-per-L-chl-A-DRV-VALUE: {name: fluorometer}
   Air-Temp-2: {name: airTemp2}
   Rel-Humidity-2: {name: relHumidity2}
   BaromPress-2: {name: airPressure2}
@@ -93,7 +93,7 @@ PointSur.headers: # These are the column names in the file to DB field name
   TSG_TEMP: {name: waterTemperature}
   TSG_SALINITY: {name: salinity}
   BEAM_TRANSMISSION: {name: beamTransmission}
-  FLUOROMETER: {name: flourometer}
+  FLUOROMETER: {name: fluorometer}
   WS_TEMP: {name: airTemp1}
   WS_RH: {name: relHumidity1}
   WS_BARO: {name: airPressure1}
@@ -125,34 +125,34 @@ db.met:
   schema:
     ship: TEXT NOT NULL
     t: TIMESTAMPTZ NOT NULL
-    longitude: REAL CHECK(longitude BETWEEN -180 AND 180)
-    latitude:  REAL CHECK(latitude BETWEEN -90 AND 90)
-    headingGyro: REAL CHECK(headingGyro BETWEEN -180 AND 360)
-    headingGPS: REAL CHECK(headingGPS BETWEEN -180 AND 360)
-    waterDepth: REAL CHECK(waterDepth BETWEEN 0 AND 1000)
-    waterTemperature: REAL CHECK(waterTemperature BETWEEN 1 AND 40)
-    chlorophyll: REAL CHECK(chlorophyll >= 0)
-    salinity: REAL CHECK(salinity BETWEEN 0 AND 40)
-    conductivity: REAL CHECK(conductivity BETWEEN 0 AND 40)
-    speedOfSound: REAL CHECK(speedOfSound BETWEEN 1000 AND 2000)
-    flourometer: REAL CHECK(flourometer BETWEEN 0 AND 1000)
-    beamTransmission: REAL CHECK(beamTransmission >= 0)
-    airTemp1: REAL CHECK(airTemp1 BETWEEN 1 AND 60)
-    airTemp2: REAL CHECK(airTemp2 BETWEEN 1 AND 60)
-    airPressure1: REAL CHECK(airPressure1 BETWEEN 1000 AND 2000)
-    airPressure2: REAL CHECK(airPressure2 BETWEEN 1000 AND 2000)
-    relHumidity1: REAL CHECK(relHumidity1 BETWEEN 0 AND 110)
-    relHumidity2: REAL CHECK(relHumidity2 BETWEEN 0 AND 110)
-    windSpdRel1: REAL CHECK(windDirRel1 BETWEEN 1 AND 100)
-    windSpdRel2: REAL CHECK(windDirRel2 BETWEEN 1 AND 100)
-    windDirRel1: REAL CHECK(windDirRel1 BETWEEN -180 AND 720)
-    windDirRel2: REAL CHECK(windDirRel2 BETWEEN -180 AND 720)
-    windSpdTrue1: REAL CHECK(windDirTrue1 BETWEEN 1 AND 100)
-    windSpdTrue2: REAL CHECK(windDirTrue2 BETWEEN 1 AND 100)
-    windDirTrue1: REAL CHECK(windDirTrue1 BETWEEN -180 AND 720)
-    windDirTrue2: REAL CHECK(windDirTrue2 BETWEEN -180 AND 720)
-    shortWave: REAL CHECK(shortWave BETWEEN -2000 AND 2000)
-    longWave: REAL CHECK(longWave BETWEEN -1000 AND 2000)
+    longitude: REAL # CHECK(longitude BETWEEN -180 AND 180)
+    latitude:  REAL # CHECK(latitude BETWEEN -90 AND 90)
+    headingGyro: REAL # CHECK(headingGyro BETWEEN -180 AND 360)
+    headingGPS: REAL # CHECK(headingGPS BETWEEN -180 AND 360)
+    waterDepth: REAL # CHECK(waterDepth BETWEEN 0 AND 1000)
+    waterTemperature: REAL # CHECK(waterTemperature BETWEEN 1 AND 40)
+    chlorophyll: REAL # CHECK(chlorophyll >= 0)
+    salinity: REAL # CHECK(salinity BETWEEN 0 AND 40)
+    conductivity: REAL # CHECK(conductivity BETWEEN 0 AND 40)
+    speedOfSound: REAL # CHECK(speedOfSound BETWEEN 1000 AND 2000)
+    fluorometer: REAL # CHECK(fluorometer BETWEEN 0 AND 1000)
+    beamTransmission: REAL # CHECK(beamTransmission >= 0)
+    airTemp1: REAL # CHECK(airTemp1 BETWEEN 1 AND 60)
+    airTemp2: REAL # CHECK(airTemp2 BETWEEN 1 AND 60)
+    airPressure1: REAL # CHECK(airPressure1 BETWEEN 1000 AND 2000)
+    airPressure2: REAL # CHECK(airPressure2 BETWEEN 1000 AND 2000)
+    relHumidity1: REAL # CHECK(relHumidity1 BETWEEN 0 AND 110)
+    relHumidity2: REAL # CHECK(relHumidity2 BETWEEN 0 AND 110)
+    windSpdRel1: REAL # CHECK(windDirRel1 BETWEEN 1 AND 100)
+    windSpdRel2: REAL # CHECK(windDirRel2 BETWEEN 1 AND 100)
+    windDirRel1: REAL # CHECK(windDirRel1 BETWEEN -180 AND 720)
+    windDirRel2: REAL # CHECK(windDirRel2 BETWEEN -180 AND 720)
+    windSpdTrue1: REAL # CHECK(windDirTrue1 BETWEEN 1 AND 100)
+    windSpdTrue2: REAL # CHECK(windDirTrue2 BETWEEN 1 AND 100)
+    windDirTrue1: REAL # CHECK(windDirTrue1 BETWEEN -180 AND 720)
+    windDirTrue2: REAL # CHECK(windDirTrue2 BETWEEN -180 AND 720)
+    shortWave: REAL # CHECK(shortWave BETWEEN -2000 AND 2000)
+    longWave: REAL # CHECK(longWave BETWEEN -1000 AND 2000)
 
   supplemental:
     - qCSV BOOL DEFAULT false

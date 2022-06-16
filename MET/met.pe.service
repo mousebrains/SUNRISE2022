@@ -15,9 +15,9 @@ WorkingDirectory=%h/SUNRISE2022/MET
 
 ExecStart= \
 	%h/SUNRISE2022/MET/met2db.py \
-	--directory=../Faux/data \
-	--key=met.ps \
-	--inotify \
+	--polling \
+	--directory=/mnt/data \
+	--key=met.pe \
 	--yaml=decimate.yaml \
 	--verbose \
 	--logfile=%h/logs/met.pe.log

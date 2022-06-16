@@ -53,4 +53,4 @@ lonMin: -95. # Galveston
 lonMax: -90. # Delta
 
 # Temporal granual search parameter
-daysBack:    2 # Days into the past to start looking for data from
+daysBack:    4 # Days into the past to start looking for data from

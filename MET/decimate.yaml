@@ -5,7 +5,7 @@
 
 met.pe:
   ship: pe
-  regexp: "met[.]pe[.]csv"
+  regexp: "MIDS[.]*[.]elg"
   timeToWait: 60 # Seconds after an update prior to taking any action
   delimiter: ','
     # headerSkipBefore: 0 # Lines to skip before header
@@ -54,8 +54,8 @@ sync.ps:
 Pelican.headers: # These are the column names in the file to DB field name
   Date: {name: t, type: date, format: "%m/%d/%Y"}
   Time: {name: t, type: time, format: "%H:%M:%S"}
-  ADU800-GGA-Lon: {name: longitude, type: latLonDegMin}
-  ADU800-GGA-Lat: {name: latitude, type: latLonDegMin}
+  ABX2-GGA-Lon: {name: longitude, type: latLonDegMin}
+  ABX2-GGA-Lat: {name: latitude, type: latLonDegMin}
   Sperry-MK1-Gyro-Hdg-deg: {name: headingGyro}
   Furuno-SC50-GPS-Hdg-Hdg: {name: headingGPS}
   Knudsen-True-Depth-DRV-VALUE: {name: waterDepth}
@@ -63,7 +63,7 @@ Pelican.headers: # These are the column names in the file to DB field name
   Thermosalinograph-Data-Salinity: {name: salinity}
   Thermosalinograph-Data-Conductivity: {name: conductivity}
   Thermosalinograph-Data-Sound-Velocity: {name: speedOfSound}
-  Wetstar-Flourometer-microgperL-DRV-VALUE: {name: flourometer}
+  Wetstar-Flourometer-ug-per-L-chl-A-DRV-VALUE: {name: flourometer}
   Air-Temp-2: {name: airTemp2}
   Rel-Humidity-2: {name: relHumidity2}
   BaromPress-2: {name: airPressure2}

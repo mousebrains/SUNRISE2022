@@ -63,7 +63,7 @@ Pelican.headers: # These are the column names in the file to DB field name
   Thermosalinograph-Data-Salinity: {name: SP}
   Thermosalinograph-Data-Conductivity: {name: C}
   Thermosalinograph-Data-Sound-Velocity: {name: speedOfSound}
-  Wetstar-Flourometer-ug-per-L-Chl-A-DRV-VALUE: {name: Fl}
+  Wetstar-Fluorometer-ug-per-L-Chl-A-DRV-VALUE: {name: Fl}
   Air-Temp-2: {name: airTemp2}
   Rel-Humidity-2: {name: relHumidity2}
   BaromPress-2: {name: airPressure2}

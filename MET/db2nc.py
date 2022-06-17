@@ -15,11 +15,14 @@ import numpy as np
 import sys
 
 def buildNC(args:ArgumentParser, cols:tuple[str]) -> Dataset:
+    doubles = ("t", "longitude", "latitude")
     with Dataset(args.nc, mode="w", format="NETCDF4") as nc:
         nc.title = args.key
         nc.createDimension("t", None)
         for col in cols:
-            nc.createVariable(col, np.float32, ('t',))
+            nc.createVariable(col, 
+                    np.float64 if col in doubles else np.float32, 
+                    ('t',))
         nc.variables["t"].units = "seconds since 1970-01-01 00:00:00"
 
 def writeNC(fn:str, data:dict) -> None:

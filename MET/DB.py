@@ -107,7 +107,7 @@ class DB(Thread):
                     (header[fn], posHeader[fn]) = self.__populateHeaders(fn)
                     logging.info("fn %s header %s", fn, header[fn])
                     position[fn] = posHeader[fn] if posDB is None else posDB
-                self.__config.mapColumns(header[fn])
+                    self.__config.mapColumns(header[fn])
                 with open(fn, "r") as fp:
                     fp.seek(max(posHeader[fn] - 1, position[fn] - backup))
                     while True: # Skip forward to the EOF or new line

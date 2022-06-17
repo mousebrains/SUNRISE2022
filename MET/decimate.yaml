@@ -59,7 +59,7 @@ Pelican.headers: # These are the column names in the file to DB field name
   Sperry-MK1-Gyro-Hdg-deg: {name: heading}
   Furuno-SC50-GPS-Hdg-Hdg: {name: true_heading}
   Knudsen-True-Depth-DRV-VALUE: {name: depth}
-  Thermosalinograph-Data-Temp: {name: T}
+  Thermosalinograph-Data-Temp: {name: Temp}
   Thermosalinograph-Data-Salinity: {name: SP}
   Thermosalinograph-Data-Conductivity: {name: C}
   Thermosalinograph-Data-Sound-Velocity: {name: speedOfSound}
@@ -90,7 +90,7 @@ PointSur.headers: # These are the column names in the file to DB field name
   ABX_HEADING: {name: true_heading}
   FURNO_DEPTH: {name: depth}
   TSG_CONDUCTICITY: {name: C}
-  TSG_TEMP: {name: T}
+  TSG_TEMP: {name: Temp}
   TSG_SALINITY: {name: SP}
   BEAM_TRANSMISSION: {name: beamTransmission}
   FLUOROMETER: {name: fluorometer}
@@ -109,7 +109,7 @@ Sync.headers: # These are the column names in the file to DB field name
   lon: {name: lon}
   lat: {name: lat}
   heading: {name: heading}
-  T: {name: T}
+  Temp: {name: Temp}
   SP: {name: SP}
   Fl: {name: Fl}
   fluorometer: {name: fluorometer}
@@ -130,7 +130,7 @@ db.met:
     heading: REAL # CHECK(heading BETWEEN -180 AND 360)
     true_heading: REAL # CHECK(true_heading BETWEEN -180 AND 360)
     depth: REAL # CHECK(depth BETWEEN 0 AND 1000)
-    T: REAL # CHECK(T BETWEEN 1 AND 40)
+    Temp: REAL # CHECK(T BETWEEN 1 AND 40)
     Fl: REAL # CHECK(Fl >= 0)
     SP: REAL # CHECK(SP BETWEEN 0 AND 40)
     C: REAL # CHECK(C BETWEEN 0 AND 40)
@@ -174,7 +174,7 @@ netCDF.met:
     - heading
     - true_heading
     - depth
-    - T
+    - Temp
     - SP
     - C
     - speedOfSound
@@ -201,7 +201,7 @@ csv.met:
     - lon
     - lat
     - heading
-    - T
+    - Temp
     - SP
     - Fl
     - fluorometer

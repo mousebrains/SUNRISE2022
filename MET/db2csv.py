@@ -66,7 +66,7 @@ with psycopg2.connect(f"dbname={args.db}") as db:
                     if i == tindex:
                         fields.append(str(row[i].timestamp()))
                     else:
-                        fields.append(str(row[i]))
+                        fields.append("" if row[i] is None else str(row[i]))
                 fp.write(",".join(fields) + "\n")
             logging.info("Wrote %s records to %s", cnt, args.csv)
         cur.execute("COMMIT;")

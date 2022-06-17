@@ -15,7 +15,7 @@ import numpy as np
 import sys
 
 def buildNC(args:ArgumentParser, cols:tuple[str]) -> Dataset:
-    doubles = ("t", "longitude", "latitude")
+    doubles = ("t", "longitude", "latitude", "lon", "lat")
     with Dataset(args.nc, mode="w", format="NETCDF4") as nc:
         nc.title = args.key
         nc.createDimension("t", None)

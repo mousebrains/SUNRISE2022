@@ -5,7 +5,7 @@
 
 met.pe:
   ship: pe
-  regexp: "MIDS[.]*[.]elg"
+  regexp: "MIDAS_.[0-9]+[.]elg"
   timeToWait: 60 # Seconds after an update prior to taking any action
   delimiter: ','
     # headerSkipBefore: 0 # Lines to skip before header

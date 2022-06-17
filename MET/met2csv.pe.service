@@ -1,0 +1,25 @@
+#
+# Append to a CSV file from the PostgreSQL database
+#
+# June-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=MET DB to CSV
+
+[Service]
+# Launced by timer
+Type=oneshot
+# 
+# %h is becomes the user's home directory, $HOME
+WorkingDirectory=%h/logs
+#
+ExecStart=%h/SUNRISE2022/MET/db2csv.py \
+	--logfile=%h/logs/db2csv.log \
+	--verbose \
+	--yaml=%h/SUNRISE2022/MET/decimate.yaml \
+	--key=met.pe \
+	--csv=%h/Sync/Pelican/met.pe.csv
+        
+[Install]
+WantedBy=default.target
+

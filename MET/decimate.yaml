@@ -88,8 +88,8 @@ PointSur.headers: # These are the column names in the file to DB field name
   ABX_LON: {name: lon, type: latLonDegMin}
   GYRO_HEADING: {name: heading}
   ABX_HEADING: {name: true_heading}
-  FURNO_DEPTH: {name: depth}
-  TSG_CONDUCTICITY: {name: C}
+  FURUNO_DEPTH: {name: depth}
+  TSG_CONDUCTIVITY: {name: C}
   TSG_TEMP: {name: Temp}
   TSG_SALINITY: {name: SP}
   BEAM_TRANSMISSION: {name: beamTransmission}

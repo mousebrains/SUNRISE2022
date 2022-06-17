@@ -50,7 +50,6 @@ sql+= " RETURNING "
 sql+= ",".join(cols)
 sql+= ") SELECT * FROM updated ORDER BY t ASC;"
 
-print(sql)
 with psycopg2.connect(f"dbname={args.db}") as db:
     cur = db.cursor()
     cur.execute("BEGIN;")

@@ -1,0 +1,20 @@
+#
+# Run rsync to sync generated hydro data from/to NAS
+#
+# June-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=Sync generated hydro data from/to NAS
+
+[Service]
+# Launced by timer
+Type=oneshot
+# 
+# %h is becomes the user's home directory, $HOME
+WorkingDirectory=%h/logs
+#
+ExecStart=%h/SUNRISE2022/Sync/synchydro.pe.sh
+        
+[Install]
+WantedBy=default.target
+

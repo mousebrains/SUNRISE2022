@@ -54,14 +54,14 @@ sync.ps:
 Pelican.headers: # These are the column names in the file to DB field name
   Date: {name: t, type: date, format: "%m/%d/%Y"}
   Time: {name: t, type: time, format: "%H:%M:%S"}
-  ABX2-GGA-Lon: {name: longitude, type: latLonDegMin}
-  ABX2-GGA-Lat: {name: latitude, type: latLonDegMin}
-  Sperry-MK1-Gyro-Hdg-deg: {name: headingGyro}
-  Furuno-SC50-GPS-Hdg-Hdg: {name: headingGPS}
-  Knudsen-True-Depth-DRV-VALUE: {name: waterDepth}
-  Thermosalinograph-Data-Temp: {name: waterTemperature}
-  Thermosalinograph-Data-Salinity: {name: salinity}
-  Thermosalinograph-Data-Conductivity: {name: conductivity}
+  ABX2-GGA-Lon: {name: lon, type: latLonDegMin}
+  ABX2-GGA-Lat: {name: lat, type: latLonDegMin}
+  Sperry-MK1-Gyro-Hdg-deg: {name: heading}
+  Furuno-SC50-GPS-Hdg-Hdg: {name: true_heading}
+  Knudsen-True-Depth-DRV-VALUE: {name: depth}
+  Thermosalinograph-Data-Temp: {name: T}
+  Thermosalinograph-Data-Salinity: {name: SP}
+  Thermosalinograph-Data-Conductivity: {name: C}
   Thermosalinograph-Data-Sound-Velocity: {name: speedOfSound}
   Wetstar-Flourometer-ug-per-L-chl-A-DRV-VALUE: {name: fluorometer}
   Air-Temp-2: {name: airTemp2}
@@ -84,14 +84,14 @@ Pelican.headers: # These are the column names in the file to DB field name
 PointSur.headers: # These are the column names in the file to DB field name
   DATE: {name: t, type: date, format: "%m/%d/%Y"}
   TIME: {name: t, type: time, format: "%H:%M:%S"}
-  ABX_LAT: {name: latitude, type: latLonDegMin}
-  ABX_LON: {name: longitude, type: latLonDegMin}
-  GYRO_HEADING: {name: headingGyro}
-  ABX_HEADING: {name: headingGPS}
-  FURNO_DEPTH: {name: waterDepth}
-  TSG_CONDUCTICITY: {name: conductivity}
-  TSG_TEMP: {name: waterTemperature}
-  TSG_SALINITY: {name: salinity}
+  ABX_LAT: {name: lat, type: latLonDegMin}
+  ABX_LON: {name: lon, type: latLonDegMin}
+  GYRO_HEADING: {name: heading}
+  ABX_HEADING: {name: true_heading}
+  FURNO_DEPTH: {name: depth}
+  TSG_CONDUCTICITY: {name: C}
+  TSG_TEMP: {name: T}
+  TSG_SALINITY: {name: SP}
   BEAM_TRANSMISSION: {name: beamTransmission}
   FLUOROMETER: {name: fluorometer}
   WS_TEMP: {name: airTemp1}
@@ -106,12 +106,12 @@ PointSur.headers: # These are the column names in the file to DB field name
 
 Sync.headers: # These are the column names in the file to DB field name
   t: {name: t, type:epoch}
-  longitude: {name: longitude}
-  latitude: {name: latitude}
-  headingGyro: {name: headingGyro}
-  waterTemperature: {name: waterTemperature}
-  salinity: {name: salinity}
-  chlorophyll: {name: chlorophyll}
+  lon: {name: lon}
+  lat: {name: lat}
+  heading: {name: heading}
+  T: {name: T}
+  SP: {name: SP}
+  Fl: {name: Fl}
   fluorometer: {name: fluorometer}
   airTemp1: {name: airTemp1}
   airTemp2: {name: airTemp2}
@@ -125,15 +125,15 @@ db.met:
   schema:
     ship: TEXT NOT NULL
     t: TIMESTAMPTZ NOT NULL
-    longitude: REAL # CHECK(longitude BETWEEN -180 AND 180)
-    latitude:  REAL # CHECK(latitude BETWEEN -90 AND 90)
-    headingGyro: REAL # CHECK(headingGyro BETWEEN -180 AND 360)
-    headingGPS: REAL # CHECK(headingGPS BETWEEN -180 AND 360)
-    waterDepth: REAL # CHECK(waterDepth BETWEEN 0 AND 1000)
-    waterTemperature: REAL # CHECK(waterTemperature BETWEEN 1 AND 40)
-    chlorophyll: REAL # CHECK(chlorophyll >= 0)
-    salinity: REAL # CHECK(salinity BETWEEN 0 AND 40)
-    conductivity: REAL # CHECK(conductivity BETWEEN 0 AND 40)
+    lon: REAL # CHECK(lon BETWEEN -180 AND 180)
+    lat:  REAL # CHECK(lat BETWEEN -90 AND 90)
+    heading: REAL # CHECK(heading BETWEEN -180 AND 360)
+    true_heading: REAL # CHECK(true_heading BETWEEN -180 AND 360)
+    depth: REAL # CHECK(depth BETWEEN 0 AND 1000)
+    T: REAL # CHECK(T BETWEEN 1 AND 40)
+    Fl: REAL # CHECK(Fl >= 0)
+    SP: REAL # CHECK(SP BETWEEN 0 AND 40)
+    C: REAL # CHECK(C BETWEEN 0 AND 40)
     speedOfSound: REAL # CHECK(speedOfSound BETWEEN 1000 AND 2000)
     fluorometer: REAL # CHECK(fluorometer BETWEEN 0 AND 1000)
     beamTransmission: REAL # CHECK(beamTransmission >= 0)
@@ -169,16 +169,16 @@ netCDF.met:
   decimate: None
   columns:
     - t
-    - longitude
-    - latitude
-    - headingGyro
-    - headingGPS
-    - waterDepth
-    - waterTemperature
-    - salinity
-    - conductivity
+    - lon
+    - lat
+    - heading
+    - true_heading
+    - depth
+    - T
+    - SP
+    - C
     - speedOfSound
-    - chlorophyll
+    - Fl
     - fluorometer
     - airTemp1
     - airTemp2
@@ -198,12 +198,12 @@ csv.met:
   decimate: 60
   columns:
     - t
-    - longitude
-    - latitude
-    - headingGyro
-    - waterTemperature
-    - salinity
-    - chlorophyll
+    - lon
+    - lat
+    - heading
+    - T
+    - SP
+    - Fl
     - fluorometer
     - airTemp1
     - airTemp2

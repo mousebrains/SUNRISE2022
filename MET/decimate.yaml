@@ -93,7 +93,7 @@ PointSur.headers: # These are the column names in the file to DB field name
   TSG_TEMP: {name: Temp}
   TSG_SALINITY: {name: SP}
   BEAM_TRANSMISSION: {name: beamTransmission}
-  FLUOROMETER: {name: fluorometer}
+  FLUOROMETER: {name: Fl}
   WS_TEMP: {name: airTemp1}
   WS_RH: {name: relHumidity1}
   WS_BARO: {name: airPressure1}

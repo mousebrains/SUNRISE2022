@@ -21,6 +21,6 @@ date >>$log
        	--exclude=scan \
 	--exclude=stick \
 	--exclude=vector \
-	/mnt/adcp/PE22_31_Shearman_ADCP/proc/* \
+	/mnt/adcp/PE22_31_Shearman_ADCP_1/proc/* \
 	/mnt/sci/data/Platform/PE/ADCP_UHDAS \
 	2>&1 >>$log

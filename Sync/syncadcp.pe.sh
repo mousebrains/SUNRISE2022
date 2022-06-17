@@ -1,6 +1,10 @@
 #! /usr/bin/sh
 #
 # I tried this using 
+log=/home/pat/logs/syncADCP.log
+
+date >>$log
+
 /usr/bin/rsync \
 	--archive \
        	--verbose \
@@ -19,4 +23,4 @@
 	--exclude=vector \
 	/mnt/adcp/PE22_31_Shearman_ADCP/proc/* \
 	/mnt/sci/data/Platform/PE/ADCP_UHDAS \
-	2>&1 >syncADCP.log
+	2>&1 >>$log

@@ -53,6 +53,11 @@ $pe_sql.= " WHERE ship='pe'";
 $pe_sql.= " AND t BETWEEN $1 AND $2";
 $pe_sql.= " ORDER BY t LIMIT 10000;";
 
+$ps_sql = "SELECT $ps_variables FROM met";
+$ps_sql.= " WHERE ship='ps'";
+$ps_sql.= " AND t BETWEEN $1 AND $2";
+$ps_sql.= " ORDER BY t LIMIT 10000;";
+
 try {
   $conn = pg_connect("dbname=$dbname");
   if (!$conn) {
@@ -61,10 +66,16 @@ try {
 
   $pe_result = pg_query_params($conn, $pe_sql, array($passData['start_time'],$passData['end_time']));
   if (!$pe_result) {
-    exit(json_encode(array("error" => "Executing $sql")));
+    exit(json_encode(array("error" => "Executing $pe_sql")));
   }
 
-  $output = pg_fetch_all($pe_result);
+  $ps_result = pg_query_params($conn, $ps_sql, array($passData['start_time'],$passData['end_time']));
+  if (!$ps_result) {
+    exit(json_encode(array("error" => "Executing $ps_sql")));
+  }
+
+  $pe_data = pg_fetch_all($pe_result,PGSQL_NUM);
+  $ps_data = pg_fetch_all($ps_result,PGSQL_NUM);
 } catch (Exception $e) {
   exit(json_encode(array("error" => $e->getMessage())));
 }

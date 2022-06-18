@@ -33,12 +33,13 @@ $variables = array(
   'V - Slab Model' => ''
 );
 
+$x_variable = $input['x_variable'];
 $output = $input;
-$pe_variables = array(
-  $variables["$input[x_variable]"],
-  $variables["$input[y_variable]"],
-  $variables["$input[data_PE]"]
-);
+// $pe_variables = array(
+//   $variables[],
+//   $variables[$input['y_variable']],
+//   $variables[$input['data_PE']]
+// );
 
 
 //

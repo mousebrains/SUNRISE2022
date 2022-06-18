@@ -81,7 +81,7 @@ try {
 }
 
 // echo the output
-$output = $pe_data;
+$output['PE_x_data'] = array_column($pe_data,0);
 echo json_encode($output);
 
 ?>

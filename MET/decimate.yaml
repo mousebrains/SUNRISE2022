@@ -105,7 +105,7 @@ PointSur.headers: # These are the column names in the file to DB field name
   RADIOMETER_SHORTWAVE: {name: shortWave}
 
 Sync.headers: # These are the column names in the file to DB field name
-  t: {name: t, type:epoch}
+  t: {name: t, type: epoch}
   lon: {name: lon}
   lat: {name: lat}
   heading: {name: heading}

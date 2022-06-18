@@ -1,0 +1,28 @@
+#
+# MET data harvesting from CSV file to a PostgreSQL database
+#
+# May-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=Point Sur MET sync data harvester
+
+[Service]
+# type=simple
+# 
+# This is run via the --user command, so it will run as User/Group
+
+WorkingDirectory=%h/SUNRISE2022/MET
+
+ExecStart= \
+	%h/SUNRISE2022/MET/met2db.py \
+	--polling \
+	--directory=%h/Sync/PointSur \
+	--key=sync.ps \
+	--yaml=decimate.yaml \
+	--verbose \
+	--logfile=%h/logs/met.pe.log
+
+RestartSec=30
+
+[Install]
+WantedBy=default.target

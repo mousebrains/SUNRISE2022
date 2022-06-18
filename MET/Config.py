@@ -171,8 +171,8 @@ class Config:
                 else:
                     val = datetime.datetime.combine(t, time, tzinfo=datetime.timezone.utc)
                     t = None
-            # elif item[2] == "epoch":
-                # val = datetime.datetime.fromtimestamp(val, tz=datetime.timezone.utc)
+            elif item[2] == "epoch":
+                val = datetime.datetime.fromtimestamp(float(val), tz=datetime.timezone.utc)
             elif item[2] == "latLonDegMin":
                 val = self.latLon(val)
             else:

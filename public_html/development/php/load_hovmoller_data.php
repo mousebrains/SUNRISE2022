@@ -50,7 +50,7 @@ $dbname = "sunrise";
 
 $pe_sql = "SELECT $pe_variables FROM met";
 $pe_sql.= " WHERE ship='pe'";
-$pe_sql.= " AND t BETWEEN $3 AND $4";
+$pe_sql.= " AND t BETWEEN $1 AND $2";
 $pe_sql.= " ORDER BY t LIMIT 10000;";
 
 try {

@@ -1,11 +1,11 @@
 #! /usr/bin/sh
 #
-# I tried this using 
+pattern=PS22_23_MacKinnon
+platform=PS
+
 log=/home/pat/logs/syncADCP.log
 
-date >>$log
-
-/usr/bin/rsync \
+cmd="/usr/bin/rsync \
 	--archive \
        	--verbose \
        	--exclude=adcpdb \
@@ -20,7 +20,23 @@ date >>$log
        	--exclude=quality \
        	--exclude=scan \
 	--exclude=stick \
-	--exclude=vector \
-	/mnt/adcp/current_cruise/proc/* \
-	/mnt/sci/data/Platform/PS/ADCP_UHDAS \
-	2>&1 >>$log
+	--exclude=vector"
+
+date >>$log
+
+
+lastsrc=
+
+for src in `ls -trd /mnt/adcp/${pattern}*`; do
+	lastsrc=$src
+	tgt=/mnt/sci/data/Platform/$platform/ADCP_UHDAS/`basename $src`
+	mkdir -p $tgt
+	$cmd $src/proc/* $tgt 2>&1 >>$log
+done
+
+if [ "x$lastsrc" != "x" ] ; then
+	src=$lastsrc
+	tgt=/mnt/sci/data/Platform/$platform/ADCP_UHDAS
+	mkdir -p $tgt
+	$cmd $src/proc/* $tgt 2>&1 >>$log
+fi

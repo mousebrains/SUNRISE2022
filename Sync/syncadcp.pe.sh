@@ -1,6 +1,7 @@
 #! /usr/bin/sh
 #
 pattern=PE22_31_Shearman_ADCP
+platform=PE
 
 log=/home/pat/logs/syncADCP.log
 
@@ -26,16 +27,16 @@ date >>$log
 
 lastsrc=
 
-for src in `ls -d /mnt/adcp/${pattern}* | sort`; do
+for src in `ls -trd /mnt/adcp/${pattern}*`; do
 	lastsrc=$src
-	tgt=/mnt/sci/data/Platform/PE/ADCP_UHDAS/`basename $src`
+	tgt=/mnt/sci/data/Platform/$platform/ADCP_UHDAS/`basename $src`
 	mkdir -p $tgt
 	$cmd $src/proc/* $tgt 2>&1 >>$log
 done
 
 if [ "x$lastsrc" != "x" ] ; then
 	src=$lastsrc
-	tgt=/mnt/sci/data/Platform/PE/ADCP_UHDAS
+	tgt=/mnt/sci/data/Platform/$platform/ADCP_UHDAS
 	mkdir -p $tgt
 	$cmd $src/proc/* $tgt 2>&1 >>$log
 fi

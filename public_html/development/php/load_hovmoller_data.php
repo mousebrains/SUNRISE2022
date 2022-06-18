@@ -22,15 +22,15 @@ $output = array(
 
 // map input variables to database variables
 $variables = array(
-  'None' => '',
+  'None' => 'NULL',
   'Time' => 't',
-  'Inertial Periods' => '',
+  'Inertial Periods' => 'NULL',
   'Latitude' => 'lat',
   'Longitude' => 'lon',
   'Salinity' => 'sp',
   'Temperature' => 'temp',
-  'U - Slab Model' => '',
-  'V - Slab Model' => ''
+  'U - Slab Model' => 'NULL',
+  'V - Slab Model' => 'NULL'
 );
 
 $pe_variables = implode(',',array(

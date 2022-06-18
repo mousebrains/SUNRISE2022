@@ -73,6 +73,6 @@ try {
 }
 
 // echo the output
-echo json_encode($output);
+//echo json_encode($output);
 
 ?>

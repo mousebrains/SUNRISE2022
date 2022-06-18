@@ -61,9 +61,10 @@ async function requestData (passData) {
     body: JSON.stringify(passData)
   });
   // return response.json();
-  let data = await response.json();
+  //let data = await response.json();
   console.log(data);
-  return generateData(passData)
+  //return generateData(passData)
+  return data
 }
 
 async function dummyData (passData) {

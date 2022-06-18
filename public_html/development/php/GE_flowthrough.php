@@ -35,6 +35,7 @@ try {
     }
 
     echo(json_encode(pg_fetch_all($pe_result)));
+    echo(json_encode(pg_fetch_all($ps_result)));
 } catch (Exception $e) {
 	exit(json_encode(array("error" => $e->getMessage())));
 }

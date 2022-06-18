@@ -20,20 +20,20 @@ $output = array(
   'PS_c_data' => []
 );
 
-echo(json_encode($output));
+// map input variables to database variables
+$variables = array(
+  'None' => '',
+  'Time' => 't',
+  'Inertial Periods' => '',
+  'Latitude' => 'lat',
+  'Longitude' => 'lon',
+  'Salinity' => 'sp',
+  'Temperature' => 'temp',
+  'U - Slab Model' => '',
+  'V - Slab Model' => ''
+);
 
-// // map input variables to database variables
-// $variables = array(
-//   'None' => '',
-//   'Time' => 't',
-//   'Inertial Periods' => '',
-//   'Latitude' => 'lat',
-//   'Longitude' => 'lon',
-//   'Salinity' => 'sp',
-//   'Temperature' => 'temp',
-//   'U - Slab Model' => '',
-//   'V - Slab Model' => ''
-// );
+echo(json_encode($output));
 //
 // $pe_variables = array(
 //   $variables[$input['x_variable']],

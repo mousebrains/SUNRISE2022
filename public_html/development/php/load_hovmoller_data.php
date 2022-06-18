@@ -81,6 +81,7 @@ try {
 }
 
 // echo the output
+$output = $pe_data;
 echo json_encode($output);
 
 ?>

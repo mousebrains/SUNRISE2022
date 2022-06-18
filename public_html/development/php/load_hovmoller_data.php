@@ -82,6 +82,9 @@ try {
 
 // echo the output
 $output['PE_x_data'] = array_column($pe_data,0);
+$output['PE_y_data'] = array_column($pe_data,1);
+$output['PE_c_data'] = array_column($pe_data,2);
+
 echo json_encode($output);
 
 ?>

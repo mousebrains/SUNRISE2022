@@ -75,7 +75,7 @@ try {
     $output['PE_c_data'] = array_column($pe_data,2);
   }
 
-  if (strcmp(passData['data_PS'],'None') ! == 0) {
+  if (strcmp(passData['data_PS'],'None') !== 0) {
     $ps_result = pg_query_params($conn, $ps_sql, array($passData['start_time'],$passData['end_time']));
     if (!$ps_result) {
       exit(json_encode(array("error" => "Executing $ps_sql")));

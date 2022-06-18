@@ -9,7 +9,7 @@ header('X-Accel-Buffering: no');
 // some database magic courtesy of Pat //
 /////////////////////////////////////////
 
-$nback = 48;
+$nback = 48*60;
 $names = "lon,lat,temp,sp";
 $dbname = "sunrise";
 

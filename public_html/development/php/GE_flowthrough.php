@@ -41,18 +41,18 @@ try {
 
 // spit out KML via the XMLWriter
 
-// $r = new XMLWriter();
-// $r->openMemory(); // Build in memory
-// $r->startDocument("1.0", "UTF-8"); // XML type
-// $r->startElement("kml"); // Start a kml stanza
-// $r->writeAttribute("xmlns", "http://www.opengis.net/kml/2.2");
-// $r->startElement("Document");
-// $r->writeElement("name", "Flowthrough");
-//
-// $r->startElement("") //
-//
-// $r->endElement(); // Document
-// $r->endElement(); // kml
-// $r->endDocument(); // XML
-// echo $r->outputMemory(true); // Clean up and generate a string
+$r = new XMLWriter();
+$r->openMemory(); // Build in memory
+$r->startDocument("1.0", "UTF-8"); // XML type
+$r->startElement("kml"); // Start a kml stanza
+$r->writeAttribute("xmlns", "http://www.opengis.net/kml/2.2");
+$r->startElement("Document");
+$r->writeElement("name", "Flowthrough");
+
+//$r->startElement("") //
+
+$r->endElement(); // Document
+$r->endElement(); // kml
+$r->endDocument(); // XML
+echo $r->outputMemory(true); // Clean up and generate a string
 ?>

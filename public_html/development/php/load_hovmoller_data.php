@@ -33,31 +33,26 @@ $variables = array(
   'V - Slab Model' => ''
 );
 
-$output = $input;
 $pe_variables = array(
   $variables[$passData['x_varaible']],
   $variables[$passData['y_variable']],
   $variables[$passData['data_PE']]
 );
 
+$ps_variables = array(
+  $variables[$passData['x_varaible']],
+  $variables[$passData['y_variable']],
+  $variables[$passData['data_PS']]
+);
 
-//
-//
-//
-// $ps_variables = array(
-//   $variables[$input['x_variable']],
-//   $variables[$input['y_variable']],
-//   $variables[$input['data_PS']]
-// );
-//
-// // access the database
-// $dbname = "sunrise";
-//
-// $sql = "SELECT $1 FROM met";
-// $sql.= " WHERE ship=$2";
-// $sql.= " AND t BETWEEN $3 AND $4";
-// $sql.= " ORDER BY t LIMIT 10000;";
-//
+// access the database
+$dbname = "sunrise";
+
+$sql = "SELECT $1 FROM met";
+$sql.= " WHERE ship=$2";
+$sql.= " AND t BETWEEN $3 AND $4";
+$sql.= " ORDER BY t LIMIT 10000;";
+
 // try {
 //     $conn = pg_connect("dbname=$dbname");
 //     if (!$conn) {

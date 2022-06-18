@@ -48,10 +48,10 @@ $ps_variables = implode(',',array(
 // access the database
 $dbname = "sunrise";
 
-$sql = "SELECT $1 FROM met";
-$sql.= " WHERE ship=$2";
-$sql.= " AND t BETWEEN $3 AND $4";
-$sql.= " ORDER BY t LIMIT 10000;";
+$pe_sql = "SELECT $pe_variables FROM met";
+$pe_sql.= " WHERE ship='pe'";
+$pe_sql.= " AND t BETWEEN $3 AND $4";
+$pe_sql.= " ORDER BY t LIMIT 10000;";
 
 try {
   $conn = pg_connect("dbname=$dbname");
@@ -59,7 +59,7 @@ try {
     exit(json_encode(array("error" => "unable to open database $dbname")));
   }
 
-  $pe_result = pg_query_params($conn, $sql, array($pe_variables,'pe',$passData['start_time'],$passData['end_time']));
+  $pe_result = pg_query_params($conn, $pe_sql, array($passData['start_time'],$passData['end_time']));
   if (!$pe_result) {
     exit(json_encode(array("error" => "Executing $sql")));
   }

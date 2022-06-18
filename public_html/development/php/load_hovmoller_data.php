@@ -57,19 +57,19 @@ try {
     $conn = pg_connect("dbname=$dbname");
     if (!$conn) {
     $output = array("error" => "unable to open database $dbname");
-	exit(json_encode(array("error" => "unable to open database $dbname")));
+	//exit(json_encode(array("error" => "unable to open database $dbname")));
     }
 
     $pe_result = pg_query_params($conn, $sql, array(implode(',',$pe_variables),'pe',$input['start_time'],$input['end_time']));
     if (!$result) {
       $output = array("error" => "Executing $sql");
-	exit(json_encode(array("error" => "Executing $sql")));
+	// exit(json_encode(array("error" => "Executing $sql")));
     }
 
     $output = pg_fetch_all($pe_result);
 } catch (Exception $e) {
   $output = array("error" => $e->getMessage());
-	exit(json_encode(array("error" => $e->getMessage())));
+	// exit(json_encode(array("error" => $e->getMessage())));
 }
 
 // echo the output

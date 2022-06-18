@@ -53,24 +53,24 @@ $sql.= " WHERE ship=$2";
 $sql.= " AND t BETWEEN $3 AND $4";
 $sql.= " ORDER BY t LIMIT 10000;";
 
-// try {
-//     $conn = pg_connect("dbname=$dbname");
-//     if (!$conn) {
-//       echo(json_encode(array("error" => "unable to open database $dbname")));
-// 	exit(json_encode(array("error" => "unable to open database $dbname")));
-//     }
-//
-//     $pe_result = pg_query_params($conn, $sql, array(implode(',',$pe_variables),'pe',$input['start_time'],$input['end_time']));
-//     if (!$result) {
-//       echo(json_encode(array("error" => "Executing $sql")));
-// 	exit(json_encode(array("error" => "Executing $sql")));
-//     }
-//
-//     echo(json_encode(pg_fetch_all($pe_result)));
-// } catch (Exception $e) {
-//   echo(json_encode(array("error" => $e->getMessage())));
-// 	exit(json_encode(array("error" => $e->getMessage())));
-// }
+try {
+    $conn = pg_connect("dbname=$dbname");
+    if (!$conn) {
+      echo(json_encode(array("error" => "unable to open database $dbname")));
+	exit(json_encode(array("error" => "unable to open database $dbname")));
+    }
+
+    $pe_result = pg_query_params($conn, $sql, array(implode(',',$pe_variables),'pe',$input['start_time'],$input['end_time']));
+    if (!$result) {
+      echo(json_encode(array("error" => "Executing $sql")));
+	exit(json_encode(array("error" => "Executing $sql")));
+    }
+
+    echo(json_encode(pg_fetch_all($pe_result)));
+} catch (Exception $e) {
+  echo(json_encode(array("error" => $e->getMessage())));
+	exit(json_encode(array("error" => $e->getMessage())));
+}
 
 // echo the output
 echo json_encode($output);

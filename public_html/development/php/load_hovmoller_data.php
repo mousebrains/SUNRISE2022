@@ -68,7 +68,7 @@ try {
 
     $output = pg_fetch_all($pe_result);
 } catch (Exception $e) {
-  $output = array("error" => $e->getMessage());
+  $output = array("error" => "Exception"); // $e->getMessage());
 	// exit(json_encode(array("error" => $e->getMessage())));
 }
 

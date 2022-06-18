@@ -80,11 +80,15 @@ try {
   exit(json_encode(array("error" => $e->getMessage())));
 }
 
-// echo the output
+// construct output
 $output['PE_x_data'] = array_column($pe_data,0);
 $output['PE_y_data'] = array_column($pe_data,1);
 $output['PE_c_data'] = array_column($pe_data,2);
+$output['PS_x_data'] = array_column($ps_data,0);
+$output['PS_y_data'] = array_column($ps_data,1);
+$output['PS_c_data'] = array_column($ps_data,2);
 
+// echo output
 echo json_encode($output);
 
 ?>

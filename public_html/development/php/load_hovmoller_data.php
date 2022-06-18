@@ -54,17 +54,17 @@ $sql.= " AND t BETWEEN $3 AND $4";
 $sql.= " ORDER BY t LIMIT 10000;";
 
 try {
-    $conn = pg_connect("dbname=$dbname");
-    if (!$conn) {
-      exit(json_encode(array("error" => "unable to open database $dbname")));
-    }
+  $conn = pg_connect("dbname=$dbname");
+  if (!$conn) {
+    exit(json_encode(array("error" => "unable to open database $dbname")));
+  }
 
-    $pe_result = pg_query_params($conn, $sql, array(implode(',',$pe_variables),'pe',$passData['start_time'],$passData['end_time']));
-    if (!$pe_result) {
-      exit(json_encode(array("error" => "Executing $sql")));
-    }
-  //
-  //   $output = pg_fetch_all($pe_result);
+  $pe_result = pg_query_params($conn, $sql, array(implode(',',$pe_variables),'pe',$passData['start_time'],$passData['end_time']));
+  if (!$pe_result) {
+    exit(json_encode(array("error" => "Executing $sql")));
+  }
+
+  $output = pg_fetch_all($pe_result);
 } catch (Exception $e) {
   exit(json_encode(array("error" => $e->getMessage())));
 }

@@ -33,11 +33,11 @@ $variables = array(
   'V - Slab Model' => ''
 );
 
-$pe_variables = array(
+$pe_variables = implode(',',array(
   $variables[$passData['x_variable']],
   $variables[$passData['y_variable']],
   $variables[$passData['data_PE']]
-);
+));
 
 $ps_variables = array(
   $variables[$passData['x_variable']],
@@ -59,7 +59,7 @@ try {
     exit(json_encode(array("error" => "unable to open database $dbname")));
   }
 
-  $pe_result = pg_query_params($conn, $sql, array(implode(',',$pe_variables),'pe',$passData['start_time'],$passData['end_time']));
+  $pe_result = pg_query_params($conn, $sql, array($pe_variables,'pe',$passData['start_time'],$passData['end_time']));
   if (!$pe_result) {
     exit(json_encode(array("error" => "Executing $sql")));
   }

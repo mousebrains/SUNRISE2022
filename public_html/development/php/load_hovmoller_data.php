@@ -64,29 +64,33 @@ try {
     exit(json_encode(array("error" => "unable to open database $dbname")));
   }
 
-  $pe_result = pg_query_params($conn, $pe_sql, array($passData['start_time'],$passData['end_time']));
-  if (!$pe_result) {
-    exit(json_encode(array("error" => "Executing $pe_sql")));
+  if (passData['PE_data'] != 'None') {
+    $pe_result = pg_query_params($conn, $pe_sql, array($passData['start_time'],$passData['end_time']));
+    if (!$pe_result) {
+      exit(json_encode(array("error" => "Executing $pe_sql")));
+    }
+    $pe_data = pg_fetch_all($pe_result,PGSQL_NUM);
+    $output['PE_x_data'] = array_column($pe_data,0);
+    $output['PE_y_data'] = array_column($pe_data,1);
+    $output['PE_c_data'] = array_column($pe_data,2);
   }
 
-  $ps_result = pg_query_params($conn, $ps_sql, array($passData['start_time'],$passData['end_time']));
-  if (!$ps_result) {
-    exit(json_encode(array("error" => "Executing $ps_sql")));
+  if (passData['PS_data'] != 'None') {
+    $ps_result = pg_query_params($conn, $ps_sql, array($passData['start_time'],$passData['end_time']));
+    if (!$ps_result) {
+      exit(json_encode(array("error" => "Executing $ps_sql")));
+    }
+    $ps_data = pg_fetch_all($ps_result,PGSQL_NUM);
+    $output['PS_x_data'] = array_column($ps_data,0);
+    $output['PS_y_data'] = array_column($ps_data,1);
+    $output['PS_c_data'] = array_column($ps_data,2);
   }
 
-  $pe_data = pg_fetch_all($pe_result,PGSQL_NUM);
-  $ps_data = pg_fetch_all($ps_result,PGSQL_NUM);
+
+
 } catch (Exception $e) {
   exit(json_encode(array("error" => $e->getMessage())));
 }
-
-// construct output
-$output['PE_x_data'] = array_column($pe_data,0);
-$output['PE_y_data'] = array_column($pe_data,1);
-$output['PE_c_data'] = array_column($pe_data,2);
-$output['PS_x_data'] = array_column($ps_data,0);
-$output['PS_y_data'] = array_column($ps_data,1);
-$output['PS_c_data'] = array_column($ps_data,2);
 
 // echo output
 echo json_encode($output);

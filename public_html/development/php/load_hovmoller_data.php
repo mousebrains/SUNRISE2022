@@ -64,7 +64,7 @@ try {
     exit(json_encode(array("error" => "unable to open database $dbname")));
   }
 
-  if (passData['PE_data'] != 'None') {
+  if (!strcmp(passData['PE_data'],'None')) {
     $pe_result = pg_query_params($conn, $pe_sql, array($passData['start_time'],$passData['end_time']));
     if (!$pe_result) {
       exit(json_encode(array("error" => "Executing $pe_sql")));
@@ -75,7 +75,7 @@ try {
     $output['PE_c_data'] = array_column($pe_data,2);
   }
 
-  if (passData['PS_data'] != 'None') {
+  if (!strcmp(passData['PS_data'],'None')) {
     $ps_result = pg_query_params($conn, $ps_sql, array($passData['start_time'],$passData['end_time']));
     if (!$ps_result) {
       exit(json_encode(array("error" => "Executing $ps_sql")));

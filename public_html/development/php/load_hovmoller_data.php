@@ -39,11 +39,11 @@ $pe_variables = implode(',',array(
   $variables[$passData['data_PE']]
 ));
 
-$ps_variables = array(
+$ps_variables = implode(',',array(
   $variables[$passData['x_variable']],
   $variables[$passData['y_variable']],
   $variables[$passData['data_PS']]
-);
+));
 
 // access the database
 $dbname = "sunrise";

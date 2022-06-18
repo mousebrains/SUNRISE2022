@@ -51,15 +51,15 @@ $dbname = "sunrise";
 $pe_sql = "SELECT $pe_variables FROM met";
 $pe_sql.= " WHERE ship='pe'";
 $pe_sql.= " AND t BETWEEN $1 AND $2";
-$pe_sql.= " AND mod(minute(t),$3) = 0";
-// $pe_sql.= " AND (EXTRACT(MINUTE FROM t) % $3) == 0";
+//$pe_sql.= " AND mod(minute(t),$3) = 0";
+$pe_sql.= " AND (EXTRACT(MINUTE FROM t) % $3) = 0";
 $pe_sql.= " ORDER BY t LIMIT 10000;";
 
 $ps_sql = "SELECT $ps_variables FROM met";
 $ps_sql.= " WHERE ship='ps'";
 $ps_sql.= " AND t BETWEEN $1 AND $2";
-$ps_sql.= " AND mod(minute(t),$3) = 0";
-//$ps_sql.= " AND (EXTRACT(MINUTE FROM t) % $3) == 0";
+//$ps_sql.= " AND mod(minute(t),$3) = 0";
+$ps_sql.= " AND (EXTRACT(MINUTE FROM t) % $3) = 0";
 $ps_sql.= " ORDER BY t LIMIT 10000;";
 
 try {

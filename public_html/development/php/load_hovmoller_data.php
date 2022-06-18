@@ -33,14 +33,16 @@ $variables = array(
   'V - Slab Model' => ''
 );
 
+echo(json_encode($variables));
+exit()
+
 $pe_variables = array(
   $variables[$input['x_variable']],
   $variables[$input['y_variable']],
   $variables[$input['data_PE']]
 );
 
-echo(json_encode($pe_variables));
-exit()
+
 
 $ps_variables = array(
   $variables[$input['x_variable']],

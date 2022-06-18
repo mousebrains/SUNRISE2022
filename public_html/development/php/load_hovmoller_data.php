@@ -53,13 +53,15 @@ $sql.= " WHERE ship=$2";
 $sql.= " AND t BETWEEN $3 AND $4";
 $sql.= " ORDER BY t LIMIT 10000;";
 
+$pe_sql = implode(',',$pe_variables);
+
 try {
     $conn = pg_connect("dbname=$dbname");
     if (!$conn) {
       exit(json_encode(array("error" => "unable to open database $dbname")));
     }
 
-    $pe_result = pg_query_params($conn, $sql, array(implode(',',$pe_variables),'pe',$input['start_time'],$input['end_time']));
+    $pe_result = pg_query_params($conn, $sql, array($pe_sql,'pe',$input['start_time'],$input['end_time']));
     if (!$pe_result) {
       exit(json_encode(array("error" => "Executing $sql")));
     }

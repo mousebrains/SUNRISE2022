@@ -34,13 +34,13 @@ $variables = array(
 );
 
 $pe_variables = array(
-  $variables[$passData['x_varaible']],
+  $variables[$passData['x_variable']],
   $variables[$passData['y_variable']],
   $variables[$passData['data_PE']]
 );
 
 $ps_variables = array(
-  $variables[$passData['x_varaible']],
+  $variables[$passData['x_variable']],
   $variables[$passData['y_variable']],
   $variables[$passData['data_PS']]
 );

@@ -1,0 +1,17 @@
+#
+# Sync Pelican's ADCP data
+#
+# June-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=Sync Pelican's ADCP data
+
+[Timer]
+# dayOfWeek Year-Month-Day Hour:Minute:Second
+# sync data every 4 hours
+OnCalendar=*-*-* 3/4:31:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+

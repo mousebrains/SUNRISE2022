@@ -18,7 +18,8 @@ ExecStart=%h/SUNRISE2022/MET/db2nc.py \
 	--verbose \
 	--yaml=%h/SUNRISE2022/MET/decimate.yaml \
 	--key=met.ps \
-	--nc=/mnt/sci/data/Platform/PS/ShipDas/met.nc
+	/mnt/sci/data/Platform/PS/ShipDas/met.nc \
+	/mnt/sci/data/Processed_NC/ShipDas/SUNRISE2022_PS_ShipDas_Processed.nc
         
 [Install]
 WantedBy=default.target

@@ -2,6 +2,7 @@
 #
 pattern=PS22_23_MacKinnon
 platform=PS
+otro=PE
 
 log=/home/pat/logs/syncADCP.log
 
@@ -24,19 +25,39 @@ cmd="/usr/bin/rsync \
 
 date >>$log
 
-
-lastsrc=
-
 for src in `ls -trd /mnt/adcp/${pattern}*`; do
-	lastsrc=$src
 	tgt=/mnt/sci/data/Platform/$platform/ADCP_UHDAS/`basename $src`
 	mkdir -p $tgt
+	echo >>$log
+	echo "Source $src" >>$log
+	echo "Target $tgt" >>$log
 	$cmd $src/proc/* $tgt 2>&1 >>$log
 done
 
-if [ "x$lastsrc" != "x" ] ; then
-	src=$lastsrc
-	tgt=/mnt/sci/data/Platform/$platform/ADCP_UHDAS
-	mkdir -p $tgt
-	$cmd $src/proc/* $tgt 2>&1 >>$log
-fi
+src=/mnt/adcp/current_cruise
+tgt=/mnt/sci/data/Platform/$platform/ADCP_UHDAS
+mkdir -p $tgt
+echo >>$log
+echo "Source $src" >>$log
+echo "Target $tgt" >>$log
+$cmd $src/proc/* $tgt 2>&1 >>$log
+
+# Copy over the Processed_NC/ADCP_UHDAS/*Platform* to Sync
+
+src=/mnt/sci/data/Processed_NC/ADCP_UHDAS
+tgt=/home/pat/Sync/PointSur/Processed_NC/ADCP_UHDAS
+mkdir -p $tgt
+echo >>$log
+echo "Source $src" >>$log
+echo "Target $tgt" >>$log
+$cmd $src/*_${platform}_*.nc $tgt
+
+# Copy over the SyncProcessed_NC/ADCP_UHDAS/*Platform* to sci
+
+src=/home/pat/Sync/Pelican/Processed_NC/ADCP_UHDAS
+tgt=/mnt/sci/data/Processed_NC/ADCP_UHDAS
+mkdir -p $tgt
+echo >>$log
+echo "Source $src" >>$log
+echo "Target $tgt" >>$log
+$cmd $src/*_${otro}_*.nc $tgt

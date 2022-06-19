@@ -190,6 +190,10 @@ netCDF.met:
     - windSpdRel2
     - windDirRel1
     - windDirRel2
+    - windSpdTrue1
+    - windSpdTrue2
+    - windDirTrue1
+    - windDirTrue2
     - shortWave
     - longWave
 

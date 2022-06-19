@@ -1,6 +1,6 @@
 // define some constants
 const MAX_NUMBER_DATAPOINTS = 10000; // maximum number of datapoints that can be loaded
-const CRUISE_START_TIME = new Date("2020-06-25 17:00"); // cannot load data from before the start of the cruise
+const CRUISE_START_TIME = new Date("2022-06-17 12:00"); // cannot load data from before the start of the cruise
 
 // function called when "Load Data Clicked"
 function loadData () {

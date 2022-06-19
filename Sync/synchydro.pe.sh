@@ -7,8 +7,10 @@ src0=/mnt/sci/data/Processed_NC/HydroCombo
 tgt0=/home/pat/Sync/Pelican
 
 exclude1='*PE*'
-src1=/home/pat/Sync/Pelican/HydroCombo
+src1=/home/pat/Sync/PointSur/HydroCombo
 tgt1=/mnt/sci/data/Processed_NC/
+
+mkdir -p $tgt0 $tgt1
 
 date >>$log
 

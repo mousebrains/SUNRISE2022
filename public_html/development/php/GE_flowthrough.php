@@ -5,17 +5,20 @@ header("Content-Type: application/xml");
 header('Cache-Control: no-cache');
 header('X-Accel-Buffering: no');
 
-/////////////////////////////////////////
-// some database magic courtesy of Pat //
-/////////////////////////////////////////
+// Set up SQL query
 
-$nback = 48*60;
-$names = "lon,lat,temp,sp";
+$nback = 48; # number of hours to search back
+
+$variables = "ROUND(lon::numeric,4),"; # longitude
+$variables .= "ROUND(lat::numeric,4),"; # latitude
+$variables .= "ROUND(temp::numeric,4),"; # temperature
+$variables .= "ROUND(sp::numeric,4)"; # salinity
+
 $dbname = "sunrise";
 
-$sql = "SELECT t,$names FROM met";
+$sql = "SELECT $variables FROM met";
 $sql.= " WHERE ship=$1";
-$sql.= " AND t>=(CURRENT_TIMESTAMP - make_interval(0,0,0,0,0,$2))";
+$sql.= " AND t>=(CURRENT_TIMESTAMP - make_interval(0,0,0,0,$2,0))";
 $sql.= " ORDER BY t LIMIT 10000;";
 
 try {
@@ -42,18 +45,18 @@ try {
 
 // spit out KML via the XMLWriter
 
-// $r = new XMLWriter();
-// $r->openMemory(); // Build in memory
-// $r->startDocument("1.0", "UTF-8"); // XML type
-// $r->startElement("kml"); // Start a kml stanza
-// $r->writeAttribute("xmlns", "http://www.opengis.net/kml/2.2");
-// $r->startElement("Document");
-// $r->writeElement("name", "Flowthrough");
-//
-// //$r->startElement("") //
-//
-// $r->endElement(); // Document
-// $r->endElement(); // kml
-// $r->endDocument(); // XML
-// echo $r->outputMemory(true); // Clean up and generate a string
+$r = new XMLWriter();
+$r->openMemory(); // Build in memory
+$r->startDocument("1.0", "UTF-8"); // XML type
+$r->startElement("kml"); // Start a kml stanza
+$r->writeAttribute("xmlns", "http://www.opengis.net/kml/2.2");
+$r->startElement("Document");
+$r->writeElement("name", "Flowthrough");
+
+//$r->startElement("") //
+
+$r->endElement(); // Document
+$r->endElement(); // kml
+$r->endDocument(); // XML
+echo $r->outputMemory(true); // Clean up and generate a string
 ?>

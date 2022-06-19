@@ -24,11 +24,11 @@ $output = array(
 $variables = array(
   'None' => 'NULL',
   'Time' => 't',
-  'Inertial Periods' => 'NULL',
-  'Latitude' => 'lat',
-  'Longitude' => 'lon',
-  'Salinity' => 'sp',
-  'Temperature' => 'temp',
+  'Inertial Periods' => "ROUND(EXTRACT(epoch FROM t - '2022-06-17 12:00:00+00')/89820::numeric,4)",
+  'Latitude' => 'ROUND(lat::numeric,4)',
+  'Longitude' => 'ROUND(lon::numeric,4)',
+  'Salinity' => 'ROUND(sp::numeric,4)',
+  'Temperature' => 'ROUND(temp::numeric,4)',
   'U - Slab Model' => 'NULL',
   'V - Slab Model' => 'NULL'
 );

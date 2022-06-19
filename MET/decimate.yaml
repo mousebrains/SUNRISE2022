@@ -76,8 +76,8 @@ Pelican.headers: # These are the column names in the file to DB field name
   BaromPress-1: {name: airPressure1}
   Rel-WindDir-1: {name: windDirRel1}
   Rel-WindSpd-1: {name: windSpdRel1}
-  True-Wind-1-DRV-DIRECTION: {name: windDirTrue1}
-  True-Wind-1-DRV-SPEED: {name: windSpdTrue1}
+  TrueWindDirection-1-DRV-DIRECTION: {name: windDirTrue1}
+  TrueWindDirection-1-DRV-SPEED: {name: windSpdTrue1}
   Radiometer-Feed--Long Wave Radiation Watts Per Square Meter: {name: longWave}
   "Radiometer-Feed--Short Wave Radiation from PSP in Watts Per M^2": {name: shortWave}
 
@@ -190,6 +190,10 @@ netCDF.met:
     - windSpdRel2
     - windDirRel1
     - windDirRel2
+    - windSpdTrue1
+    - windSpdTrue2
+    - windDirTrue1
+    - windDirTrue2
     - shortWave
     - longWave
 

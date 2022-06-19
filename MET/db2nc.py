@@ -14,9 +14,9 @@ from netCDF4 import Dataset
 import numpy as np
 import sys
 
-def buildNC(args:ArgumentParser, cols:tuple[str]) -> Dataset:
+def buildNC(fn:str, args:ArgumentParser, cols:tuple[str]) -> Dataset:
     doubles = ("t", "longitude", "latitude", "lon", "lat")
-    with Dataset(args.nc, mode="w", format="NETCDF4") as nc:
+    with Dataset(fn, mode="w", format="NETCDF4") as nc:
         nc.title = args.key
         nc.createDimension("t", None)
         for col in cols:
@@ -26,18 +26,21 @@ def buildNC(args:ArgumentParser, cols:tuple[str]) -> Dataset:
         nc.variables["t"].units = "seconds since 1970-01-01 00:00:00"
 
 def writeNC(fn:str, data:dict) -> None:
-    with Dataset(args.nc, mode="a")  as nc:
-        nc.variables["t"][:] = np.array(data["t"])
+    with Dataset(fn, mode="a")  as nc:
+        sz = nc.variables["t"].size
+        t = np.array(data["t"])
+        i = sz + np.arange(t.size)
+        nc.variables["t"][i] = t
         for key in data:
             if key == "t": continue
-            nc.variables[key][:] = np.array(data[key])
+            nc.variables[key][i] = np.array(data[key])
 
 parser = ArgumentParser()
 Logger.addArgs(parser)
 Config.addArgs(parser)
 parser.add_argument("--db", type=str, default="sunrise", help="Input database")
 parser.add_argument("--table", type=str, default="met", help="Table to fetch data from")
-parser.add_argument("--nc", type=str, required=True, help="Output netcdf filename")
+parser.add_argument("nc", type=str, nargs="+", help="Output netcdf filename(s)")
 args = parser.parse_args()
 
 Logger.mkLogger(args, fmt="%(asctime)s %(levelname)s: %(message)s")
@@ -60,8 +63,9 @@ if ("decimate" in config.netcdf) and config.netcdf["decimate"].isnumeric():
 else:
     dt = None
 
-if not os.path.isfile(args.nc):
-    buildNC(args, cols)
+for fn in args.nc:
+    if not os.path.isfile(fn):
+        buildNC(fn, args, cols)
 
 sql = "WITH updated AS ("
 sql+= f"UPDATE {args.table} SET qNetCDF=true"
@@ -90,7 +94,9 @@ with psycopg2.connect(f"dbname={args.db}") as db:
                     data[key].append(row[index])
         logging.info("Wrote %s records to %s", len(data["t"]), args.nc)
 
-        writeNC(args.nc, data)
+        for fn in args.nc:
+            writeNC(fn, data)
+
         cur.execute("COMMIT;")
     except:
         cur.execute("ROLLBACK;")

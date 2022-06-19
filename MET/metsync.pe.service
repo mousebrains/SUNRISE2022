@@ -20,7 +20,7 @@ ExecStart= \
 	--key=sync.pe \
 	--yaml=decimate.yaml \
 	--verbose \
-	--logfile=%h/logs/met.pe.log
+	--logfile=%h/logs/metsync.pe.log
 
 RestartSec=30
 

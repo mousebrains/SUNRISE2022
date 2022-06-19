@@ -14,7 +14,7 @@ Type=oneshot
 WorkingDirectory=%h/logs
 #
 ExecStart=%h/SUNRISE2022/MET/db2nc.py \
-	--logfile=%h/logs/db2nc.log \
+	--logfile=%h/logs/db2nc.ps.log \
 	--verbose \
 	--yaml=%h/SUNRISE2022/MET/decimate.yaml \
 	--key=met.ps \

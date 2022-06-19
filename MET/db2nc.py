@@ -27,10 +27,13 @@ def buildNC(args:ArgumentParser, cols:tuple[str]) -> Dataset:
 
 def writeNC(fn:str, data:dict) -> None:
     with Dataset(args.nc, mode="a")  as nc:
-        nc.variables["t"][:] = np.array(data["t"])
+        sz = nc.variables["t"].size
+        t = np.array(data["t"])
+        i = sz + np.arange(t.size)
+        nc.variables["t"][i] = t
         for key in data:
             if key == "t": continue
-            nc.variables[key][:] = np.array(data[key])
+            nc.variables[key][i] = np.array(data[key])
 
 parser = ArgumentParser()
 Logger.addArgs(parser)

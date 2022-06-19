@@ -3,7 +3,7 @@
 // available data fields
 const PELICAN_DATA_VARIABLES = [
   "Time",
-  "Inertial Periods",
+//  "Inertial Periods",
 	"Latitude",
 	"Longitude",
 	"Salinity",
@@ -14,7 +14,7 @@ const PELICAN_DATA_VARIABLES = [
 
 const POINTSUR_DATA_VARIABLES = [
   "Time",
-  "Inertial Periods",
+//  "Inertial Periods",
 	"Latitude",
 	"Longitude",
 	"Salinity",

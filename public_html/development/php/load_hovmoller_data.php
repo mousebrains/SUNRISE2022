@@ -25,10 +25,10 @@ $variables = array(
   'None' => 'NULL',
   'Time' => 't',
   'Inertial Periods' => 'ROUND(CAST(((DATE_PART('day', t::timestamp - '2022-06-17 12:00:00'::timestamp) * 24 + DATE_PART('hour', t::timestamp - '2022-06-17 12:00:00'::timestamp)) * 60 + DATE_PART('minute', t::timestamp - '2022-06-17 12:00:00'::timestamp))/1497 as NUMERIC),2)';
-  'Latitude' => 'ROUND(CAST(lat as NUMERIC), 4)',
-  'Longitude' => 'ROUND(CAST(lon as NUMERIC), 4)',
-  'Salinity' => 'ROUND(CAST(sp as NUMERIC), 2)',
-  'Temperature' => 'ROUND(CAST(temp as NUMERIC), 2)',
+  'Latitude' => 'lat',
+  'Longitude' => 'lon',
+  'Salinity' => 'sp',
+  'Temperature' => 'temp',
   'U - Slab Model' => 'NULL',
   'V - Slab Model' => 'NULL'
 );

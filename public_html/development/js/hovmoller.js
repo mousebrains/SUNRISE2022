@@ -90,7 +90,7 @@ updateSetData();
 
 let now = new Date();
 let earlier = new Date();
-earlier.setHours(now.getHours()-2);
+earlier.setHours(now.getHours()-4);
 
 // create an object to read time values into and pass to php
 // also set the edfault range to now - 2 hours to now, datetime2str defined in js/utils.js

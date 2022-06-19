@@ -3,24 +3,24 @@
 // available data fields
 const PELICAN_DATA_VARIABLES = [
   "Time",
-  "Inertial Periods",
+//  "Inertial Periods",
 	"Latitude",
 	"Longitude",
 	"Salinity",
 	"Temperature",
-  "U - Slab Model",
-  "V - Slab Model"
+//  "U - Slab Model",
+//  "V - Slab Model"
 ];
 
 const POINTSUR_DATA_VARIABLES = [
   "Time",
-  "Inertial Periods",
+//  "Inertial Periods",
 	"Latitude",
 	"Longitude",
 	"Salinity",
 	"Temperature",
-  "U - Slab Model",
-  "V - Slab Model"
+//  "U - Slab Model",
+//  "V - Slab Model"
 ];
 
 const LABELS = {

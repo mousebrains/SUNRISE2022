@@ -128,7 +128,7 @@ $dbname = "sunrise";
 $sql = "SELECT $variables FROM met";
 $sql.= " WHERE ship=$1";
 $sql.= " AND t>=(CURRENT_TIMESTAMP - make_interval(0,0,0,0,$2,0))";
-$sql.= " AND SECOND = 0";
+$sql.= " AND EXTRACT(SECOND FROM t) = 0";
 $sql.= " ORDER BY t LIMIT 15000;";
 
 try {

@@ -103,7 +103,7 @@ function temperature_colour($tvalue) : string {
     }
 
     // map salinity to index
-    $index = (($tvalue - $tmin)/($tmax - $tmin)*127);
+    $index = (1 - ($tvalue - $tmin)/($tmax - $tmin))*127;
 
     return TEMPERATURE_CMAP[(int)$index];
   }

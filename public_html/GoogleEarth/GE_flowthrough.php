@@ -81,8 +81,8 @@ function salinity_colour($svalue) : string {
 
 function temperature_colour($tvalue) : string {
   try {
-    $tmin = 29.0;
-    $tmax = 34.0;
+    $tmin = 30.0;
+    $tmax = 33.0;
     // convert temperature to a float
     $tvalue = (float)$tvalue;
 

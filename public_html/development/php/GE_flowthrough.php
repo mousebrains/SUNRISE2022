@@ -5,6 +5,60 @@ header("Content-Type: application/xml");
 header('Cache-Control: no-cache');
 header('X-Accel-Buffering: no');
 
+// Define cmaps
+
+$salinity_cmap = array(
+  '#ffd9ffff','#ffd6fefd','#ffd3fefc','#ffd1fdfb','#ffcefdfa','#ffccfcf9','#ffc9fcf8','#ffc7fbf7',
+  '#ffc4fbf5','#ffc2fbf4','#ffbffaf3','#ffbdfaf2','#ffbaf9f1','#ffb8f9f0','#ffb5f8ef','#ffb3f8ee',
+  '#ffb1f7ec','#ffb1f7ea','#ffb1f6e8','#ffb1f5e5','#ffb1f4e3','#ffb1f3e0','#ffb2f2de','#ffb2f1dc',
+  '#ffb2f0d9','#ffb2efd7','#ffb2eed5','#ffb3edd2','#ffb3ecd0','#ffb3ebcd','#ffb3eacb','#ffb3e9c9',
+  '#ffb4e8c6','#ffb4e7c1','#ffb4e5bd','#ffb5e3b8','#ffb5e1b4','#ffb6dfaf','#ffb6deab','#ffb7dca6',
+  '#ffb7daa2','#ffb8d89d','#ffb8d799','#ffb8d594','#ffb9d390','#ffb9d18b','#ffbad087','#ffbace82',
+  '#ffbbcc7e','#ffbbcb7a','#ffbcc976','#ffbcc872','#ffbdc66e','#ffbdc56a','#ffbec466','#ffbfc263',
+  '#ffbfc15f','#ffc0bf5b','#ffc0be57','#ffc1bc53','#ffc1bb4f','#ffc2b94b','#ffc3b847','#ffc3b743',
+  '#ffc3b43f','#ffc3b13d','#ffc3af3a','#ffc3ad38','#ffc2aa36','#ffc2a834','#ffc2a631','#ffc2a42f',
+  '#ffc1a12d','#ffc19f2a','#ffc19d28','#ffc19a26','#ffc09824','#ffc09621','#ffc0931f','#ffc0911d',
+  '#ffbe8e1d','#ffbd8b1d','#ffbb881d','#ffba841e','#ffb8811e','#ffb77e1e','#ffb57b1f','#ffb4781f',
+  '#ffb2741f','#ffb17120','#ffaf6e20','#ffae6b20','#ffac6821','#ffab6421','#ffa96121','#ffa85e21',
+  '#ffa65b22','#ffa55922','#ffa45622','#ffa35322','#ffa15122','#ffa04e23','#ff9f4b23','#ff9e4923',
+  '#ff9c4623','#ff9b4323','#ff9a4124','#ff993e24','#ff973c24','#ff963924','#ff953624','#ff943424',
+  '#ff903223','#ff8c3121','#ff882f1f','#ff852e1d','#ff812c1c','#ff7d2b1a','#ff792918','#ff762816',
+  '#ff722714','#ff6e2512','#ff6a2411','#ff67220f','#ff63210d','#ff5f1f0b','#ff5b1e09','#ff581d08'
+);
+
+function salinity_colour($svalue) : string {
+  try {
+    $min = 24.0;
+    $smax = 32.0;
+    // convert salinity to a float
+    $value = floatvar($svalue)
+
+    // check salinity is in a reasonable range
+    if ( $value <= 0 ) {
+      throw new Exception('Salinity must be positive');
+    }
+    if ( $value > 40) {
+      throw new Exception('Salinity too large');
+    }
+
+    // map points outside of range to the range limits
+    if ( $value < $smin ) {
+      $value = $smin;
+    }
+    if ( $value > $smax ) {
+      $value = $smax;
+    }
+
+    // map salinity to index
+    $index = (int)(($svalue - $smin)/($smax - $smin)*127);
+
+    return $salinity_cmap($index);
+  }
+  catch (exception $e) {
+    // return transparent colour upon error
+    return '#00000000';
+  }
+}
 // Set up SQL query
 
 $nback = 48; # number of hours to search back
@@ -67,10 +121,10 @@ $r->endElement(); // Linestyle
 $r->startElement("BalloonStyle");
 $r->startElement("text");
 $text_string = "$[sunriseData/Time/displayName] $[sunriseData/Time]<br/>";
-$text_string .= "$[sunriseData/lon/displayName] $[sunriseData/lon]<br/>";
-$text_string .= "$[sunriseData/lat/displayName] $[sunriseData/lat]<br/>";
-$text_string .= "$[sunriseData/temp/displayName] $[sunriseData/temp]<br/>";
-$text_string .= "$[sunriseData/sal/displayName] $[sunriseData/sal]";
+$text_string .= "$[sunriseData/lon/displayName] $[sunriseData/lon] &degE<br/>";
+$text_string .= "$[sunriseData/lat/displayName] $[sunriseData/lat] &degN<br/>";
+$text_string .= "$[sunriseData/temp/displayName] $[sunriseData/temp] &degC<br/>";
+$text_string .= "$[sunriseData/sal/displayName] $[sunriseData/sal] PSU";
 $r->writeCData($text_string);
 $r->endElement(); // text
 $r->endElement(); // BalloonStyle
@@ -129,7 +183,7 @@ foreach (range(1, count($pe_data)-1) as $ii) {
 	$end_lat = $pe_data[$ii][2];
 	$end_temp = $pe_data[$ii][3];
 	$end_sal = $pe_data[$ii][4];
-	
+
 	$r->startElement("Placemark");
 
 	$r->startElement("TimeSpan");
@@ -144,10 +198,10 @@ foreach (range(1, count($pe_data)-1) as $ii) {
 	$r->writeElement("styleUrl","#sunrise_lines");
 	$r->startElement("Style");
 	$r->startElement("LineStyle");
-	$r->writeElement("color","ff000000");
+	$r->writeElement("color",salinity_colour($end_sal));
 	$r->endElement(); // LineStyle
 	$r->endElement(); // Style
-	
+
 	$r->startElement("ExtendedData");
 	$r->startElement("SchemaData");
 	$r->writeAttribute("schemaUrl","#sunriseData");
@@ -171,14 +225,14 @@ foreach (range(1, count($pe_data)-1) as $ii) {
 	$r->writeAttribute("name","sal");
 	$r->text($end_sal);
 	$r->endElement(); // SimpleData - sal
-	$r->endElement(); // SchemaData 
+	$r->endElement(); // SchemaData
 	$r->endElement(); // ExtendedData
-	
+
 	$r->endElement(); // Placemark
 
 	$start_time = $end_time;
 	$start_lon = $end_lon;
-	$start_lat = $end_lat;	
+	$start_lat = $end_lat;
 }
 
 $r->endElement(); // Pelican salinity folder

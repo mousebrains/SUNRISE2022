@@ -193,7 +193,7 @@ $r->writeElement("width",5);
 $r->endElement(); // Linestyle
 $r->startElement("BalloonStyle");
 $r->startElement("text");
-$text_string = "<b>Point Sur</b><br/>";
+$text_string = "<b>RV Point Sur</b><br/>";
 $text_string .= "$[sunriseData/Time/displayName] $[sunriseData/Time]<br/>";
 $text_string .= "$[sunriseData/lon/displayName] $[sunriseData/lon] &degE<br/>";
 $text_string .= "$[sunriseData/lat/displayName] $[sunriseData/lat] &degN<br/>";

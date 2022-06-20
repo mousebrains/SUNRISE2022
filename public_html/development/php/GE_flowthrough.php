@@ -128,7 +128,8 @@ $dbname = "sunrise";
 $sql = "SELECT $variables FROM met";
 $sql.= " WHERE ship=$1";
 $sql.= " AND t>=(CURRENT_TIMESTAMP - make_interval(0,0,0,0,$2,0))";
-$sql.= " ORDER BY t LIMIT 10000;";
+$sql.= " AND SECOND = 0";
+$sql.= " ORDER BY t LIMIT 15000;";
 
 try {
     $conn = pg_connect("dbname=$dbname");
@@ -192,7 +193,7 @@ $r->writeElement("width",5);
 $r->endElement(); // Linestyle
 $r->startElement("BalloonStyle");
 $r->startElement("text");
-$text_string = "$<b>Point Sur</b><br/>";
+$text_string = "<b>Point Sur</b><br/>";
 $text_string .= "$[sunriseData/Time/displayName] $[sunriseData/Time]<br/>";
 $text_string .= "$[sunriseData/lon/displayName] $[sunriseData/lon] &degE<br/>";
 $text_string .= "$[sunriseData/lat/displayName] $[sunriseData/lat] &degN<br/>";
@@ -379,6 +380,143 @@ foreach (range(1, count($pe_data)-1) as $ii) {
 }
 
 $r->endElement(); // Pelican temperature folder
+
+// Point Sur Salinity
+$r->startElement("Folder"); // Point Sur salinity folder
+$r->writeAttribute("id","PS_salinity");
+$r->writeElement("name","PS Salinity");
+
+$start_time = $ps_data[0][0];
+$start_lon = $ps_data[0][1];
+$start_lat = $ps_data[0][2];
+foreach (range(1, count($ps_data)-1) as $ii) {
+	$end_time = $ps_data[$ii][0];
+	$end_lon = $ps_data[$ii][1];
+	$end_lat = $ps_data[$ii][2];
+	$end_temp = $ps_data[$ii][3];
+	$end_sal = $ps_data[$ii][4];
+
+	$r->startElement("Placemark");
+
+	$r->startElement("TimeSpan");
+	$r->writeElement("begin",str_replace(' ','T',$start_time).":00");
+	$r->writeElement("end",str_replace(' ','T',$end_time).":00");
+	$r->endElement(); // TimeSpan
+	$r->startElement("LineString");
+	$r->writeElement("coordinates","$start_lon,$start_lat $end_lon,$end_lat");
+	$r->endElement(); // Linestring
+
+
+	$r->writeElement("styleUrl","#ps_lines");
+	$r->startElement("Style");
+	$r->startElement("LineStyle");
+	$r->writeElement("color",salinity_colour($end_sal));
+	$r->endElement(); // LineStyle
+	$r->endElement(); // Style
+
+	$r->startElement("ExtendedData");
+	$r->startElement("SchemaData");
+	$r->writeAttribute("schemaUrl","#sunriseData");
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","Time");
+	$r->text(substr($end_time,0,16));
+	$r->endElement(); // SimpleData - Time
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","lon");
+	$r->text($end_lon);
+	$r->endElement(); // SimpleData - lon
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","lat");
+	$r->text($end_lat);
+	$r->endElement(); // SimpleData - lat
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","temp");
+	$r->text($end_temp);
+	$r->endElement(); // SimpleData - temp
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","sal");
+	$r->text($end_sal);
+	$r->endElement(); // SimpleData - sal
+	$r->endElement(); // SchemaData
+	$r->endElement(); // ExtendedData
+
+	$r->endElement(); // Placemark
+
+	$start_time = $end_time;
+	$start_lon = $end_lon;
+	$start_lat = $end_lat;
+}
+
+$r->endElement(); // Point Sur salinity folder
+
+// Point Sur Temperature
+$r->startElement("Folder"); // Point Sur temperature folder
+$r->writeAttribute("id","PS_temperature");
+$r->writeElement("name","PS Temperature");
+$r->writeElement("visibility",0);
+
+$start_time = $ps_data[0][0];
+$start_lon = $ps_data[0][1];
+$start_lat = $ps_data[0][2];
+foreach (range(1, count($ps_data)-1) as $ii) {
+	$end_time = $ps_data[$ii][0];
+	$end_lon = $ps_data[$ii][1];
+	$end_lat = $ps_data[$ii][2];
+	$end_temp = $ps_data[$ii][3];
+	$end_sal = $ps_data[$ii][4];
+
+	$r->startElement("Placemark");
+
+	$r->startElement("TimeSpan");
+	$r->writeElement("begin",str_replace(' ','T',$start_time).":00");
+	$r->writeElement("end",str_replace(' ','T',$end_time).":00");
+	$r->endElement(); // TimeSpan
+	$r->startElement("LineString");
+	$r->writeElement("coordinates","$start_lon,$start_lat $end_lon,$end_lat");
+	$r->endElement(); // Linestring
+
+
+	$r->writeElement("styleUrl","#ps_lines");
+	$r->startElement("Style");
+	$r->startElement("LineStyle");
+	$r->writeElement("color",temperature_colour($end_sal));
+	$r->endElement(); // LineStyle
+	$r->endElement(); // Style
+
+	$r->startElement("ExtendedData");
+	$r->startElement("SchemaData");
+	$r->writeAttribute("schemaUrl","#sunriseData");
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","Time");
+	$r->text(substr($end_time,0,16));
+	$r->endElement(); // SimpleData - Time
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","lon");
+	$r->text($end_lon);
+	$r->endElement(); // SimpleData - lon
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","lat");
+	$r->text($end_lat);
+	$r->endElement(); // SimpleData - lat
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","temp");
+	$r->text($end_temp);
+	$r->endElement(); // SimpleData - temp
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","sal");
+	$r->text($end_sal);
+	$r->endElement(); // SimpleData - sal
+	$r->endElement(); // SchemaData
+	$r->endElement(); // ExtendedData
+
+	$r->endElement(); // Placemark
+
+	$start_time = $end_time;
+	$start_lon = $end_lon;
+	$start_lat = $end_lat;
+}
+
+$r->endElement(); // Point Sur temperature folder
 
 $r->endElement(); // Document
 $r->endElement(); // kml

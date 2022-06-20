@@ -79,14 +79,14 @@ function salinity_colour($svalue) : string {
   }
 }
 
-function salinity_colour($tvalue) : string {
+function temperature_colour($tvalue) : string {
   try {
     $tmin = 29.0;
     $tmax = 34.0;
-    // convert salinity to a float
+    // convert temperature to a float
     $tvalue = (float)$tvalue;
 
-    // check salinity is in a reasonable range
+    // check temperature is in a reasonable range
     if ( $tvalue <= 0 ) {
       throw new Exception('Temperature must be positive');
     }
@@ -174,7 +174,7 @@ $r->writeElement("width",5);
 $r->endElement(); // Linestyle
 $r->startElement("BalloonStyle");
 $r->startElement("text");
-$text_string = "$<b>Pelican</b><br/>";
+$text_string = "<b>RV Pelican</b><br/>";
 $text_string .= "$[sunriseData/Time/displayName] $[sunriseData/Time]<br/>";
 $text_string .= "$[sunriseData/lon/displayName] $[sunriseData/lon] &degE<br/>";
 $text_string .= "$[sunriseData/lat/displayName] $[sunriseData/lat] &degN<br/>";

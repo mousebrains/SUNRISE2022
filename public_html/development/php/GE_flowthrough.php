@@ -81,8 +81,8 @@ function salinity_colour($svalue) : string {
 
 function temperature_colour($tvalue) : string {
   try {
-    $tmin = 29.0;
-    $tmax = 34.0;
+    $tmin = 30.0;
+    $tmax = 33.0;
     // convert temperature to a float
     $tvalue = (float)$tvalue;
 
@@ -103,7 +103,7 @@ function temperature_colour($tvalue) : string {
     }
 
     // map salinity to index
-    $index = (($tvalue - $tmin)/($tmax - $tmin)*127);
+    $index = (1 - ($tvalue - $tmin)/($tmax - $tmin))*127;
 
     return TEMPERATURE_CMAP[(int)$index];
   }
@@ -193,7 +193,7 @@ $r->writeElement("width",5);
 $r->endElement(); // Linestyle
 $r->startElement("BalloonStyle");
 $r->startElement("text");
-$text_string = "<b>Point Sur</b><br/>";
+$text_string = "<b>RV Point Sur</b><br/>";
 $text_string .= "$[sunriseData/Time/displayName] $[sunriseData/Time]<br/>";
 $text_string .= "$[sunriseData/lon/displayName] $[sunriseData/lon] &degE<br/>";
 $text_string .= "$[sunriseData/lat/displayName] $[sunriseData/lat] &degN<br/>";

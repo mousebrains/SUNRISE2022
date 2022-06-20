@@ -26,6 +26,25 @@ const SALINITY_CMAP = array(
   '#ff722714','#ff6e2512','#ff6a2411','#ff67220f','#ff63210d','#ff5f1f0b','#ff5b1e09','#ff581d08'
 );
 
+const TEMPERATURE_CMAP = array(
+  '#ffa4fefc','#ff9dfcf9','#ff95faf6','#ff8df7f4','#ff85f4f2','#ff7df2f1','#ff74eef1','#ff6cebf1',
+  '#ff64e8f1','#ff5de4f2','#ff56e0f3','#ff4fdcf4','#ff48d9f5','#ff42d5f6','#ff3cd1f7','#ff37cdf8',
+  '#ff31c9f8','#ff2cc5f9','#ff28c1fa','#ff23bdfa','#ff1eb9fb','#ff1ab5fb','#ff16b1fb','#ff12aefb',
+  '#ff0eaafb','#ff0ba6fb','#ff08a2fb','#ff079efb','#ff069bfb','#ff0697fa','#ff0693fa','#ff0890f9',
+  '#ff098cf9','#ff0c88f8','#ff0e85f7','#ff1181f6','#ff147ef5','#ff167af4','#ff1977f3','#ff1c74f2',
+  '#ff1e70f0','#ff216def','#ff236aed','#ff2667ec','#ff2864ea','#ff2b61e8','#ff2d5ee6','#ff305be5',
+  '#ff3258e3','#ff3456e0','#ff3753de','#ff3950dc','#ff3b4eda','#ff3e4bd7','#ff4049d5','#ff4247d2',
+  '#ff4445d0','#ff4742cd','#ff4940cb','#ff4b3ec8','#ff4d3dc5','#ff4f3bc2','#ff5139bf','#ff5337bd',
+  '#ff5635b8','#ff5733b5','#ff5932b2','#ff5b31af','#ff5c2fac','#ff5e2ea9','#ff5f2ca6','#ff612ba3',
+  '#ff622aa0','#ff63299c','#ff642899','#ff662696','#ff672593','#ff682490','#ff69238d','#ff692289',
+  '#ff6a2186','#ff6b2083','#ff6b1f80','#ff6c1d7d','#ff6d1c7a','#ff6d1b76','#ff6d1a73','#ff6e1970',
+  '#ff6e186d','#ff6e176a','#ff6e1566','#ff6e1463','#ff6e1360','#ff6e125d','#ff6d115a','#ff6d0f57',
+  '#ff6d0e53','#ff6c0d50','#ff6b0c4d','#ff6a0b4a','#ff690a46','#ff680a43','#ff660940','#ff65093c',
+  '#ff620939','#ff600935','#ff5d0932','#ff5a0a2e','#ff560a2b','#ff520b27','#ff4e0b24','#ff4a0c20',
+  '#ff450c1d','#ff400b1a','#ff3b0b17','#ff360b14','#ff320a12','#ff2d090f','#ff28080d','#ff23070a',
+  '#ff1f0608','#ff1b0406','#ff160304','#ff120203','#ff0e0102','#ff090101','#ff060000','#ff030000'
+);
+
 function salinity_colour($svalue) : string {
   try {
     $smin = 24.0;
@@ -59,6 +78,41 @@ function salinity_colour($svalue) : string {
     return '#00000000';
   }
 }
+
+function salinity_colour($tvalue) : string {
+  try {
+    $tmin = 29.0;
+    $tmax = 34.0;
+    // convert salinity to a float
+    $tvalue = (float)$tvalue;
+
+    // check salinity is in a reasonable range
+    if ( $tvalue <= 0 ) {
+      throw new Exception('Temperature must be positive');
+    }
+    if ( $tvalue > 40) {
+      throw new Exception('Temperature too large');
+    }
+
+    // map points outside of range to the range limits
+    if ( $tvalue < $tmin ) {
+      $tvalue = $tmin;
+    }
+    if ( $tvalue > $tmax ) {
+      $tvalue = $tmax;
+    }
+
+    // map salinity to index
+    $index = (($tvalue - $tmin)/($tmax - $tmin)*127);
+
+    return TEMPERATURE_CMAP[(int)$index];
+  }
+  catch (exception $e) {
+    // return transparent colour upon error
+    return '#00000000';
+  }
+}
+
 // Set up SQL query
 
 $nback = 48; # number of hours to search back
@@ -114,13 +168,32 @@ $r->startElement("Document");
 $r->writeElement("name", "Flowthrough");
 
 $r->startElement("Style");
-$r->writeAttribute("id","sunrise_lines");
+$r->writeAttribute("id","pe_lines");
 $r->startElement("LineStyle");
 $r->writeElement("width",5);
 $r->endElement(); // Linestyle
 $r->startElement("BalloonStyle");
 $r->startElement("text");
-$text_string = "$[sunriseData/Time/displayName] $[sunriseData/Time]<br/>";
+$text_string = "$<b>Pelican</b><br/>";
+$text_string .= "$[sunriseData/Time/displayName] $[sunriseData/Time]<br/>";
+$text_string .= "$[sunriseData/lon/displayName] $[sunriseData/lon] &degE<br/>";
+$text_string .= "$[sunriseData/lat/displayName] $[sunriseData/lat] &degN<br/>";
+$text_string .= "$[sunriseData/temp/displayName] $[sunriseData/temp] &degC<br/>";
+$text_string .= "$[sunriseData/sal/displayName] $[sunriseData/sal] PSU";
+$r->writeCData($text_string);
+$r->endElement(); // text
+$r->endElement(); // BalloonStyle
+$r->endElement(); // Style
+
+$r->startElement("Style");
+$r->writeAttribute("id","ps_lines");
+$r->startElement("LineStyle");
+$r->writeElement("width",5);
+$r->endElement(); // Linestyle
+$r->startElement("BalloonStyle");
+$r->startElement("text");
+$text_string = "$<b>Point Sur</b><br/>";
+$text_string .= "$[sunriseData/Time/displayName] $[sunriseData/Time]<br/>";
 $text_string .= "$[sunriseData/lon/displayName] $[sunriseData/lon] &degE<br/>";
 $text_string .= "$[sunriseData/lat/displayName] $[sunriseData/lat] &degN<br/>";
 $text_string .= "$[sunriseData/temp/displayName] $[sunriseData/temp] &degC<br/>";
@@ -170,6 +243,7 @@ $r->endElement();
 $r->endElement(); // SimpleField - sal
 $r->endElement(); // Schema
 
+// Pelican Salinity
 $r->startElement("Folder"); // Pelican salinity folder
 $r->writeAttribute("id","PE_salinity");
 $r->writeElement("name","PE Salinity");
@@ -195,7 +269,7 @@ foreach (range(1, count($pe_data)-1) as $ii) {
 	$r->endElement(); // Linestring
 
 
-	$r->writeElement("styleUrl","#sunrise_lines");
+	$r->writeElement("styleUrl","#pe_lines");
 	$r->startElement("Style");
 	$r->startElement("LineStyle");
 	$r->writeElement("color",salinity_colour($end_sal));
@@ -236,6 +310,75 @@ foreach (range(1, count($pe_data)-1) as $ii) {
 }
 
 $r->endElement(); // Pelican salinity folder
+
+// Pelican Temperature
+$r->startElement("Folder"); // Pelican temperature folder
+$r->writeAttribute("id","PE_temperature");
+$r->writeElement("name","PE Temperature");
+$r->writeElement("visibility",0);
+
+$start_time = $pe_data[0][0];
+$start_lon = $pe_data[0][1];
+$start_lat = $pe_data[0][2];
+foreach (range(1, count($pe_data)-1) as $ii) {
+	$end_time = $pe_data[$ii][0];
+	$end_lon = $pe_data[$ii][1];
+	$end_lat = $pe_data[$ii][2];
+	$end_temp = $pe_data[$ii][3];
+	$end_sal = $pe_data[$ii][4];
+
+	$r->startElement("Placemark");
+
+	$r->startElement("TimeSpan");
+	$r->writeElement("begin",str_replace(' ','T',$start_time).":00");
+	$r->writeElement("end",str_replace(' ','T',$end_time).":00");
+	$r->endElement(); // TimeSpan
+	$r->startElement("LineString");
+	$r->writeElement("coordinates","$start_lon,$start_lat $end_lon,$end_lat");
+	$r->endElement(); // Linestring
+
+
+	$r->writeElement("styleUrl","#pe_lines");
+	$r->startElement("Style");
+	$r->startElement("LineStyle");
+	$r->writeElement("color",temperature_colour($end_sal));
+	$r->endElement(); // LineStyle
+	$r->endElement(); // Style
+
+	$r->startElement("ExtendedData");
+	$r->startElement("SchemaData");
+	$r->writeAttribute("schemaUrl","#sunriseData");
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","Time");
+	$r->text(substr($end_time,0,16));
+	$r->endElement(); // SimpleData - Time
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","lon");
+	$r->text($end_lon);
+	$r->endElement(); // SimpleData - lon
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","lat");
+	$r->text($end_lat);
+	$r->endElement(); // SimpleData - lat
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","temp");
+	$r->text($end_temp);
+	$r->endElement(); // SimpleData - temp
+	$r->startElement("SimpleData");
+	$r->writeAttribute("name","sal");
+	$r->text($end_sal);
+	$r->endElement(); // SimpleData - sal
+	$r->endElement(); // SchemaData
+	$r->endElement(); // ExtendedData
+
+	$r->endElement(); // Placemark
+
+	$start_time = $end_time;
+	$start_lon = $end_lon;
+	$start_lat = $end_lat;
+}
+
+$r->endElement(); // Pelican temperature folder
 
 $r->endElement(); // Document
 $r->endElement(); // kml

@@ -7,7 +7,7 @@ header('X-Accel-Buffering: no');
 
 // Define cmaps
 
-$salinity_cmap = array(
+const SALINITY_CMAP = array(
   '#ffd9ffff','#ffd6fefd','#ffd3fefc','#ffd1fdfb','#ffcefdfa','#ffccfcf9','#ffc9fcf8','#ffc7fbf7',
   '#ffc4fbf5','#ffc2fbf4','#ffbffaf3','#ffbdfaf2','#ffbaf9f1','#ffb8f9f0','#ffb5f8ef','#ffb3f8ee',
   '#ffb1f7ec','#ffb1f7ea','#ffb1f6e8','#ffb1f5e5','#ffb1f4e3','#ffb1f3e0','#ffb2f2de','#ffb2f1dc',
@@ -28,31 +28,31 @@ $salinity_cmap = array(
 
 function salinity_colour($svalue) : string {
   try {
-    $min = 24.0;
+    $smin = 24.0;
     $smax = 32.0;
     // convert salinity to a float
-    $value = floatvar($svalue)
+    $svalue = (float)$svalue;
 
     // check salinity is in a reasonable range
-    if ( $value <= 0 ) {
+    if ( $svalue <= 0 ) {
       throw new Exception('Salinity must be positive');
     }
-    if ( $value > 40) {
+    if ( $svalue > 40) {
       throw new Exception('Salinity too large');
     }
 
     // map points outside of range to the range limits
-    if ( $value < $smin ) {
-      $value = $smin;
+    if ( $svalue < $smin ) {
+      $svalue = $smin;
     }
-    if ( $value > $smax ) {
-      $value = $smax;
+    if ( $svalue > $smax ) {
+      $svalue = $smax;
     }
 
     // map salinity to index
-    $index = (int)(($svalue - $smin)/($smax - $smin)*127);
+    $index = (($svalue - $smin)/($smax - $smin)*127);
 
-    return $salinity_cmap($index);
+    return SALINITY_CMAP[(int)$index];
   }
   catch (exception $e) {
     // return transparent colour upon error

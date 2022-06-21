@@ -119,6 +119,10 @@ Sync.headers: # These are the column names in the file to DB field name
   airPressure2: {name: airPressure2}
   relHumidity1: {name: relHumidity1}
   relHumidity2: {name: relHumidity2}
+  windDirTrue1: {name: windDirTrue1}
+  windSpdTrue1: {name: windSpdTrue1}
+  windDirTrue2: {name: windDirTrue2}
+  windSpdTrue2: {name: windSpdTrue2}
 
 db.met:
   table: met
@@ -215,3 +219,7 @@ csv.met:
     - airPressure2
     - relHumidity1
     - relHumidity2
+    - windDirTrue1
+    - windSpdTrue1
+    - windDirTrue2
+    - windSpdTrue2

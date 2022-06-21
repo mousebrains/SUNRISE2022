@@ -12,5 +12,5 @@ mkdir -p $tgt0
 
 date >>$log
 
-/usr/bin/rsync --archive --verbose $src0 $tgt0 2>&1 >>$log
-/usr/bin/rsync --archive --verbose $src1 $tgt1 2>&1 >>$log
+/usr/bin/rsync --temp-dir=/home/pat/cache --archive --verbose $src0 $tgt0 2>&1 >>$log
+/usr/bin/rsync --temp-dir=/mnt/sci/cache --archive --verbose $src1 $tgt1 2>&1 >>$log

@@ -31,7 +31,7 @@ for src in `ls -trd /mnt/adcp/${pattern}*`; do
 	echo >>$log
 	echo "Source $src" >>$log
 	echo "Target $tgt" >>$log
-	$cmd $src/proc/* $tgt 2>&1 >>$log
+	$cmd --temp-dir=/mnt/sci/cache $src/proc/* $tgt 2>&1 >>$log
 done
 
 src=/mnt/adcp/current_cruise
@@ -40,7 +40,7 @@ mkdir -p $tgt
 echo >>$log
 echo "Source $src" >>$log
 echo "Target $tgt" >>$log
-$cmd $src/proc/* $tgt 2>&1 >>$log
+$cmd --temp-dir=/mnt/sci/cache $src/proc/* $tgt 2>&1 >>$log
 
 # Copy over the Processed_NC/ADCP_UHDAS/*Platform* to Sync
 
@@ -50,7 +50,7 @@ mkdir -p $tgt
 echo >>$log
 echo "Source $src" >>$log
 echo "Target $tgt" >>$log
-$cmd $src/*_${platform}_*.nc $tgt
+$cmd --temp-dir=/home/pat/cache $src/*_${platform}_*.nc $tgt
 
 # Copy over the SyncProcessed_NC/ADCP_UHDAS/*Platform* to sci
 
@@ -60,4 +60,4 @@ mkdir -p $tgt
 echo >>$log
 echo "Source $src" >>$log
 echo "Target $tgt" >>$log
-$cmd $src/*_${otro}_*.nc $tgt
+$cmd --temp-dir=/mnt/sci/cache $src/*_${otro}_*.nc $tgt

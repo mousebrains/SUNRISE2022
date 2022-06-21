@@ -22,7 +22,7 @@ args = parser.parse_args()
 Logger.mkLogger(args, fmt="%(asctime)s %(levelname)s: %(message)s")
 
 if args.opt is None:
-    args.opt = ["--archive", "--verbose"]
+    args.opt = ["--archive", "--verbose", "--temp-dir", "/home/pat/cache"]
 
 cmd = [args.rsync]
 cmd.extend(args.opt)

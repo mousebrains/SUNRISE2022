@@ -13,6 +13,7 @@ def concatenate_adcp(adcp: str) -> None:
 
     # create the target file if it does not exist
     if not os.path.isfile(target):
+        print(f"Creating file {target}")
         shutil.copy(template, target)
 
     # now open the target file and the source files as a multifile dataset
@@ -34,6 +35,7 @@ def concatenate_adcp(adcp: str) -> None:
                 tgt[key][tgt_shape[0]:src_shape[0],:] = src[key][tgt_shape[0]:src_shape[0],:]
             else:
                 raise ValueError("ADCP variables have either 1 or 2 dimensions")
+        print(f"Added {src_shape[0] - tgt_shape[0]} new datapoints")
 
 
 

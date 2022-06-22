@@ -6,33 +6,44 @@ def concatenate_adcp(adcp: str) -> None:
     source = f"/mnt/adcp/PE22_31_Shearman_ADCP_*/proc/{adcp}/contour/{adcp}.nc"
     target = f"/mnt/sci/data/Processed_NC/ADCP_UHDAS/{adcp}_concat.nc"
 
-    # use the first of the source files as a template
-    template = source.replace("*","1",1)
-    if not os.path.isfile(template):
-        raise FileNotFoundError(f"Source file '{template}' does not exist")
 
     # create the target file if it does not exist
     if not os.path.isfile(target):
+        
+        # use the first of the source files as a template
+        template = source.replace("*","1",1)
+        if not os.path.isfile(template):
+            raise FileNotFoundError(f"Source file '{template}' does not exist")
         print(f"Creating file {target}")
         shutil.copy(template, target)
 
     # now open the target file and the source files as a multifile dataset
-    with netCDF4.MFDataset(source,master_file=template) as src, \
+    with netCDF4.MFDataset(source,aggdim='time') as src, \
         netCDF4.Dataset(target,'a') as tgt:
 
+        # ensure that the time dimenion is appendable
+        if not 
+
         # these datasets have no groups so we can simply loop over the variables
-        for key in tgt.variables.key():
+        for key in tgt.variables.keys():
             tgt_shape = tgt[key].shape
             src_shape = src[key].shape
+            
+            # skip scalar variables
+            if not tgt_shape: 
+                continue
+            else:
+                tgt_idx = tgt_shape[0]
+                src_idx = src_shape[0]
 
             # check there is new data to add
-            if tgt_shape[0] >= src_shape[0]: return
+            if tgt_idx >= src_idx: continue
 
             # append new data
             if len(tgt_shape) == 1:
-                tgt[key][tgt_shape[0]:src_shape[0]] = src[key][tgt_shape[0]:src_shape[0]]
+                tgt[key][tgt_idx:src_idx] = src[key][tgt_idx:src_idx]
             elif len(tgt_shape) == 2:
-                tgt[key][tgt_shape[0]:src_shape[0],:] = src[key][tgt_shape[0]:src_shape[0],:]
+                tgt[key][tgt_idx:src_idx,:] = src[key][tgt_idx:src_idx,:]
             else:
                 raise ValueError("ADCP variables have either 1 or 2 dimensions")
         print(f"Added {src_shape[0] - tgt_shape[0]} new datapoints")

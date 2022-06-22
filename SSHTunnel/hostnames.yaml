@@ -1,19 +1,19 @@
 ps0: # R/V Point Sur
-  # - 31000:localhost:22
+  - 11000:localhost:22
   - 31000:localhost:22
 ps1: # R/V Point Sur
   - 11001:localhost:22
-    # - 31001:localhost:22
+  - 31001:localhost:22
 ps2:  # R/V Point Sur
   - 11002:localhost:22
-    # - 31002:localhost:22
+  - 31002:localhost:22
 
 pe0: # R/V Pelican
   - 11010:localhost:22
   - 31010:localhost:22
 pe1: # R/V Pelican
   - 11011:localhost:22
-    # - 31011:localhost:22
+  - 31011:localhost:22
 pe2:  # R/V Pelican
   - 11012:localhost:22
   - 31012:localhost:22

@@ -26,6 +26,12 @@ def concatenate_adcp(adcp: str) -> None:
     with netCDF4.MFDataset(source,aggdim='time') as src, \
         netCDF4.Dataset(target,'a') as tgt:
 
+        tgt_idx = tgt.time.size
+        src_idx = src.time.size
+        print(f"{adcp}: Target length = {tgt_idx}, Source length = {src_idx})
+
+        # check there is new data to add
+        if tgt_idx >= src_idx: return
 
         # these datasets have no groups so we can simply loop over the variables
         for key in tgt.variables.keys():
@@ -33,14 +39,7 @@ def concatenate_adcp(adcp: str) -> None:
             src_shape = src[key].shape
 
             # skip scalar variables
-            if not tgt_shape:
-                continue
-            else:
-                tgt_idx = tgt_shape[0]
-                src_idx = src_shape[0]
-
-            # check there is new data to add
-            if tgt_idx >= src_idx: continue
+            if not tgt_shape: continue
 
             # append new data
             if len(tgt_shape) == 1:
@@ -49,7 +48,6 @@ def concatenate_adcp(adcp: str) -> None:
                 tgt[key][tgt_idx:src_idx,:] = src[key][tgt_idx:src_idx,:]
             else:
                 raise ValueError("ADCP variables have either 1 or 2 dimensions")
-        print(f"{adcp}: Added {src_idx - tgt_idx} new datapoints")
 
 
 

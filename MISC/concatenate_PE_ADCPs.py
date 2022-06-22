@@ -12,7 +12,10 @@ def concatenate_adcp(adcp: str) -> None:
         # use the first of the source files as a template
         # however we need to ensure the time dimension is unlimited
         # therefore use xarray to do the copy
-        template = source.replace("*","1",1)
+        if adcp == "wh600":
+            template = source.replace("*","2",1)
+        else:
+            template = source.replace("*","1",1)
         if not os.path.isfile(template):
             raise FileNotFoundError(f"Source file '{template}' does not exist")
         tmp = xr.open_dataset(template)
@@ -46,7 +49,7 @@ def concatenate_adcp(adcp: str) -> None:
                 tgt[key][tgt_idx:src_idx,:] = src[key][tgt_idx:src_idx,:]
             else:
                 raise ValueError("ADCP variables have either 1 or 2 dimensions")
-        print(f"Added {src_shape[0] - tgt_shape[0]} new datapoints")
+        print(f"{adcp}: Added {src_idx - tgt_idx} new datapoints")
 
 
 
@@ -60,5 +63,6 @@ def concatenate_adcp(adcp: str) -> None:
 
 
 if __name__ == "__main__":
-    adcp = "wh1200"
-    concatenate_adcp(adcp)
+    concatenate_adcp("wh1200")
+    concatenate_adcp("wh600")
+    concatenate_adcp("wh300")

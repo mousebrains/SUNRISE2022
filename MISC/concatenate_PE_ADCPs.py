@@ -26,9 +26,9 @@ def concatenate_adcp(adcp: str) -> None:
     with netCDF4.MFDataset(source,aggdim='time') as src, \
         netCDF4.Dataset(target,'a') as tgt:
 
-        tgt_idx = tgt.time.size
-        src_idx = src.time.size
-        print(f"{adcp}: Target length = {tgt_idx}, Source length = {src_idx})
+        tgt_idx = len(tgt.dimensions["time"])
+        src_idx = len(src.dimensions["time"])
+        print(f"{adcp: <6} Target length = {tgt_idx: >5}, Source length = {src_idx: >5}, Adding {src_idx - tgt_idx} datapoints")
 
         # check there is new data to add
         if tgt_idx >= src_idx: return

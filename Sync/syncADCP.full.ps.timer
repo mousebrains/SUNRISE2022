@@ -1,0 +1,17 @@
+#
+# Sync the full UHDAS ADCP data to the science share
+#
+# June-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=Sync Pelican's ADCP data
+
+[Timer]
+# dayOfWeek Year-Month-Day Hour:Minute:Second
+# sync data every hour
+OnCalendar=*-*-* *:47:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+

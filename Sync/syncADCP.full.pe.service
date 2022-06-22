@@ -1,0 +1,23 @@
+#
+# Run rsync to sync ADCP Ship's NAS
+#
+# June-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=ADCP to ship's NAS on pe2
+
+[Service]
+# Launced by timer
+Type=oneshot
+# 
+# %h is becomes the user's home directory, $HOME
+WorkingDirectory=%h/logs
+#
+ExecStart=%h/SUNRISE2022/Sync/syncadcp.full.py \
+	--verbose \
+	--logfile=syncadcp.full.log \
+	--pattern=PE22_31_Shearman_ADCP_
+        
+[Install]
+WantedBy=default.target
+

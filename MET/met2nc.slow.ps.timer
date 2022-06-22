@@ -9,8 +9,9 @@ Description=MET DB to NetCDF
 [Timer]
 # dayOfWeek Year-Month-Day Hour:Minute:Second
 # sync data every minute
-OnCalendar=*-*-* *:*:13 UTC
+OnCalendar=*-*-* *:5/10:13 UTC
 Persistent=false
+Unit=met2nc.ps.service
 
 [Install]
 WantedBy=timers.target

@@ -6,7 +6,7 @@
 met.pe:
   ship: pe
   regexp: "MIDAS_.[0-9]+[.]elg"
-  timeToWait: 60 # Seconds after an update prior to taking any action
+  timeToWait: 30 # Seconds after an update prior to taking any action
   delimiter: ','
     # headerSkipBefore: 0 # Lines to skip before header
     # headerSkipAfter: 0 # Lines to skip after header before data
@@ -18,7 +18,7 @@ met.pe:
 met.ps:
   ship: ps
   regexp: "PS22_23[.].*[.]csv"
-  timeToWait: 60 # Seconds after an update prior to taking any action
+  timeToWait: 30 # Seconds after an update prior to taking any action
   delimiter: ','
     # headerSkipBefore: 0 # Lines to skip before header
     # headerSkipAfter: 0 # Lines to skip after header before data

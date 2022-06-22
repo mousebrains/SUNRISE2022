@@ -1,10 +1,22 @@
+#! /usr/bin/env python3
+#
+# Join multiple ADCP files togetheer
+#
+# June-2022, Jamie Hilditch
+
+from argparse import ArgumentParser
+import logging
 import netCDF4
 import os
 import xarray as xr
 
-def concatenate_adcp(adcp: str) -> None:
-    source = f"/mnt/adcp/PE22_31_Shearman_ADCP_*/proc/{adcp}/contour/{adcp}.nc"
-    target = f"/mnt/sci/data/Processed_NC/ADCP_UHDAS/{adcp}_concat.nc"
+def concatenate_adcp(adcp: str, args:ArgumentParser) -> None:
+    # source = f"/mnt/adcp/PE22_31_Shearman_ADCP_*/proc/{adcp}/contour/{adcp}.nc"
+    # target = f"/mnt/sci/data/Processed_NC/ADCP_UHDAS/{adcp}_concat.nc"
+    source = os.path.join(args.src, "proc", adcp, "contour", adcp + ".nc")
+    target = args.tgt + adcp + "_concat.nc"
+
+    logging.info("ADCP %s src %s tgt %s", adcp, source, target)
 
     # create the target file if it does not exist
     if not os.path.isfile(target):
@@ -20,7 +32,7 @@ def concatenate_adcp(adcp: str) -> None:
             raise FileNotFoundError(f"Source file '{template}' does not exist")
         tmp = xr.open_dataset(template)
         tmp.to_netcdf(target,unlimited_dims=("time"),format="NETCDF3_CLASSIC")
-        print(f"Created file {target}")
+        logging.info("Created %s from %s", target, template)
 
     # now open the target file and the source files as a multifile dataset
     with netCDF4.MFDataset(source,aggdim='time') as src, \
@@ -28,10 +40,13 @@ def concatenate_adcp(adcp: str) -> None:
 
         tgt_idx = len(tgt.dimensions["time"])
         src_idx = len(src.dimensions["time"])
-        print(f"{adcp: <6} Target length = {tgt_idx: >5}, Source length = {src_idx: >5}, Adding {src_idx - tgt_idx} datapoints")
+        logging.info("%s target length %s source length %s adding %s datapoints",
+                adcp, tgt_idx, src_idx, src_idx-tgt_idx)
 
         # check there is new data to add
-        if tgt_idx >= src_idx: return
+        if tgt_idx >= src_idx:
+            logging.info("No new data for %s", adcp)
+            return
 
         # these datasets have no groups so we can simply loop over the variables
         for key in tgt.variables.keys():
@@ -47,20 +62,32 @@ def concatenate_adcp(adcp: str) -> None:
             elif len(tgt_shape) == 2:
                 tgt[key][tgt_idx:src_idx,:] = src[key][tgt_idx:src_idx,:]
             else:
-                raise ValueError("ADCP variables have either 1 or 2 dimensions")
-
-
-
-
-
-
-
-
-
-
+                raise ValueError(f"ADCP, {adcp} {key}, variables have either 1 or 2 dimensions")
 
 
 if __name__ == "__main__":
-    concatenate_adcp("wh1200")
-    concatenate_adcp("wh600")
-    concatenate_adcp("wh300")
+    from TPWUtils import Logger
+
+    parser = ArgumentParser()
+    Logger.addArgs(parser)
+    parser.add_argument("--adcp", type=str, action="append", help="ADCP system(s) to join")
+    parser.add_argument("--src", type=str, default="/mnt/adcp/PE22_31_Shearman_ADCP_*",
+            help="Where UHDAS ADCP source files are")
+    parser.add_argument("--tgt", type=str,
+            default="/mnt/sci/data/Processed_NC/ADCP_UHDAS/SUNRISE2022_PE_",
+            help="Where to store the output")
+
+    args = parser.parse_args()
+
+    Logger.mkLogger(args, fmt="%(asctime)s %(levelname)s: %(message)s")
+
+    if args.adcp is None:
+        args.adcp = ["wh1200", "wh600", "wh300"]
+
+    logging.info("Args %s", args)
+
+    for adcp in args.adcp:
+        try:
+            concatenate_adcp(adcp, args)
+        except:
+            logging.exception("Error processing %s", adcp)

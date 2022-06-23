@@ -16,7 +16,8 @@ WorkingDirectory=%h/logs
 ExecStart=%h/SUNRISE2022/MISC/adcpJoin.py \
 	--logfile=adcpJoin.log \
 	--verbose \
-	--pattern=PS22_23_MacKinnon
+	--pattern=PS22_23_MacKinnon \
+	--exclude=_Cal
         
 [Install]
 WantedBy=default.target

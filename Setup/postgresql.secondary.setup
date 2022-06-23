@@ -18,14 +18,15 @@ tmp=/tmp/tpw.$$
 sudo systemctl stop postgresql
 
 sudo tar -cvf /tmp/postgresql.tar $var/*
-sudo rm -rf $prefix
+sudo rm -rf $var
 
 sudo -u postgres \
-	pg_basebackup -R -h $host -U pat -D $var -P 
+	pg_basebackup -R -h $host -U rep_user -D $var -P 
 
 cat $conf \
-	| sed --regexp-extended "s/[#]?\s*listen_addresses\s*=\s*'.*'/listen_addresses = '*'/" \
-	| sed --regexp-extended "s/[#]?\s*host_standby\s*=\s*\w+/host_standby = on/" \
+	| sed --regexp-extended "s/[#]?\s*listen_addresses\s*=\s*'.*'/listen_addresses = '*'/" 
+	| sed --regexp-extended "s/[#]?\s*primary_conninfo\s*=\s*'.*'/primary_conninfo = 'host=$host port=5432 dbname=replication connect_timeout=10'/" \
+	| sed --regexp-extended "s/[#]?\s*hot_standby\s*=\s*\w+/hot_standby = on/" \
 	>$tmp
 if ! cmp $conf $tmp; then
     sudo mv $conf $conf.backup

@@ -22,7 +22,8 @@ ExecStart= \
 	--verbose \
 	--logfile=%h/logs/met.ps.log
 
-RestartSec=30
+Restart=always
+RestartSec=120
 
 [Install]
 WantedBy=default.target

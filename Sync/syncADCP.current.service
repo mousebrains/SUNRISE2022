@@ -1,0 +1,22 @@
+#
+# Sync current UHDAS contour files
+#
+# June-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=Shore syncing to/from
+
+[Service]
+# Launced by timer
+Type=oneshot
+# 
+# %h is becomes the user's home directory, $HOME
+WorkingDirectory=%h/logs
+#
+ExecStart=%h/SUNRISE2022/Sync/syncadcp.current.py \
+	--verbose \
+	--logfile=syncADCP.current.log
+        
+[Install]
+WantedBy=default.target
+

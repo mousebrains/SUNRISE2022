@@ -1,10 +1,10 @@
 #
-# Run rsync to sync ADCP Ship's NAS
+# Sync from/to the science share Processed_NC from/to Sync
 #
 # June-2022, Pat Welch, pat@mousebrains.com
 
 [Unit]
-Description=ADCP to ship's NAS on ps2
+Description=Shore syncing to/from
 
 [Service]
 # Launced by timer
@@ -13,7 +13,9 @@ Type=oneshot
 # %h is becomes the user's home directory, $HOME
 WorkingDirectory=%h/logs
 #
-ExecStart=%h/SUNRISE2022/Sync/syncadcp.ps.sh
+ExecStart=%h/SUNRISE2022/Sync/syncadcp.shore.py \
+	--verbose \
+	--logfile=syncADCP.shore.log
         
 [Install]
 WantedBy=default.target

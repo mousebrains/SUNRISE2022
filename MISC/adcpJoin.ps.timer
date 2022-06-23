@@ -9,7 +9,7 @@ Description=Sync section defintion files
 [Timer]
 # dayOfWeek Year-Month-Day Hour:Minute:Second
 # sync data every 5 minutes
-OnCalendar=*-*-* *:3/5:00 UTC
+OnCalendar=*-*-* *:2/5:00 UTC
 Persistent=true
 
 [Install]

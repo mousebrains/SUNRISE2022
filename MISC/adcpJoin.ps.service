@@ -16,7 +16,7 @@ WorkingDirectory=%h/logs
 ExecStart=%h/SUNRISE2022/MISC/adcpJoin.py \
 	--logfile=adcpJoin.log \
 	--verbose \
-	--pattern=PE22_31_Shearman_ADCP_
+	--pattern=PS22_23_MacKinnon
         
 [Install]
 WantedBy=default.target

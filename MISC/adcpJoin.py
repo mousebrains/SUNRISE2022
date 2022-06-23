@@ -6,36 +6,32 @@
 
 from argparse import ArgumentParser
 import logging
-import netCDF4
-import os
 import xarray as xr
+import netCDF4
+import glob
+import os
+import sys
 
-def concatenate_adcp(adcp: str, args:ArgumentParser) -> None:
-    # source = f"/mnt/adcp/PE22_31_Shearman_ADCP_*/proc/{adcp}/contour/{adcp}.nc"
-    # target = f"/mnt/sci/data/Processed_NC/ADCP_UHDAS/{adcp}_concat.nc"
-    source = os.path.join(args.src, "proc", adcp, "contour", adcp + ".nc")
-    target = args.tgt + adcp + "_concat.nc"
+def concatenate_adcp(adcp:str, files: list, args:ArgumentParser) -> None:
+    source = os.path.join(args.adcp, args.pattern + "*", "proc", adcp, "contour", adcp + ".nc")
+    target = os.path.join(args.processed,
+            args.cruise + "_" + args.platform + "_" + adcp + "_concat.nc")
 
-    logging.info("ADCP %s src %s tgt %s", adcp, source, target)
+    logging.debug("ADCP %s source %s tgt %s", adcp, source, target)
 
     # create the target file if it does not exist
     if not os.path.isfile(target):
-
         # use the first of the source files as a template
         # however we need to ensure the time dimension is unlimited
         # therefore use xarray to do the copy
-        if adcp == "wh600":
-            template = source.replace("*","2",1)
-        else:
-            template = source.replace("*","1",1)
-        if not os.path.isfile(template):
-            raise FileNotFoundError(f"Source file '{template}' does not exist")
+        files = sorted(files) # Earliest first
+        template = files[0]
         tmp = xr.open_dataset(template)
         tmp.to_netcdf(target,unlimited_dims=("time"),format="NETCDF3_CLASSIC")
         logging.info("Created %s from %s", target, template)
 
     # now open the target file and the source files as a multifile dataset
-    with netCDF4.MFDataset(source,aggdim='time') as src, \
+    with netCDF4.MFDataset(source, aggdim='time') as src, \
         netCDF4.Dataset(target,'a') as tgt:
 
         tgt_idx = len(tgt.dimensions["time"])
@@ -70,24 +66,29 @@ if __name__ == "__main__":
 
     parser = ArgumentParser()
     Logger.addArgs(parser)
-    parser.add_argument("--adcp", type=str, action="append", help="ADCP system(s) to join")
-    parser.add_argument("--src", type=str, default="/mnt/adcp/PE22_31_Shearman_ADCP_*",
-            help="Where UHDAS ADCP source files are")
-    parser.add_argument("--tgt", type=str,
-            default="/mnt/sci/data/Processed_NC/ADCP_UHDAS/SUNRISE2022_PE_",
-            help="Where to store the output")
-
+    parser.add_argument("--pattern", type=str, required=True, help="UHDAS pattern to concatenate")
+    parser.add_argument("--platform", type=str, help="2 letter platform prefix")
+    parser.add_argument("--adcp", type=str, default="/mnt/adcp", help="UHDAS directory")
+    parser.add_argument("--processed", type=str, default="/mnt/sci/data/Processed_NC/ADCP_UHDAS",
+            help="Location to store concatenated files")
+    parser.add_argument("--cruise", type=str, default="SUNRISE2022", help="Cruise prefix")
     args = parser.parse_args()
 
     Logger.mkLogger(args, fmt="%(asctime)s %(levelname)s: %(message)s")
 
-    if args.adcp is None:
-        args.adcp = ["wh1200", "wh600", "wh300"]
+    if args.platform is None: args.platform = args.pattern[:2]
+
+    files = {}
+    for fn in glob.glob(os.path.join(args.adcp, args.pattern + "*", "proc", "*", "contour", "*.nc")):
+        adcp = os.path.basename(fn)[:-3]
+        if adcp not in files: files[adcp] = []
+        files[adcp].append(fn)
+
+    logging.info("ADCPS %s", files)
 
     logging.info("Args %s", args)
-
-    for adcp in args.adcp:
+    for adcp in files:
         try:
-            concatenate_adcp(adcp, args)
+            concatenate_adcp(adcp, files[adcp], args)
         except:
             logging.exception("Error processing %s", adcp)

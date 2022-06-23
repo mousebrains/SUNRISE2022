@@ -4,4 +4,4 @@
 #
 # Feb-2022, Pat Welch, pat@mousebrains.com
 
-./install.py --service=monitorShore.service $*
+./install.py monitorShore.service $*

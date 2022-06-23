@@ -10,11 +10,11 @@ hostline="host	replication	rep_user	192.168.0.0/23	scram-sha-256"
 
 tmp=/tmp/tpw.$$
 
+	# | sed --regexp-extended "s/[#]?\s*synchronous_commit\s*=\s*\w*/synchronous_commit = on/"
 	# | sed --regexp-extended "s/[#]?\s*synchronous_standby_names\s*=\s*'.*'/synchronous_standby_names = '*'/" 
 cat $conf \
 	| sed --regexp-extended "s/[#]?\s*listen_addresses\s*=\s*'.*'/listen_addresses = '*'/" \
 	| sed --regexp-extended "s/[#]?\s*wal_level\s*=\s*\w+/wal_level = replica/" \
-	| sed --regexp-extended "s/[#]?\s*synchronous_commit\s*=\s*\w*/synchronous_commit = on/" \
 	>$tmp
 if ! cmp $conf $tmp; then
     sudo mv $conf $conf.backup

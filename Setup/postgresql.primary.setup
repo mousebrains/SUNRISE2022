@@ -1,0 +1,37 @@
+#! /usr/bin/sh -x
+
+# Set up a postgresql 14 server as a primary server for replication standpoints
+
+prefix=/etc/postgresql/14/main
+conf=$prefix/postgresql.conf
+hba=$prefix/pg_hba.conf
+
+hostline="host	replication	pat	192.168.0.0/16	scram-sha-256"
+
+tmp=/tmp/tpw.$$
+
+cat $conf \
+	| sed --regexp-extended "s/[#]?\s*listen_addresses\s*=\s*'.*'/listen_addresses = '*'/" \
+	| sed --regexp-extended "s/[#]?\s*wal_level\s*=\s*\w+/wal_level = replica/" \
+	| sed --regexp-extended "s/[#]?\s*synchronous_commit\s*=\s*\w*/synchronous_commit = on/" \
+	| sed --regexp-extended "s/[#]?\s*synchronous_standby_names\s*=\s*'.*'/synchronous_standby_names = '*'/" \
+	>$tmp
+if ! cmp $conf $tmp; then
+    sudo mv $conf $conf.backup
+    sudo mv $tmp $conf
+    sudo chown postgres:postgres $conf
+fi
+
+sudo cat $hba \
+	| grep -v "$hostline" \
+	>$tmp
+echo "$hostline" >>$tmp
+if ! cmp $hba $tmp; then
+    sudo mv $hba $hba.backup
+    sudo mv $tmp $hba
+    sudo chown postgres:postgres $hba
+fi
+rm $tmp
+
+sudo systemctl restart postgresql
+sudo systemctl status postgresql

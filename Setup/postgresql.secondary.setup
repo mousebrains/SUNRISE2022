@@ -1,0 +1,39 @@
+#! /usr/bin/sh -x
+
+# Set up a postgresql 14 server as a secondary backup server from a replication standpoint
+
+if [ "$#" -ne 1 ] ; then
+	echo "Usage: $0 primaryHostname"
+	exit 1
+fi
+
+host=$1
+
+prefix=/etc/postgresql/14/main
+var=/var/lib/postgresql/14/main/*
+conf=$prefix/postgresql.conf
+
+tmp=/tmp/tpw.$$
+
+sudo systemctl stop postgresql
+
+sudo tar -cvf /tmp/postgresql.tar $var/*
+sudo rm -rf $prefix
+
+sudo -u postgres \
+	pg_basebackup -R -h $host -U pat -D $var -P 
+
+cat $conf \
+	| sed --regexp-extended "s/[#]?\s*listen_addresses\s*=\s*'.*'/listen_addresses = '*'/" \
+	| sed --regexp-extended "s/[#]?\s*host_standby\s*=\s*\w+/host_standby = on/" \
+	>$tmp
+if ! cmp $conf $tmp; then
+    sudo mv $conf $conf.backup
+    sudo mv $tmp $conf
+    sudo chown postgres:postgres $conf
+fi
+
+rm $tmp
+
+sudo systemctl restart postgresql
+sudo systemctl status postgresql

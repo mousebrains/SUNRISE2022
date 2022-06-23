@@ -6,7 +6,7 @@ prefix=/etc/postgresql/14/main
 conf=$prefix/postgresql.conf
 hba=$prefix/pg_hba.conf
 
-hostline="host	replication	pat	192.168.0.0/16	scram-sha-256"
+hostline="host	replication	rep_user	192.168.0.0/23	scram-sha-256"
 
 tmp=/tmp/tpw.$$
 
@@ -31,7 +31,10 @@ if ! cmp $hba $tmp; then
     sudo mv $tmp $hba
     sudo chown postgres:postgres $hba
 fi
-rm $tmp
+
+rm -f $tmp
+
+sudo -u postgres createuser --replication -P rep_user
 
 sudo systemctl restart postgresql
 sudo systemctl status postgresql

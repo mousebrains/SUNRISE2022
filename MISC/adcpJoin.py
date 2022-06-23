@@ -94,6 +94,7 @@ def concatenate_adcp(adcp:str, source: list[str], args:ArgumentParser) -> None:
 
 if __name__ == "__main__":
     from TPWUtils import Logger
+    from TPWUtils import SingleInstance
 
     parser = ArgumentParser()
     Logger.addArgs(parser)
@@ -115,8 +116,9 @@ if __name__ == "__main__":
 
     files = findFiles(args)
 
-    for adcp in files:
-        try:
-            concatenate_adcp(adcp, files[adcp], args)
-        except:
-            logging.exception("Error processing %s", adcp)
+    with SingleInstance.SingleInstance() as single:
+        for adcp in files:
+            try:
+                concatenate_adcp(adcp, files[adcp], args)
+            except:
+                logging.exception("Error processing %s", adcp)

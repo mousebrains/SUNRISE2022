@@ -6,6 +6,7 @@
 
 from argparse import ArgumentParser
 from TPWUtils import Logger
+from TPWUtils import SingleInstance
 from Config import Config
 import psycopg2
 import logging
@@ -20,8 +21,8 @@ def buildNC(fn:str, args:ArgumentParser, cols:tuple[str]) -> Dataset:
         nc.title = args.key
         nc.createDimension("t", None)
         for col in cols:
-            nc.createVariable(col, 
-                    np.float64 if col in doubles else np.float32, 
+            nc.createVariable(col,
+                    np.float64 if col in doubles else np.float32,
                     ('t',))
         nc.variables["t"].units = "seconds since 1970-01-01 00:00:00"
 
@@ -63,42 +64,43 @@ if ("decimate" in config.netcdf) and config.netcdf["decimate"].isnumeric():
 else:
     dt = None
 
-for fn in args.nc:
-    if not os.path.isfile(fn):
-        buildNC(fn, args, cols)
+with SingleInstance.SingleInstance(sys.argv[0] + "/" + args.key) as single:
+    for fn in args.nc:
+        if not os.path.isfile(fn):
+            buildNC(fn, args, cols)
 
-sql = "WITH updated AS ("
-sql+= f"UPDATE {args.table} SET qNetCDF=true"
-sql+= f" WHERE ship='{config.ship}' AND qNetCDF=false"
-if dt is not None:
-    sql+= f" AND (EXTRACT(EPOCH FROM t) % {dt})=0"
-sql+= " RETURNING "
-sql+= ",".join(cols)
-sql+= ") SELECT * FROM updated ORDER BY t ASC;"
+    sql = "WITH updated AS ("
+    sql+= f"UPDATE {args.table} SET qNetCDF=true"
+    sql+= f" WHERE ship='{config.ship}' AND qNetCDF=false"
+    if dt is not None:
+        sql+= f" AND (EXTRACT(EPOCH FROM t) % {dt})=0"
+    sql+= " RETURNING "
+    sql+= ",".join(cols)
+    sql+= ") SELECT * FROM updated ORDER BY t ASC;"
 
-data = {}
-for col in cols: data[col] = []
+    data = {}
+    for col in cols: data[col] = []
 
-with psycopg2.connect(f"dbname={args.db}") as db:
-    cur = db.cursor()
-    cur.execute("BEGIN;")
-    try:
-        cur.execute(sql)
-        times = []
-        for row in cur:
-            for index in range(len(cols)):
-                key = cols[index]
-                if key == "t":
-                    data[key].append(row[index].timestamp())
-                else:
-                    data[key].append(row[index])
-        logging.info("Wrote %s records to %s", len(data["t"]), args.nc)
+    with psycopg2.connect(f"dbname={args.db}") as db:
+        cur = db.cursor()
+        cur.execute("BEGIN;")
+        try:
+            cur.execute(sql)
+            times = []
+            for row in cur:
+                for index in range(len(cols)):
+                    key = cols[index]
+                    if key == "t":
+                        data[key].append(row[index].timestamp())
+                    else:
+                        data[key].append(row[index])
+            logging.info("Wrote %s records to %s", len(data["t"]), args.nc)
 
-        for fn in args.nc:
-            writeNC(fn, data)
+            for fn in args.nc:
+                writeNC(fn, data)
 
-        cur.execute("COMMIT;")
-    except:
-        cur.execute("ROLLBACK;")
-        logging.error("Error executing %s", sql)
-        sys.exit(1)
+            cur.execute("COMMIT;")
+        except:
+            cur.execute("ROLLBACK;")
+            logging.error("Error executing %s", sql)
+            sys.exit(1)

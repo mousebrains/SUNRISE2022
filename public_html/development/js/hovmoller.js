@@ -213,27 +213,37 @@ function updateColourProperties() {
 	var PE_colourmap = document.getElementById('data-PE-colour-map').value;
 	var PE_reverse = document.getElementById('data-PE-reverse-colour-map').checked;
 	var PE_min = document.getElementById('data-PE-min').value;
-	if ((PE_min === "") || isNaN(PE_min)) { PE_min = Math.min(...dataset_PE.c_data) };
 	var PE_max = document.getElementById('data-PE-max').value;
-	if ((PE_max === "") || isNaN(PE_max)) { PE_max = Math.max(...dataset_PE.c_data) };
+	var PS_colourmap = document.getElementById('data-PS-colour-map').value;
+	var PS_reverse = document.getElementById('data-PS-reverse-colour-map').checked;
+	var PS_min = document.getElementById('data-PS-min').value;
+	var PS_max = document.getElementById('data-PS-max').value;
+
+	if ((PE_min === "") && (PE_max === "") && (PS_min === "") && (PS_max === "")
+		&& (dataset_PE.name == dataset_PS.name)) {
+		PE_min = Math.min(...dataset_PE.c_data,...dataset_PS.c_data);
+		PS_min = PE_min;
+		PE_max = Math.max(...dataset_PE.c_data,...dataset_PS.c_data);
+		PS_max = PE_max;
+	} else {
+		if ((PE_min === "") || isNaN(PE_min)) { PE_min = Math.min(...dataset_PE.c_data) };
+		if ((PE_max === "") || isNaN(PE_max)) { PE_max = Math.max(...dataset_PE.c_data) };
+		if ((PS_min === "") || isNaN(PS_min)) { PS_min = Math.min(...dataset_PS.c_data) };
+		if ((PS_max === "") || isNaN(PS_max)) { PS_max = Math.max(...dataset_PS.c_data) };
+	};
+
 	PE_colour_properties = {
 		colourmap: PE_colourmap,
 		reverse: PE_reverse,
 		min: PE_min,
 		max: PE_max
 	};
-		var PS_colourmap = document.getElementById('data-PS-colour-map').value;
-		var PS_reverse = document.getElementById('data-PS-reverse-colour-map').checked;
-		var PS_min = document.getElementById('data-PS-min').value;
-		if ((PS_min === "") || isNaN(PS_min)) { PS_min = Math.min(...dataset_PS.c_data) };
-		var PS_max = document.getElementById('data-PS-max').value;
-		if ((PS_max === "") || isNaN(PS_max)) { PS_max = Math.max(...dataset_PS.c_data) };
-		PS_colour_properties = {
-			colourmap: PS_colourmap,
-			reverse: PS_reverse,
-			min: PS_min,
-			max: PS_max
-		};
+	PS_colour_properties = {
+		colourmap: PS_colourmap,
+		reverse: PS_reverse,
+		min: PS_min,
+		max: PS_max
+	};
 };
 
 // update set_data_values

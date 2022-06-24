@@ -329,6 +329,7 @@ foreach (range(1, count($pe_data)-1) as $ii) {
 	$end_sal = $pe_data[$ii][4];
 
 	$r->startElement("Placemark");
+  $r->writeElement("visibility",0);
 
 	$r->startElement("TimeSpan");
 	$r->writeElement("begin",str_replace(' ','T',$start_time).":00");
@@ -466,6 +467,7 @@ foreach (range(1, count($ps_data)-1) as $ii) {
 	$end_sal = $ps_data[$ii][4];
 
 	$r->startElement("Placemark");
+  $r->writeElement("visibility",0);
 
 	$r->startElement("TimeSpan");
 	$r->writeElement("begin",str_replace(' ','T',$start_time).":00");

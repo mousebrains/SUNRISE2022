@@ -140,11 +140,24 @@ class Config:
         self.__colmap = colmap
 
     def latLon(self, val:str) -> float:
-        matches = re.match(r"(\d+)(\d{2}[.]\d*)([EWNSewns])$", val)
-        if not matches: return None
-        deg = int(matches[1]) + (float(matches[2]) / 60)
-        if matches[3] in ["W", "w", "S", "s"]: deg = -deg
-        return deg
+        # First look for deg*100+ fractional minutes + direction
+        matches = re.match(r"^\s*(\d+)(\d{2}[.]\d*)([EWNSewns])\s*$", val)
+        if matches:
+            deg = int(matches[1]) + (float(matches[2]) / 60)
+            if matches[3] in ["W", "w", "S", "s"]: deg = -deg
+            return deg
+
+        # Now look for [+-]? deg*100 + fractional minutes
+        matches = re.match(r"^\s*([+-]?)(\d+)(\d{2}[.]\d*)\s*$", val)
+        if matches: #+-deg*100 + minutes
+            deg = int(matches[2]) + (float(matches[3]) / 60)
+            if matches[1] == "-": deg = -deg
+            return deg
+        # Now look for [+-]decimal degrees
+        matches = re.match(r"^\s*([+-]?\d+[.]\d*)\s*$", val)
+        if matches:
+            return float(matches[1])
+        return None
 
     def insertRow(self, cur, row:tuple) -> bool:
         names = []

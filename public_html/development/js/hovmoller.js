@@ -5,6 +5,34 @@
 // *********************************************** //
 // ************** INITIALISE THE UI*************** //
 // *********************************************** //
+// available data fields
+const PELICAN_DATA_VARIABLES = [
+  "Time",
+  "Inertial Periods",
+	"Latitude",
+	"Longitude",
+	"Salinity",
+	"Temperature",
+	"Air Temperature",
+	"Air Pressure",
+	"Relative Humidity",
+	"Wind Speed",
+	"Wind Direction"
+];
+
+const POINTSUR_DATA_VARIABLES = [
+  "Time",
+  "Inertial Periods",
+	"Latitude",
+	"Longitude",
+	"Salinity",
+	"Temperature",
+	"Air Temperature",
+	"Air Pressure",
+	"Relative Humidity",
+	"Wind Speed",
+	"Wind Direction"
+];
 
 const COMMON_VARIABLES = PELICAN_DATA_VARIABLES.filter(x => POINTSUR_DATA_VARIABLES.includes(x));
 

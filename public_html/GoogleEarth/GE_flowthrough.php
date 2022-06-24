@@ -343,7 +343,7 @@ foreach (range(1, count($pe_data)-1) as $ii) {
 	$r->writeElement("styleUrl","#pe_lines");
 	$r->startElement("Style");
 	$r->startElement("LineStyle");
-	$r->writeElement("color",temperature_colour($end_sal));
+	$r->writeElement("color",temperature_colour($end_temp));
 	$r->endElement(); // LineStyle
 	$r->endElement(); // Style
 
@@ -481,7 +481,7 @@ foreach (range(1, count($ps_data)-1) as $ii) {
 	$r->writeElement("styleUrl","#ps_lines");
 	$r->startElement("Style");
 	$r->startElement("LineStyle");
-	$r->writeElement("color",temperature_colour($end_sal));
+	$r->writeElement("color",temperature_colour($end_temp));
 	$r->endElement(); // LineStyle
 	$r->endElement(); // Style
 

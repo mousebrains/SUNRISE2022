@@ -10,14 +10,13 @@ fi
 host=$1
 
 prefix=/etc/postgresql/14/main
-var=/var/lib/postgresql/14/main/*
+var=/var/lib/postgresql/14/main
 conf=$prefix/postgresql.conf
 
 tmp=/tmp/tpw.$$
 
 sudo systemctl stop postgresql
 
-sudo tar -cvf /tmp/postgresql.tar $var/*
 sudo rm -rf $var
 
 sudo -u postgres \

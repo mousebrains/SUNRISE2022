@@ -35,8 +35,8 @@ $variables = array(
 	'Relative Humidity' => 'ROUND(relHumidity1::numeric,4)',
 	'Wind Speed' => 'ROUND(windSpdTrue1::numeric,4)',
 	'Wind Direction' => 'ROUND(windDirTrue1::numeric,4)',
-  'Wind u' => 'ROUND(- windSpdTrue1 * SIN(windSpdTrue1*PI()/180)::numeric,4)',
-  'Wind v' => 'ROUND(- windSpdTrue1 * COS(windSpdTrue1*PI()/180)::numeric,4)'
+  'Wind u' => 'ROUND(-windSpdTrue1*SIN(windDirTrue1*PI()/180)::numeric,4)',
+  'Wind v' => 'ROUND(-windSpdTrue1*COS(windDirTrue1*PI()/180)::numeric,4)'
 );
 
 $pe_variables = implode(',',array(

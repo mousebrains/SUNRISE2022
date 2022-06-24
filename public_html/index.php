@@ -21,6 +21,14 @@ foreach($files as $item) {
 		echo "<li><a href='$item'>$item</a></li>\n";
 	}
 }
+$host = gethostname();
+echo "<li><a href='";
+if ($host and strlen($host) > 1 and (substr($host, 0, 2) == "ps")) {
+	echo "https://192.168.1.162/";
+} else {
+	echo "https://coriolix.ceoas.oregonstate.edu/ptsur/sensor/flowthrough/plots/";
+}
+echo "'>Point Sur flow through data</li>\n";
 ?>
 <li><a href=logViewer.php>log files</a></li>
 <li><a href=https://sunrise.ceoas.oregonstate.edu/monitor.php>System monitor</a></li>

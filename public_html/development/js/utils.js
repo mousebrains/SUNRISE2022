@@ -29,3 +29,8 @@ function getCookies() {
 	let cookies = cookie_strings.map(co => co.split('='))
 	return cookies
 }
+
+// ** DEFINE NEW MIN AND MAX FUNCTIONS TO HANDLE NULL VALUES
+
+const my_min = (values) => values.reduce((m, v) => (v != null && v < m ? v : m), Infinity);
+const my_max = (values) => values.reduce((m, v) => (v != null && v > m ? v : m), -Infinity);

@@ -192,12 +192,6 @@ setLabels('','');
 // *********** NOW DEFINE FUNCTIONS    *********** //
 // *********************************************** //
 
-// ** DEFINE NEW MIN AND MAX FUNCTIONS TO HANDLE NULL VALUES
-
-const my_min = (values) => values.reduce((m, v) => (v != null && v < m ? v : m), Infinity);
-const my_max = (values) => values.reduce((m, v) => (v != null && v > m ? v : m), -Infinity);
-
-
 // ** FIRST FUNCTIONS FOR READING DATA FROM THE PAGE ** //
 
 // update figure settings values

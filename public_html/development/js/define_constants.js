@@ -1,4 +1,38 @@
 // define some labels to be used by both the timeseries and Hovmoller plotters
+// available data fields
+const PELICAN_DATA_VARIABLES = [
+  "Time",
+  "Inertial Periods",
+	"Latitude",
+	"Longitude",
+	"Salinity",
+	"Temperature",
+	"Chlorophyll",
+	"Air Temperature",
+	"Air Pressure",
+	"Relative Humidity",
+	"Wind Speed",
+	"Wind Direction",
+	"Wind u",
+	"Wind v"
+];
+
+const POINTSUR_DATA_VARIABLES = [
+  "Time",
+  "Inertial Periods",
+	"Latitude",
+	"Longitude",
+	"Salinity",
+	"Temperature",
+	"Chlorophyll",
+	"Air Temperature",
+	"Air Pressure",
+	"Relative Humidity",
+	"Wind Speed",
+	"Wind Direction",
+	"Wind u",
+	"Wind v"
+];
 
 const LABELS = {
   "None": "",

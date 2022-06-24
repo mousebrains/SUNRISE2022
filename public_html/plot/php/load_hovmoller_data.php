@@ -29,11 +29,14 @@ $variables = array(
   'Longitude' => 'ROUND(lon::numeric,4)',
   'Salinity' => 'ROUND(sp::numeric,4)',
   'Temperature' => 'ROUND(temp::numeric,4)',
+  'Chlorophyll' => 'ROUND(Fl::numeric,4)',
   'Air Temperature' => 'ROUND(airTemp1::numeric,4)',
 	'Air Pressure' => 'ROUND(airPressure1::numeric,4)',
 	'Relative Humidity' => 'ROUND(relHumidity1::numeric,4)',
 	'Wind Speed' => 'ROUND(windSpdTrue1::numeric,4)',
-	'Wind Direction' => 'ROUND(windDirTrue1::numeric,4)'
+	'Wind Direction' => 'ROUND(windDirTrue1::numeric,4)',
+  'Wind u' => 'ROUND(- windSpdTrue1 * SIN(windSpdTrue1*PI()/180)::numeric,4)'
+  'Wind v' => 'ROUND(- windSpdTrue1 * COS(windSpdTrue1*PI()/180)::numeric,4)'
 );
 
 $pe_variables = implode(',',array(

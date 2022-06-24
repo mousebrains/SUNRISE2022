@@ -220,7 +220,7 @@ function updateColourProperties() {
 	var PS_max = document.getElementById('data-PS-max').value;
 
 	if ((PE_min === "") && (PE_max === "") && (PS_min === "") && (PS_max === "")
-		&& (dataset_PE.name == dataset_PS.name)) {
+		&& (dataset_PE.name === dataset_PS.name)) {
 		PE_min = Math.min(...dataset_PE.c_data,...dataset_PS.c_data);
 		PS_min = PE_min;
 		PE_max = Math.max(...dataset_PE.c_data,...dataset_PS.c_data);

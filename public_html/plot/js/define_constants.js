@@ -24,7 +24,7 @@ const POINTSUR_DATA_VARIABLES = [
 	"Longitude",
 	"Salinity",
 	"Temperature",
-	"Chlorophyll",
+	// "Chlorophyll",
 	"Air Temperature",
 	"Air Pressure",
 	"Relative Humidity",

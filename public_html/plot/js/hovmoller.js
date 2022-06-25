@@ -221,21 +221,21 @@ function updateColourProperties() {
 
 	if ((PE_min === "") && (PE_max === "") && (PS_min === "") && (PS_max === "")
 		&& (dataset_PE.name === dataset_PS.name)) {
-		//PE_min = Math.min(...dataset_PE.c_data,...dataset_PS.c_data);
-		PE_min = my_min(dataset_PE.c_data.concat(dataset_PS.c_data));
+		PE_min = Math.min(...dataset_PE.c_data.filter(e => e !== null),...dataset_PS.c_data.filter(e => e !== null));
+		// PE_min = my_min(dataset_PE.c_data.concat(dataset_PS.c_data));
 		PS_min = PE_min;
-		//PE_max = Math.max(...dataset_PE.c_data,...dataset_PS.c_data);
-		PE_max = my_max(dataset_PE.c_data.concat(dataset_PS.c_data));
+		PE_max = Math.max(...dataset_PE.c_data.filter(e => e !== null),...dataset_PS.c_data.filter(e => e !== null));
+		// PE_max = my_max(dataset_PE.c_data.concat(dataset_PS.c_data));
 		PS_max = PE_max;
 	} else {
-		// if ((PE_min === "") || isNaN(PE_min)) { PE_min = Math.min(...dataset_PE.c_data) };
-		// if ((PE_max === "") || isNaN(PE_max)) { PE_max = Math.max(...dataset_PE.c_data) };
-		// if ((PS_min === "") || isNaN(PS_min)) { PS_min = Math.min(...dataset_PS.c_data) };
-		// if ((PS_max === "") || isNaN(PS_max)) { PS_max = Math.max(...dataset_PS.c_data) };
-		if ((PE_min === "") || isNaN(PE_min)) { PE_min = my_min(dataset_PE.c_data) };
-		if ((PE_max === "") || isNaN(PE_max)) { PE_max = my_max(dataset_PE.c_data) };
-		if ((PS_min === "") || isNaN(PS_min)) { PS_min = my_min(dataset_PS.c_data) };
-		if ((PS_max === "") || isNaN(PS_max)) { PS_max = my_max(dataset_PS.c_data) };
+		if ((PE_min === "") || isNaN(PE_min)) { PE_min = Math.min(...dataset_PE.c_data.filter(e => e !== null)) };
+		if ((PE_max === "") || isNaN(PE_max)) { PE_max = Math.max(...dataset_PE.c_data.filter(e => e !== null)) };
+		if ((PS_min === "") || isNaN(PS_min)) { PS_min = Math.min(...dataset_PS.c_data.filter(e => e !== null)) };
+		if ((PS_max === "") || isNaN(PS_max)) { PS_max = Math.max(...dataset_PS.c_data.filter(e => e !== null)) };
+		// if ((PE_min === "") || isNaN(PE_min)) { PE_min = my_min(dataset_PE.c_data) };
+		// if ((PE_max === "") || isNaN(PE_max)) { PE_max = my_max(dataset_PE.c_data) };
+		// if ((PS_min === "") || isNaN(PS_min)) { PS_min = my_min(dataset_PS.c_data) };
+		// if ((PS_max === "") || isNaN(PS_max)) { PS_max = my_max(dataset_PS.c_data) };
 	};
 
 	PE_colour_properties = {

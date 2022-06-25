@@ -139,7 +139,8 @@ let plot_data = [
 		mode: 'markers',
 		marker: {'color': [], colorscale: 'YlGnBu'},
 		showlegend: false,
-		hovertemplate: "%{xaxis.title.text}: %{x}<br>" +
+		hovertemplate: "RV Pelican<br>" +
+									 "%{xaxis.title.text}: %{x}<br>" +
             			 "%{yaxis.title.text}: %{y}<br>" +
             			 "%{fullData.name}: %{marker.color}<br>" +
 									 "<extra></extra>"
@@ -151,7 +152,8 @@ let plot_data = [
 		mode: 'markers',
 		marker: {'color': [] , colorscale: 'YlGnBu'},
 		showlegend: false,
-		hovertemplate: "%{xaxis.title.text}: %{x}<br>" +
+		hovertemplate: "RV Point Sur<br>" + 
+									 "%{xaxis.title.text}: %{x}<br>" +
             			 "%{yaxis.title.text}: %{y}<br>" +
 									 "%{fullData.name}: %{marker.color}" +
 									 "<extra></extra>"

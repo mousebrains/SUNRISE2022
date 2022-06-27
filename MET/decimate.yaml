@@ -74,8 +74,8 @@ Pelican.headers: # These are the column names in the file to DB field name
   Air-Temp-1: {name: airTemp1}
   Rel-Humidity-1: {name: relHumidity1}
   BaromPress-1: {name: airPressure1}
-  Rel-WindDir-1: {name: windDirRel1}
-  Rel-WindSpd-1: {name: windSpdRel1}
+  Rel-WindDir-1: {name: windDirRel1} #Rel-WindDir-1-Val
+  Rel-WindSpd-1: {name: windSpdRel1} #Look up name
   TrueWindDirection-1-DRV-DIRECTION: {name: windDirTrue1}
   TrueWindDirection-1-DRV-SPEED: {name: windSpdTrue1}
   Radiometer-Feed--Long Wave Radiation Watts Per Square Meter: {name: longWave}

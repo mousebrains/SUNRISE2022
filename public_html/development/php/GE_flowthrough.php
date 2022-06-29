@@ -7,7 +7,7 @@ header('X-Accel-Buffering: no');
 
 // Define colour limits
 
-const SALINITY_MIN = 26.0;
+const SALINITY_MIN = 26.5;
 const SALINITY_MAX = 28.0;
 const TEMPERATURE_MIN = 30.0;
 const TEMPERATURE_MAX = 33.0;
@@ -73,7 +73,7 @@ function salinity_colour($svalue) : string {
     }
 
     // map salinity to index
-    $index = (($svalue - SALINITY_MIN)/(SALINITY_MAX - SALINITY_MIN)*127);
+    $index = ((SALINITY_MAX - $svalue)/(SALINITY_MAX - SALINITY_MIN)*127);
 
     return SALINITY_CMAP[(int)$index];
   }

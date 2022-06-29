@@ -5,6 +5,12 @@ header("Content-Type: application/xml");
 header('Cache-Control: no-cache');
 header('X-Accel-Buffering: no');
 
+// Define colour limits
+
+const SALINITY_MIN = 26.5;
+const SALINITY_MAX = 28.0;
+const TEMPERATURE_MIN = 30.0;
+const TEMPERATURE_MAX = 33.0;
 // Define cmaps
 
 const SALINITY_CMAP = array(
@@ -47,8 +53,6 @@ const TEMPERATURE_CMAP = array(
 
 function salinity_colour($svalue) : string {
   try {
-    $smin = 24.0;
-    $smax = 32.0;
     // convert salinity to a float
     $svalue = (float)$svalue;
 
@@ -61,15 +65,15 @@ function salinity_colour($svalue) : string {
     }
 
     // map points outside of range to the range limits
-    if ( $svalue < $smin ) {
-      $svalue = $smin;
+    if ( $svalue < SALINITY_MIN ) {
+      $svalue = SALINITY_MIN;
     }
-    if ( $svalue > $smax ) {
-      $svalue = $smax;
+    if ( $svalue > SALINITY_MAX ) {
+      $svalue = SALINITY_MAX;
     }
 
     // map salinity to index
-    $index = (($svalue - $smin)/($smax - $smin)*127);
+    $index = ((SALINITY_MAX - $svalue)/(SALINITY_MAX - SALINITY_MIN)*127);
 
     return SALINITY_CMAP[(int)$index];
   }
@@ -81,8 +85,6 @@ function salinity_colour($svalue) : string {
 
 function temperature_colour($tvalue) : string {
   try {
-    $tmin = 30.0;
-    $tmax = 33.0;
     // convert temperature to a float
     $tvalue = (float)$tvalue;
 
@@ -95,15 +97,15 @@ function temperature_colour($tvalue) : string {
     }
 
     // map points outside of range to the range limits
-    if ( $tvalue < $tmin ) {
-      $tvalue = $tmin;
+    if ( $tvalue < TEMPERATURE_MIN ) {
+      $tvalue = TEMPERATURE_MIN;
     }
-    if ( $tvalue > $tmax ) {
-      $tvalue = $tmax;
+    if ( $tvalue > TEMPERATURE_MAX ) {
+      $tvalue = TEMPERATURE_MAX;
     }
 
     // map salinity to index
-    $index = (1 - ($tvalue - $tmin)/($tmax - $tmin))*127;
+    $index = (1 - ($tvalue - TEMPERATURE_MIN)/(TEMPERATURE_MAX - TEMPERATURE_MIN))*127;
 
     return TEMPERATURE_CMAP[(int)$index];
   }

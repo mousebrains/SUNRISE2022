@@ -71,7 +71,7 @@ class DB(Thread):
             for line in lines: # Walk through the lines and insert them
                 fields = self.__config.delimiter.split(line)
                 if len(fields) != nHeaders:
-                    logging.info("Bad line, %s", line)
+                    if len(line): logging.info("Bad line, %s", line)
                     continue
                 self.__config.insertRow(cur, fields)
         epos =  fp.tell() - len(buffer)

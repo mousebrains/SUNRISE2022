@@ -128,6 +128,7 @@ class Config:
         headers = self.headers
         for index in range(len(columns)):
             name = columns[index]
+            if len(name) == 0: continue
             logging.info("name %s in headers %s", name, name in headers)
             if name not in headers: continue
             item = headers[name]

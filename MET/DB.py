@@ -56,6 +56,7 @@ class DB(Thread):
         nHeaders = len(header)
         spos = fp.tell() # Starting position
         buffer = ""
+        cnt = 0
         cur.execute("BEGIN;")
         while True:
             content = fp.read(1024*1024) # Read a chunk of data
@@ -74,13 +75,17 @@ class DB(Thread):
                     if len(line): logging.info("Bad line, %s", line)
                     continue
                 self.__config.insertRow(cur, fields)
+                cnt += 1
         epos =  fp.tell() - len(buffer)
         if spos == epos: # Nothing happened
+            logging.info("Nothing processed from %s", fn)
             cur.execute("ROLLBACK;")
         else:
             if self.__filepos.set(fn, epos, cur):
+                logging.info("Processed %s rows from %s", cnt, fn)
                 cur.execute("COMMIT;")
             else:
+                logging.warning("Failed setting fileposition for %s", fn)
                 cur.execute("ROLLBACK;")
         return epos
 

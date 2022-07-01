@@ -8,7 +8,7 @@ header('X-Accel-Buffering: no');
 // Define colour limits
 
 const SALINITY_MIN = 26.5;
-const SALINITY_MAX = 28.0;
+const SALINITY_MAX = 31.0;
 const TEMPERATURE_MIN = 30.0;
 const TEMPERATURE_MAX = 33.0;
 // Define cmaps

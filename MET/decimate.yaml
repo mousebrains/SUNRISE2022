@@ -58,11 +58,11 @@ Pelican.headers: # These are the column names in the file to DB field name
   ABX2-GGA-Lat: {name: lat, type: latLonDegMin}
   Sperry-MK1-Gyro-Hdg-deg: {name: heading}
   Furuno-SC50-GPS-Hdg-Hdg: {name: true_heading}
-  Knudsen-True-Depth-DRV-VALUE: {name: depth}
   Thermosalinograph-Data-Temp: {name: Temp}
   Thermosalinograph-Data-Salinity: {name: SP}
   Thermosalinograph-Data-Conductivity: {name: C}
   Thermosalinograph-Data-Sound-Velocity: {name: speedOfSound}
+  Transmissometer-percent-DRV-VALUE: {name: beamTransmission}
   Wetstar-Fluorometer-ug-per-L-Chl-A-DRV-VALUE: {name: Fl}
   Air-Temp-2: {name: airTemp2}
   Rel-Humidity-2: {name: relHumidity2}
@@ -74,12 +74,24 @@ Pelican.headers: # These are the column names in the file to DB field name
   Air-Temp-1: {name: airTemp1}
   Rel-Humidity-1: {name: relHumidity1}
   BaromPress-1: {name: airPressure1}
+  Rel-WindDir-1-Val: {name: windDirRel1}
   Rel-WindDir-1: {name: windDirRel1} #Rel-WindDir-1-Val
   Rel-WindSpd-1: {name: windSpdRel1} #Look up name
+  Rel--old-WindSpd-1: {name: windSpdRel1} #Look up name
   TrueWindDirection-1-DRV-DIRECTION: {name: windDirTrue1}
   TrueWindDirection-1-DRV-SPEED: {name: windSpdTrue1}
   Radiometer-Feed--Long Wave Radiation Watts Per Square Meter: {name: longWave}
   "Radiometer-Feed--Short Wave Radiation from PSP in Watts Per M^2": {name: shortWave}
+  "Chirp 100KHz True Depth Meters-VALUE": {name: depth}
+    # Knudsen-True-Depth-DRV-VALUE: {name: depth}
+    # SPAR-Voltage-DRV-VALUE
+    # SPAR-Microeinsteins-DRV-VALUE
+    # Rel--old-WindSpd-1
+    # time-DRV-VALUE # Useless
+    # TWSpd-5sAvg2-DRV-VALUE
+    # Chirp 3.5KHz True Depth Meters-VALUE
+    # Chirp 12KHz True Depth Meters-VALUE
+    # Chirp 100KHz True Depth Meters-VALUE
 
 PointSur.headers: # These are the column names in the file to DB field name
   DATE: {name: t, type: date, format: "%m/%d/%Y"}

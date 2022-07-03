@@ -1,0 +1,17 @@
+#
+# RHIB ADCP DB to NetCDF
+#
+# June-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=RHIB DB to NetCDF
+
+[Timer]
+# dayOfWeek Year-Month-Day Hour:Minute:Second
+# sync data every 10 minutes
+OnCalendar=*-*-* *:4/10:33 UTC
+Persistent=false
+
+[Install]
+WantedBy=timers.target
+

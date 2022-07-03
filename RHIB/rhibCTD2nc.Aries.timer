@@ -1,0 +1,17 @@
+#
+# RHIB CTD DB to NetCDF
+#
+# June-2022, Pat Welch, pat@mousebrains.com
+
+[Unit]
+Description=RHIB CTD DB to NetCDF
+
+[Timer]
+# dayOfWeek Year-Month-Day Hour:Minute:Second
+# sync data every 10 minutes
+OnCalendar=*-*-* *:5/10:17 UTC
+Persistent=false
+
+[Install]
+WantedBy=timers.target
+

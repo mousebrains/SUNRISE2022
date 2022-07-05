@@ -60,6 +60,8 @@ cmd = [args.ssh, "-N", "-x", "-T"]
 if args.identity:
     cmd.extend(("-i", args.identity))
 
+cmd.extend(("-o", "ExitOnForwardFailure=yes")) # Fail if port forwarding fails for some reason
+
 if args.interval > 0:
     cmd.extend(("-o", f"ServerAliveInterval={args.interval}"))
     if args.count > 0:

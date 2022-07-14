@@ -1,4 +1,14 @@
 #! /usr/bin/env python3
+#
+# Google Drive v3 API to count number of files in a shared drive
+#
+# For API documenation see:
+# https://developers.google.com/drive/api
+#
+# QuickStart for Python:
+# https://developers.google.com/drive/api/quickstart/python
+#
+# July-2022, Pat Welch, pat@mousebrains.com
 
 from argparse import ArgumentParser
 import os.path
@@ -36,6 +46,22 @@ def getCredentials(scopes:list[str], token:str, secret:str) -> Credentials:
 
     return creds
 
+def getSharedDrives(service) -> dict:
+    name2id = {}
+    params = dict(
+            pageSize = 100, 
+            fields="nextPageToken, drives(name,id)",
+            )
+    while True:
+        results = service.drives().list(**params).execute()
+        pageToken = results.get("nextPageToken")
+        params["pageToken"] = pageToken
+        items = results.get("drives", [])
+        for item in items:
+            name2id[item["name"]] = item["id"]
+        if not items or pageToken is None: break
+    return name2id
+
 parser = ArgumentParser()
 parser.add_argument("--scopes", type=str, action="append", help="Scopes to authenticate with")
 parser.add_argument("--token", type=str, 
@@ -44,7 +70,9 @@ parser.add_argument("--token", type=str,
 parser.add_argument("--secret", type=str,
         default="~/.config/Google/sunriseCounter.secret.json",
         help="Google API Credentials File")
-parser.add_argument("id", type=str, nargs="+", help="Shared folder ids to examine")
+parser.add_argument("--batchsize", type=int, default=1000,
+        help="Number of Google Drive API records to fetch in each batch, <=1000")
+parser.add_argument("drive", type=str, nargs="+", help="Shared folder name to examine")
 args = parser.parse_args()
 
 if not args.scopes: # If modifying these scopes, delete the file token.json.
@@ -55,27 +83,32 @@ creds = getCredentials(args.scopes, args.token, args.secret)
 try:
     service = build('drive', 'v3', credentials=creds)
 
-    for ident in args.id:
+    drives2id = getSharedDrives(service)
+    for drive in sorted(drives2id): print("Known drives", drive)
+
+    for drive in args.drive:
+        if drive not in drives2id:
+            print("Unknown drive", drive)
+            continue
+        ident = drives2id[drive]
         cnt = 0
         params = dict(
                 corpora="drive",
                 driveId=ident,
                 includeItemsFromAllDrives=True,
                 supportsAllDrives=True,
-                pageSize = 1000,
+                pageSize = args.batchsize,
                 fields = "nextPageToken, files(id)",
             )
 
         while True: # Loop over all the results calling the Drive v3 API
             results = service.files().list(**params).execute()
             pageToken = results.get("nextPageToken") 
-            if pageToken is None: break # Last page
             params["pageToken"] = pageToken
             items = results.get('files', [])
-            if not items: break # Past the end of the list
             print("nItems", len(items), cnt)
             cnt += len(items)
-            if cnt > 5000: break
-        print("Ident", ident, "count", cnt)
+            if not items or pageToken is None: break # Last page
+        print("Drive", drive, "Ident", ident, "count", cnt)
 except HttpError as error:
     print(f'An error occurred: {error}')

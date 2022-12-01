@@ -8,11 +8,9 @@ $nback = array_key_exists("nback", $_GET) ? $_GET["nback"] : 60; # Number of min
 $ship = array_key_exists("ship", $_GET) ? $_GET["ship"] : "pe"; # Name of ship
 $names = array_key_exists("vars", $_GET) ? $_GET["vars"] : "temp"; # Variables to fetch
 
-$names = "ROUND(CAST(temp as NUMERIC), 2),";
-$names .= " ROUND(CAST(((DATE_PART('day', t::timestamp - '2022-06-17 12:00:00'::timestamp) * 24";
-$names .= " + DATE_PART('hour', t::timestamp - '2022-06-17 12:00:00'::timestamp)) * 60";
-$names .= " + DATE_PART('minute', t::timestamp - '2022-06-17 12:00:00'::timestamp))/1497 as NUMERIC),2),";
-$names .= " ROUND(CAST(sp as NUMERIC), 2)"; # Trying to get temp,inertial periods,salinity
+$names = "ROUND(temp::numeric,4),";
+$names .= " ROUND(EXTRACT(epoch FROM t - '2022-06-17 12:00:00+00')/89820::numeric,4),";
+$names .= " ROUND(sp::numeric,4)"; # Trying to get temp,inertial periods,salinity
 
 $dbname = "sunrise";
 
